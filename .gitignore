@@ -1,2 +1,5 @@
 /target
 /dist
+dist/index.html
+dist/lambda-online-246b137093e84ce2_bg.wasm
+dist/lambda-online-246b137093e84ce2.js
