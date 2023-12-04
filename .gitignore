@@ -5,3 +5,4 @@ latex/*.log
 latex/*.out
 latex/*.synctex.gz
 latex/*.pdf
+latex/*.aux
