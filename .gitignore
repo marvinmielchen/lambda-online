@@ -1,0 +1,6 @@
+# Ignore all files in the latex folder
+/latex/*
+
+# Except for .tex files
+!/latex/*.tex
+
