@@ -35,9 +35,49 @@ public class Lexer {
             case ':': addToken(TokenType.COLON); break;
             case '=': addToken(TokenType.EQUAL); break;
             case ';': addToken(TokenType.SEMICOLON); break;
-            default: Lambo.error(line, "Unexpected character."); break;
+            case '/':
+                if (match('/')) {
+                    while (peek() != '\n' && !isAtEnd()) advance();
+                }
+                break;
+            case ' ': case '\r': case '\t': break;
+            case '\n': line++; break;
+            default:
+                if (isAlpha(c)) {
+                    identifier();
+                } else {
+                    Lambo.error(line, "Unexpected character.");
+                }
+                break;
         }
 
+    }
+
+    private void identifier() {
+        while (isAlphaNumeric(peek())) advance();
+        addToken(TokenType.IDENTIFIER);
+    }
+
+    private boolean isAlpha(char c) {
+        return (c >= 'a' && c <= 'z') ||
+                (c >= 'A' && c <= 'Z') ||
+                c == '_';
+    }
+
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c);
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
+
+    private boolean match(char expected) {
+        if (isAtEnd()) return false;
+        if (source.charAt(current) != expected) return false;
+
+        current++;
+        return true;
     }
 
     private char advance() {
@@ -53,6 +93,11 @@ public class Lexer {
     private void addToken(TokenType type, Object literal) {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
+    }
+
+    private char peek() {
+        if (isAtEnd()) return '\0';
+        return source.charAt(current);
     }
 
     private boolean isAtEnd() {
