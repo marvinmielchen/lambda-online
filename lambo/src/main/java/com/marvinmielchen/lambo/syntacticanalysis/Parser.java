@@ -21,6 +21,24 @@ public class Parser {
     }
 
     private Expr lambdaExpression(){
+        return switch (peek().getTokenType()) {
+            case LEFT_PAREN -> application();
+            case LEFT_BRACE -> abstraction();
+            default -> variable();
+        };
+    }
+
+    private Expr application(){
+        if(match(TokenType.LEFT_PAREN)){
+            Expr left = lambdaExpression();
+            Expr right = lambdaExpression();
+            consume(TokenType.RIGHT_PAREN, "Expected ')' after application expression");
+            return new Expr.Application(left, right);
+        }
+        throw error(peek(), "Expected application expression.");
+    }
+
+    private Expr abstraction(){
         if(match(TokenType.LEFT_BRACE)){
             Expr.Variable boundVariable = variable();
             consume(TokenType.COLON, "Expected ':' after bound variable");
@@ -28,15 +46,7 @@ public class Parser {
             consume(TokenType.RIGHT_BRACE, "Expected '}' after abstraction expression");
             return new Expr.Abstraction(boundVariable, body);
         }
-
-        if(match(TokenType.LEFT_PAREN)){
-            Expr left = lambdaExpression();
-            Expr right = lambdaExpression();
-            consume(TokenType.RIGHT_PAREN, "Expected ')' after application expression");
-            return new Expr.Application(left, right);
-        }
-
-        return variable();
+        throw error(peek(), "Expected abstraction expression.");
     }
 
     private Expr.Variable variable(){
