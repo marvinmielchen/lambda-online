@@ -12,6 +12,14 @@ public class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
+    public Expr parse() {
+        try {
+            return lambdaExpression();
+        } catch (Lambo.ParseError error) {
+            return null;
+        }
+    }
+
     private Expr lambdaExpression(){
         if(match(TokenType.LEFT_BRACE)){
             Expr.Variable boundVariable = variable();
@@ -32,8 +40,10 @@ public class Parser {
     }
 
     private Expr.Variable variable(){
-        Token token = consume(TokenType.IDENTIFIER, "Expected variable name");
-        return new Expr.Variable(token);
+        if(match(TokenType.IDENTIFIER)){
+            return new Expr.Variable(previous());
+        }
+        throw error(peek(), "Expected lambda expression.");
     }
 
 
@@ -78,5 +88,14 @@ public class Parser {
     private Lambo.ParseError error(Token token, String message) {
         Lambo.error(token, message);
         return new Lambo.ParseError();
+    }
+
+    private void synchronize() {
+        advance();
+
+        while (!isAtEnd()) {
+            if (previous().getTokenType() == TokenType.SEMICOLON) return;
+            advance();
+        }
     }
 }

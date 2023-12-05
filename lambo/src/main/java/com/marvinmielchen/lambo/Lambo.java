@@ -3,9 +3,11 @@ package com.marvinmielchen.lambo;
 import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
+import com.marvinmielchen.lambo.syntacticanalysis.AstPrinter;
+import com.marvinmielchen.lambo.syntacticanalysis.Expr;
+import com.marvinmielchen.lambo.syntacticanalysis.Parser;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,11 +20,11 @@ public class Lambo {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
 
-        for (Token token : tokens){
-                System.out.println(token);
-        }
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
 
-        if (hadError) System.exit(65);
+        if (hadError) return;
+        log.info(new AstPrinter().print(expression));
     }
 
     public static void error(int line, String message){

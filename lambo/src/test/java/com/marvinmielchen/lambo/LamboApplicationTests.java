@@ -13,9 +13,7 @@ class LamboApplicationTests {
         String source =
                 """
                 //this is a comment
-                example_function = {a : {b : {c : b}}};
-
-                result = ((example_function g) h);
+                {a : {b : {c : (c b)}}}
                 """;
         Lambo.run(source);
     }
