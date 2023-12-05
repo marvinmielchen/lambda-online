@@ -2,9 +2,11 @@ package com.marvinmielchen.lambo.syntacticanalysis;
 
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 public abstract class Expr {
     @AllArgsConstructor
+    @Getter
     public static class Abstraction extends Expr{
         final Variable boundVariable;
         final Expr body;
@@ -16,6 +18,7 @@ public abstract class Expr {
     }
 
     @AllArgsConstructor
+    @Getter
     public static class Application extends Expr{
         final Expr left;
         final Expr right;
@@ -27,6 +30,7 @@ public abstract class Expr {
     }
 
     @AllArgsConstructor
+    @Getter
     public static class Variable extends Expr{
         final Token token;
         @Override
