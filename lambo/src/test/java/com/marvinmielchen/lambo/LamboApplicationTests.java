@@ -13,7 +13,7 @@ class LamboApplicationTests {
         String source =
                 """
                 //this is a comment
-                {a b : (b a)}
+                ({z y : (y {x : x})} {x : (z x)})
                 """;
         Lambo.run(source);
     }

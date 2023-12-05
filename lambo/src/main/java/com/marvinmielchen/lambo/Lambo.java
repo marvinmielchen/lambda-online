@@ -20,11 +20,6 @@ public class Lambo {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
 
-        for (Token token : tokens) {
-            if (token.getTokenType() == TokenType.EOF) break;
-            log.info(token.toString());
-        }
-
         Parser parser = new Parser(tokens);
         Expr expression = parser.parse();
 
