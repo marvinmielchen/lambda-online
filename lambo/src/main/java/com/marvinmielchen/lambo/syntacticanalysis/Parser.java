@@ -5,6 +5,7 @@ import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,6 +33,11 @@ public class Parser {
         if(match(TokenType.LEFT_PAREN)){
             Expr left = lambdaExpression();
             Expr right = lambdaExpression();
+            while (peek().getTokenType() != TokenType.RIGHT_PAREN && !isAtEnd()){
+                Expr next = lambdaExpression();
+                left = new Expr.Application(left, right);
+                right = next;
+            }
             consume(TokenType.RIGHT_PAREN, "Expected ')' after application expression");
             return new Expr.Application(left, right);
         }
@@ -40,11 +46,18 @@ public class Parser {
 
     private Expr abstraction(){
         if(match(TokenType.LEFT_BRACE)){
-            Expr.Variable boundVariable = variable();
-            consume(TokenType.COLON, "Expected ':' after bound variable");
-            Expr body = lambdaExpression();
+            List<Expr.Variable> boundVariables = new ArrayList<>();
+            boundVariables.add(variable());
+            while (peek().getTokenType() != TokenType.COLON && !isAtEnd()){
+                boundVariables.add(variable());
+            }
+            consume(TokenType.COLON, "Expected ':' after bound variables");
+            Expr abstraction = lambdaExpression();
             consume(TokenType.RIGHT_BRACE, "Expected '}' after abstraction expression");
-            return new Expr.Abstraction(boundVariable, body);
+            for (int i = boundVariables.size() - 1; i >= 0; i--) {
+                abstraction = new Expr.Abstraction(boundVariables.get(i), abstraction);
+            }
+            return abstraction;
         }
         throw error(peek(), "Expected abstraction expression.");
     }
