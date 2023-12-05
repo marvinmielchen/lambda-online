@@ -1,0 +1,16 @@
+lo_program = {statement};
+
+statement = assignment | comment;
+
+comment = "//", {char}, "\n"
+
+assignment = variable, "=", lambda_exp, ";";
+
+lambda_exp = abstraction, application, variable;
+
+abstraction = "{", variable, {variable}, ":", lambda_exp, "}"; 
+
+application = "(", lambda_exp, {lambda_exp}, ")";
+
+variable = char, {char};
+

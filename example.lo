@@ -1,0 +1,9 @@
+
+
+
+
+//this is a comment
+example_function = {a b c : b};
+
+result = (example_function 3 7);
+
