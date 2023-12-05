@@ -2,7 +2,7 @@ lo_program = {statement};
 
 statement = assignment | comment;
 
-comment = "//", {char}, "\n"
+comment = "//", {char}, "\n";
 
 assignment = variable, "=", lambda_exp, ";";
 
