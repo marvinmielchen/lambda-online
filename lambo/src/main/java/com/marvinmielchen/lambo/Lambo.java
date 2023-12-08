@@ -5,6 +5,7 @@ import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
 import com.marvinmielchen.lambo.semanticanalysis.Interpreter;
 import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
+import com.marvinmielchen.lambo.syntacticanalysis.AstPrinter;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import com.marvinmielchen.lambo.syntacticanalysis.Parser;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,10 @@ public class Lambo {
         LamboExpression lamboExpression = parser.parse();
 
         if (hadError| hadRuntimeError) return;
+        AstPrinter astPrinter = new AstPrinter();
+        log.info(astPrinter.print(lamboExpression));
         interpreter.interpret(lamboExpression);
+
     }
 
     public static void error(int line, String message){

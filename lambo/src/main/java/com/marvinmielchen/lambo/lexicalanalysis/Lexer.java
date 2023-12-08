@@ -32,12 +32,13 @@ public class Lexer {
             case ')': addToken(TokenType.RIGHT_PAREN); break;
             case '{': addToken(TokenType.LEFT_BRACE); break;
             case '}': addToken(TokenType.RIGHT_BRACE); break;
-            case ':': addToken(TokenType.COLON); break;
             case '=': addToken(TokenType.EQUAL); break;
             case ';': addToken(TokenType.SEMICOLON); break;
             case '/':
                 if (match('/')) {
                     while (peek() != '\n' && !isAtEnd()) advance();
+                } else {
+                    Lambo.error(line, "Unexpected character.");
                 }
                 break;
             case ' ': case '\r': case '\t': break;

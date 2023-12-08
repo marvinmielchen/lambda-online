@@ -22,44 +22,16 @@ public class Parser {
     }
 
     private LamboExpression lambdaExpression(){
-        return switch (peek().getTokenType()) {
-            case LEFT_PAREN -> application();
-            case LEFT_BRACE -> abstraction();
-            default -> variable();
-        };
-    }
-
-    private LamboExpression application(){
-        if(match(TokenType.LEFT_PAREN)){
-            LamboExpression left = lambdaExpression();
-            LamboExpression right = lambdaExpression();
-            while (peek().getTokenType() != TokenType.RIGHT_PAREN && !isAtEnd()){
-                LamboExpression next = lambdaExpression();
-                left = new LamboExpression.Application(left, right);
-                right = next;
-            }
-            consume(TokenType.RIGHT_PAREN, "Expected ')' after application expression");
-            return new LamboExpression.Application(left, right);
+        if(peek().getTokenType() == TokenType.IDENTIFIER){
+            return variable();
         }
-        throw error(peek(), "Expected application expression.");
-    }
-
-    private LamboExpression abstraction(){
-        if(match(TokenType.LEFT_BRACE)){
-            List<LamboExpression.Variable> boundVariables = new ArrayList<>();
-            boundVariables.add(variable());
-            while (peek().getTokenType() != TokenType.COLON && !isAtEnd()){
-                boundVariables.add(variable());
-            }
-            consume(TokenType.COLON, "Expected ':' after bound variables");
-            LamboExpression abstraction = lambdaExpression();
-            consume(TokenType.RIGHT_BRACE, "Expected '}' after abstraction expression");
-            for (int i = boundVariables.size() - 1; i >= 0; i--) {
-                abstraction = new LamboExpression.Abstraction(boundVariables.get(i), abstraction);
-            }
-            return abstraction;
+        if(peek().getTokenType() == TokenType.LEFT_BRACE){
+            return expressionBody();
         }
-        throw error(peek(), "Expected abstraction expression.");
+        if (peek().getTokenType() == TokenType.LEFT_PAREN){
+            return expressionHead();
+        }
+        throw error(peek(), "Expected expression.");
     }
 
     private LamboExpression.Variable variable(){
@@ -67,6 +39,40 @@ public class Parser {
             return new LamboExpression.Variable(previous());
         }
         throw error(peek(), "Expected lambda expression.");
+    }
+
+    private LamboExpression expressionHead(){
+        consume(TokenType.LEFT_PAREN, "Expected '('.");
+        List<LamboExpression.Variable> variables = new ArrayList<>();
+        while(peek().getTokenType() == TokenType.IDENTIFIER){
+            LamboExpression.Variable variable = variable();
+            variables.add(variable);
+        }
+        consume(TokenType.RIGHT_PAREN, "Expected ')'.");
+        LamboExpression expression = expressionBody();
+        if(variables.isEmpty()){
+            return expression;
+        }
+        //iterate over variables from last to first
+        int last = variables.size() - 1;
+        LamboExpression.Abstraction abstraction = new LamboExpression.Abstraction(variables.get(last), expression);;
+        for(int i = variables.size() - 2; i >= 0; i--){
+            LamboExpression.Variable variable = variables.get(i);
+            abstraction = new LamboExpression.Abstraction(variable, abstraction);
+        }
+        return abstraction;
+    }
+
+    private LamboExpression expressionBody(){
+        consume(TokenType.LEFT_BRACE, "Expected '{'.");
+        LamboExpression expression = lambdaExpression();
+        while (List.of(TokenType.LEFT_BRACE, TokenType.LEFT_PAREN, TokenType.IDENTIFIER)
+                .contains(peek().getTokenType())){
+            LamboExpression newExpression = lambdaExpression();
+            expression = new LamboExpression.Application(expression, newExpression);
+        }
+        consume(TokenType.RIGHT_BRACE, "Expected '}'.");
+        return expression;
     }
 
 

@@ -1,9 +1,46 @@
 
+//there is only one type of statement in lambo which is an assignment
 
+//the assignment has an identifier and an expression
+def x b
 
+//in this implementations of the lambda calculus, there is only one type of lambda_expression that is application and abstraction at the same time
+//and to be precise there is also a second type of (general) expression that is the variable ( as seen in the assignment above )
+//b is an expression and (x){x} is an expression too
 
-//this is a comment
-example_function = {a b c : b};
+//each lambda expression is an abstraction with an application in the body
+def example_function(x){x y}
 
-result = (example_function 3 7);
+//if you only want to use application you can have no lambda bound variables
+def application(){func arg}
+
+//if you only want to use abstraction that is possible too because the application also supports only one argument
+def abstraction(x){
+    (y){x}
+}
+
+//the following function is therefor just the unbound variable x
+def one_argument_application(){
+    x
+}
+
+//if your abstraction doesnt have a lambda bound variable you can leaf away the parentheses
+def example_function(func){
+    func
+    {
+        add x y
+    }
+}
+
+def s_combinator(x y z){
+    x z
+    {y z}
+}
+
+def crazy_function(x){
+    (number){
+        add number x
+    }
+    one
+}
 

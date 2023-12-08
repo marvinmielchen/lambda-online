@@ -4,18 +4,18 @@ import com.marvinmielchen.lambo.Lambo;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 
 @Slf4j
 public class Interpreter implements LamboExpression.Visitor<String>{
 
+    private int depth = 0;
+
     public void interpret(LamboExpression expression){
         try {
-            String value = evaluate(expression);
+            depth = 0;
+            String value = "\n" + evaluate(expression);
             log.info(value);
         } catch (RuntimeError e){
             Lambo.runtimeError(e);
@@ -25,14 +25,14 @@ public class Interpreter implements LamboExpression.Visitor<String>{
     @Override
     public String visit(LamboExpression.Abstraction abstraction) {
         LamboExpression body = abstraction.getBody();
-        return String.format("(λ%s.%s)", abstraction.getBoundVariable().getToken().getLexeme(), evaluate(body));
+        return String.format("(%s) %s", abstraction.getBoundVariable().getToken().getLexeme(), evaluate(body));
     }
 
     @Override
     public String visit(LamboExpression.Application application) {
         LamboExpression left = application.getLeft();
         LamboExpression right = application.getRight();
-        return String.format("(%s %s)", evaluate(left), evaluate(right));
+        return String.format("{\n%s\n%s\n}", evaluate(left), evaluate(right));
     }
 
     @Override
@@ -41,20 +41,21 @@ public class Interpreter implements LamboExpression.Visitor<String>{
     }
 
     private String evaluate(LamboExpression expression){
-        log.info("Evaluating expression: " + expression.toString());
-        log.info("Bound variables: " + findBoundVariables(expression));
-        log.info("Free variables: " + findFreeVariables(expression));
         return expression.accept(this);
+    }
+
+    private String indentation(){
+        return "\t".repeat(Math.max(0, depth));
     }
 
 
 
     private Set<String> findBoundVariableLexemes(LamboExpression expression){
-
+        return null;
     }
 
     private Set<String> findFreeVariableLexemes(LamboExpression expression){
-
+        return null;
     }
 
     private LamboExpression betaReduction(LamboExpression.Application beta_redex){

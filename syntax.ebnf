@@ -1,20 +1,17 @@
-lo_program = {statement};
+lo_program = statement+;
 
 statement = assignment | comment;
 
-comment = "//", {char}, "\n";
+assignment = "def", IDENTIFIER, expression;
 
-assignment = variable, "=", lambda_exp, ";";
+expression = expression_head, expression_body | expression_body | variable;
+
+expression_head = "(", variable*, ")";
+
+expression_body = "{", expression+, "}";
+
+variable = IDENTIFIER;
 
 
 
-
-
-lambda_exp = abstraction, application, variable;
-
-abstraction = "{", variable, ":", lambda_exp, "}";
-
-application = "(", lambda_exp, ")";
-
-variable = char, {char};
-
+60ml ÖL
