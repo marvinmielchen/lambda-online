@@ -13,15 +13,15 @@ public class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
-    public Expr parse() {
+    public LamboExpression parse() {
         try {
             return lambdaExpression();
-        } catch (Lambo.ParseError error) {
+        } catch (ParseError error) {
             return null;
         }
     }
 
-    private Expr lambdaExpression(){
+    private LamboExpression lambdaExpression(){
         return switch (peek().getTokenType()) {
             case LEFT_PAREN -> application();
             case LEFT_BRACE -> abstraction();
@@ -29,42 +29,42 @@ public class Parser {
         };
     }
 
-    private Expr application(){
+    private LamboExpression application(){
         if(match(TokenType.LEFT_PAREN)){
-            Expr left = lambdaExpression();
-            Expr right = lambdaExpression();
+            LamboExpression left = lambdaExpression();
+            LamboExpression right = lambdaExpression();
             while (peek().getTokenType() != TokenType.RIGHT_PAREN && !isAtEnd()){
-                Expr next = lambdaExpression();
-                left = new Expr.Application(left, right);
+                LamboExpression next = lambdaExpression();
+                left = new LamboExpression.Application(left, right);
                 right = next;
             }
             consume(TokenType.RIGHT_PAREN, "Expected ')' after application expression");
-            return new Expr.Application(left, right);
+            return new LamboExpression.Application(left, right);
         }
         throw error(peek(), "Expected application expression.");
     }
 
-    private Expr abstraction(){
+    private LamboExpression abstraction(){
         if(match(TokenType.LEFT_BRACE)){
-            List<Expr.Variable> boundVariables = new ArrayList<>();
+            List<LamboExpression.Variable> boundVariables = new ArrayList<>();
             boundVariables.add(variable());
             while (peek().getTokenType() != TokenType.COLON && !isAtEnd()){
                 boundVariables.add(variable());
             }
             consume(TokenType.COLON, "Expected ':' after bound variables");
-            Expr abstraction = lambdaExpression();
+            LamboExpression abstraction = lambdaExpression();
             consume(TokenType.RIGHT_BRACE, "Expected '}' after abstraction expression");
             for (int i = boundVariables.size() - 1; i >= 0; i--) {
-                abstraction = new Expr.Abstraction(boundVariables.get(i), abstraction);
+                abstraction = new LamboExpression.Abstraction(boundVariables.get(i), abstraction);
             }
             return abstraction;
         }
         throw error(peek(), "Expected abstraction expression.");
     }
 
-    private Expr.Variable variable(){
+    private LamboExpression.Variable variable(){
         if(match(TokenType.IDENTIFIER)){
-            return new Expr.Variable(previous());
+            return new LamboExpression.Variable(previous());
         }
         throw error(peek(), "Expected lambda expression.");
     }
@@ -108,9 +108,9 @@ public class Parser {
         return tokens.get(current - 1);
     }
 
-    private Lambo.ParseError error(Token token, String message) {
+    private ParseError error(Token token, String message) {
         Lambo.error(token, message);
-        return new Lambo.ParseError();
+        return new ParseError();
     }
 
     private void synchronize() {

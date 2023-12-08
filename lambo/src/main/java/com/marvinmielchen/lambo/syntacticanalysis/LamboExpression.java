@@ -4,12 +4,12 @@ import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public abstract class Expr {
+public abstract class LamboExpression {
     @AllArgsConstructor
     @Getter
-    public static class Abstraction extends Expr{
+    public static class Abstraction extends LamboExpression {
         final Variable boundVariable;
-        final Expr body;
+        final LamboExpression body;
 
         @Override
         public <R> R accept(Visitor<R> visitor) {
@@ -19,9 +19,9 @@ public abstract class Expr {
 
     @AllArgsConstructor
     @Getter
-    public static class Application extends Expr{
-        final Expr left;
-        final Expr right;
+    public static class Application extends LamboExpression {
+        final LamboExpression left;
+        final LamboExpression right;
 
         @Override
         public <R> R accept(Visitor<R> visitor) {
@@ -31,7 +31,7 @@ public abstract class Expr {
 
     @AllArgsConstructor
     @Getter
-    public static class Variable extends Expr{
+    public static class Variable extends LamboExpression {
         final Token token;
         @Override
         public <R> R accept(Visitor<R> visitor) {
