@@ -4,6 +4,12 @@ import com.marvinmielchen.lambo.Lambo;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
+
+
 @Slf4j
 public class Interpreter implements LamboExpression.Visitor<String>{
 
@@ -12,7 +18,7 @@ public class Interpreter implements LamboExpression.Visitor<String>{
             String value = evaluate(expression);
             log.info(value);
         } catch (RuntimeError e){
-            Lambo.error(e.getToken(), e.getMessage());
+            Lambo.runtimeError(e);
         }
     }
 
@@ -35,6 +41,30 @@ public class Interpreter implements LamboExpression.Visitor<String>{
     }
 
     private String evaluate(LamboExpression expression){
+        log.info("Evaluating expression: " + expression.toString());
+        log.info("Bound variables: " + findBoundVariables(expression));
+        log.info("Free variables: " + findFreeVariables(expression));
         return expression.accept(this);
     }
+
+
+
+    private Set<String> findBoundVariableLexemes(LamboExpression expression){
+
+    }
+
+    private Set<String> findFreeVariableLexemes(LamboExpression expression){
+
+    }
+
+    private LamboExpression betaReduction(LamboExpression.Application beta_redex){
+        //TODO: Implement beta reduction
+        return null;
+    }
+
+    private LamboExpression alphaConversion(LamboExpression expression ){
+        //TODO: Implement alpha conversion
+        return null;
+    }
+
 }
