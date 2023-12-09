@@ -13,7 +13,7 @@ class LamboApplicationTests {
         String source =
                 """
                 //this is a comment
-                (x){
+                (x y){
                     (number){
                         add number x
                     }

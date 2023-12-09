@@ -25,14 +25,26 @@ public class Interpreter implements LamboExpression.Visitor<String>{
     @Override
     public String visit(LamboExpression.Abstraction abstraction) {
         LamboExpression body = abstraction.getBody();
-        return String.format("(%s) %s", abstraction.getBoundVariable().getToken().getLexeme(), evaluate(body));
+        return String.format("(%s)%s", abstraction.getBoundVariable().getToken().getLexeme(), evaluate(body));
     }
 
     @Override
     public String visit(LamboExpression.Application application) {
         LamboExpression left = application.getLeft();
         LamboExpression right = application.getRight();
-        return String.format("{\n%s\n%s\n}", evaluate(left), evaluate(right));
+        StringBuilder result = new StringBuilder();
+        result.append("{\n");
+        depth++;
+        result.append(indentation());
+        result.append(evaluate(left));
+        result.append("\n");
+        result.append(indentation());
+        result.append(evaluate(right));
+        result.append("\n");
+        depth--;
+        result.append(indentation());
+        result.append("}");
+        return result.toString();
     }
 
     @Override
@@ -45,7 +57,7 @@ public class Interpreter implements LamboExpression.Visitor<String>{
     }
 
     private String indentation(){
-        return "\t".repeat(Math.max(0, depth));
+        return "    ".repeat(Math.max(0, depth));
     }
 
 
