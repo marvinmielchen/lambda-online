@@ -8,7 +8,6 @@ import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -18,6 +17,7 @@ public class Interpreter implements LamboStatement.Visitor<Void>{
     private Environment environment = new Environment();
 
     public List<LamboStatement> simplifyOneStep(List<LamboStatement> statement){
+        environment = new Environment();
         //store definitions in environment
         for (LamboStatement s : statement) {
             try {
@@ -28,13 +28,13 @@ public class Interpreter implements LamboStatement.Visitor<Void>{
             }
         }
         //evaluate expressions with one turn of beta reductions
-        PrefixAlphaConverter prefixAlphaConverter = new PrefixAlphaConverter("b", "f");
+        RecursiveBetaReduction betaReductionConverter = new RecursiveBetaReduction();
         List<LamboStatement> simplifiedStatements = new ArrayList<>();
         for (LamboStatement s : statement) {
             try {
                 if (s instanceof LamboStatement.Definition definition){
                     Token identifier = definition.getIdentifier();
-                    LamboExpression expression = prefixAlphaConverter.evaluate(definition.getExpression());
+                    LamboExpression expression = betaReductionConverter.evaluate(definition.getExpression());
                     simplifiedStatements.add(new LamboStatement.Definition(identifier, expression));
                 }
             } catch (RuntimeError error) {

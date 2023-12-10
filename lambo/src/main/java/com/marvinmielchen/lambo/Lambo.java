@@ -4,10 +4,8 @@ import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
 import com.marvinmielchen.lambo.semanticanalysis.Interpreter;
-import com.marvinmielchen.lambo.semanticanalysis.PrefixAlphaConverter;
 import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
 import com.marvinmielchen.lambo.syntacticanalysis.AstPrinter;
-import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import com.marvinmielchen.lambo.syntacticanalysis.Parser;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +26,14 @@ public class Lambo {
         Parser parser = new Parser(tokens);
         List<LamboStatement> statements = parser.parse();
 
-        AstPrinter astPrinter = new AstPrinter();
-        for (LamboStatement statement : statements) {
-            log.info(astPrinter.print(statement));
-        }
-
         if (hadError| hadRuntimeError) return;
 
 
         List<LamboStatement> simplifiedStatements = interpreter.simplifyOneStep(statements);
+        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
+        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
+        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
+        AstPrinter astPrinter = new AstPrinter();
         for (LamboStatement statement : simplifiedStatements) {
             log.info(astPrinter.print(statement));
         }
@@ -55,7 +52,7 @@ public class Lambo {
     }
 
     public static void runtimeError(RuntimeError error){
-        log.error(error.getMessage() + "\n[line " + error.getLine() + "]");
+        log.error("Runtime Error: " + error.getMessage() + " [line " + error.getLine() + "]");
         hadRuntimeError = true;
     }
 

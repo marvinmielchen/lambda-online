@@ -1,6 +1,5 @@
 package com.marvinmielchen.lambo.syntacticanalysis;
 
-import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -33,7 +32,7 @@ public abstract class LamboExpression {
     @Getter
     public static class Variable extends LamboExpression {
         private final String name;
-        private final int definitionLine;
+        private final Integer definitionLine;
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visit(this);
