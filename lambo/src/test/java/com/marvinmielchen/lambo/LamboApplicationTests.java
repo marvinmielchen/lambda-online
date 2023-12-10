@@ -20,6 +20,8 @@ class LamboApplicationTests {
                 def if (c x y) { c x y };
                 
                 def result () { if true a b };
+                
+                def test () { (x) {x} a };
                 """;
         Lambo.run(source);
     }

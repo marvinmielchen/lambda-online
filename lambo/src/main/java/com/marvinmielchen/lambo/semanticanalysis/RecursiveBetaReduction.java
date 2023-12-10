@@ -2,6 +2,8 @@ package com.marvinmielchen.lambo.semanticanalysis;
 
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 
+import java.util.Map;
+
 public class RecursiveBetaReduction implements LamboExpression.Visitor<LamboExpression>{
 
     @Override
@@ -18,8 +20,9 @@ public class RecursiveBetaReduction implements LamboExpression.Visitor<LamboExpr
                     (LamboExpression.Abstraction) (new PrefixAlphaConverter("`", "")).evaluate(left);
             LamboExpression safeSubstitute =
                     (new PrefixAlphaConverter("˙", "")).evaluate(right);
+            Map<String, LamboExpression> substitutions = Map.of(safeAbstraction.getBoundVariable().getName(), safeSubstitute);
             UnsafeSubstitution unsafeSubstitution =
-                    new UnsafeSubstitution(safeSubstitute, safeAbstraction.getBoundVariable().getName());
+                    new UnsafeSubstitution(substitutions);
             return unsafeSubstitution.evaluate(safeAbstraction.getBody());
         }
         return new LamboExpression.Application(evaluate(left), evaluate(right));

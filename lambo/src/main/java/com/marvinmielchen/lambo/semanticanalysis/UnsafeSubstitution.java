@@ -3,11 +3,14 @@ package com.marvinmielchen.lambo.semanticanalysis;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 public class UnsafeSubstitution implements LamboExpression.Visitor<LamboExpression> {
 
-    private final LamboExpression substitute;
-    private final String boundVariableName;
+
+    private final Map<String, LamboExpression> substitutions;
+
     public LamboExpression evaluate(LamboExpression expression){
         return expression.accept(this);
     }
@@ -26,8 +29,8 @@ public class UnsafeSubstitution implements LamboExpression.Visitor<LamboExpressi
 
     @Override
     public LamboExpression visit(LamboExpression.Variable variable) {
-        if (variable.getName().equals(boundVariableName)){
-            return new LamboExpressionClone().evaluate(substitute);
+        if (substitutions.containsKey(variable.getName())){
+            return new LamboExpressionClone().evaluate(substitutions.get(variable.getName()));
         } else {
             return variable;
         }

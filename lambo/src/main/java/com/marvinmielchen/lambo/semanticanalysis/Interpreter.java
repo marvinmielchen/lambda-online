@@ -12,22 +12,10 @@ import java.util.List;
 
 
 @Slf4j
-public class Interpreter implements LamboStatement.Visitor<Void>{
+public class Interpreter{
 
-    private Environment environment = new Environment();
 
     public List<LamboStatement> simplifyOneStep(List<LamboStatement> statement){
-        environment = new Environment();
-        //store definitions in environment
-        for (LamboStatement s : statement) {
-            try {
-                s.accept(this);
-            } catch (RuntimeError error) {
-                Lambo.runtimeError(error);
-                break;
-            }
-        }
-        //evaluate expressions with one turn of beta reductions
         RecursiveBetaReduction betaReductionConverter = new RecursiveBetaReduction();
         List<LamboStatement> simplifiedStatements = new ArrayList<>();
         for (LamboStatement s : statement) {
@@ -42,16 +30,13 @@ public class Interpreter implements LamboStatement.Visitor<Void>{
                 break;
             }
         }
-
         return simplifiedStatements;
     }
 
-    //Statement Visitors
-    @Override
-    public Void visit(LamboStatement.Definition definition) {
-        Token identifier = definition.getIdentifier();
-        LamboExpression expression = definition.getExpression();
-        environment.define(identifier, expression);
+    public List<LamboStatement> substituteDefinitionsOnStep(List<LamboStatement> statement){
         return null;
     }
+
+
+
 }
