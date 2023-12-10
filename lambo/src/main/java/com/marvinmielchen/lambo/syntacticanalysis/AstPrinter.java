@@ -18,7 +18,7 @@ public class AstPrinter implements LamboExpression.Visitor<String> {
 
     @Override
     public String visit(LamboExpression.Variable variable) {
-        return variable.token.getLexeme();
+        return variable.getName();
     }
 
     private String parenthesize(String name, LamboExpression... lamboExpressions) {

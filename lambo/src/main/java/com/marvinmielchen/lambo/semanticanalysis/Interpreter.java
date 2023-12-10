@@ -1,6 +1,7 @@
 package com.marvinmielchen.lambo.semanticanalysis;
 
 import com.marvinmielchen.lambo.Lambo;
+import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,23 +61,28 @@ public class Interpreter implements LamboExpression.Visitor<String>{
         return "    ".repeat(Math.max(0, depth));
     }
 
-
-
-    private Set<String> findBoundVariableLexemes(LamboExpression expression){
-        return null;
-    }
-
-    private Set<String> findFreeVariableLexemes(LamboExpression expression){
-        return null;
-    }
-
     private LamboExpression betaReduction(LamboExpression.Application beta_redex){
-        //TODO: Implement beta reduction
+        LamboExpression left = stupidAlphaConversion(beta_redex.getLeft(), "a");
+        LamboExpression right = stupidAlphaConversion(beta_redex.getRight(), "b");
+
         return null;
     }
 
-    private LamboExpression alphaConversion(LamboExpression expression ){
-        //TODO: Implement alpha conversion
+    //applies a given prefix to all variables in the expression
+    private LamboExpression stupidAlphaConversion(LamboExpression expression, String prefix){
+        if (expression instanceof LamboExpression.Abstraction abstraction){
+            return new LamboExpression.Abstraction(
+                    new LamboExpression.Variable(prefix + abstraction.getBoundVariable().getName()),
+                    stupidAlphaConversion(abstraction.getBody(), prefix)
+            );
+        } else if (expression instanceof LamboExpression.Application application){
+            return new LamboExpression.Application(
+                    stupidAlphaConversion(application.getLeft(), prefix),
+                    stupidAlphaConversion(application.getRight(), prefix)
+            );
+        } else if (expression instanceof LamboExpression.Variable variable){
+            return new LamboExpression.Variable(prefix + variable.getName());
+        }
         return null;
     }
 

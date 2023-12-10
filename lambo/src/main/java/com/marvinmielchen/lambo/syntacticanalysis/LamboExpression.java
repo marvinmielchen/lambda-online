@@ -32,7 +32,7 @@ public abstract class LamboExpression {
     @AllArgsConstructor
     @Getter
     public static class Variable extends LamboExpression {
-        final Token token;
+        private final String name;
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visit(this);
