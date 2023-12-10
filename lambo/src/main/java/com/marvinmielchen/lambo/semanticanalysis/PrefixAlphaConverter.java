@@ -8,7 +8,7 @@ import java.util.List;
 
 //This Visitor Performs an Alpha Conversion by appending prefix to all bound variables and a different prefix to all free variables
 @RequiredArgsConstructor
-public class PrefixAlphaConversion implements LamboExpression.Visitor<LamboExpression> {
+public class PrefixAlphaConverter implements LamboExpression.Visitor<LamboExpression> {
 
     private final String boundVariablePrefix;
     private final String freeVariablePrefix;
@@ -45,7 +45,7 @@ public class PrefixAlphaConversion implements LamboExpression.Visitor<LamboExpre
         return new LamboExpression.Application(left, right);
     }
 
-    private LamboExpression evaluate(LamboExpression expression){
+    public LamboExpression evaluate(LamboExpression expression){
         return expression.accept(this);
     }
 

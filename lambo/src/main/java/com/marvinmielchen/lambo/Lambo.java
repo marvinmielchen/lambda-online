@@ -4,6 +4,7 @@ import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
 import com.marvinmielchen.lambo.semanticanalysis.Interpreter;
+import com.marvinmielchen.lambo.semanticanalysis.PrefixAlphaConverter;
 import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
 import com.marvinmielchen.lambo.syntacticanalysis.AstPrinter;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
@@ -34,7 +35,11 @@ public class Lambo {
 
         if (hadError| hadRuntimeError) return;
 
-        //interpreter.simplifyOneStep(statements);
+
+        List<LamboStatement> simplifiedStatements = interpreter.simplifyOneStep(statements);
+        for (LamboStatement statement : simplifiedStatements) {
+            log.info(astPrinter.print(statement));
+        }
     }
 
     public static void error(int line, String message){
