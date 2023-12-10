@@ -1,36 +1,31 @@
 package com.marvinmielchen.lambo.syntacticanalysis;
 
-public class AstPrinter implements LamboExpression.Visitor<String> {
+public class AstPrinter implements LamboExpression.Visitor<String>, LamboStatement.Visitor<String>{
 
-    public String print(LamboExpression lamboExpression){
-        return lamboExpression.accept(this);
+
+    public String print(LamboStatement statement){
+        return statement.accept(this);
     }
-
     @Override
     public String visit(LamboExpression.Abstraction abstraction) {
-        return parenthesize("λ", abstraction.boundVariable, abstraction.body);
+
+        //return "(" + abstraction.getBoundVariable().getToken().getLexeme() + ")" + abstraction.getBody().accept(this);
+
+        return String.format("(%s) %s", abstraction.getBoundVariable().getToken().getLexeme(), abstraction.getBody().accept(this));
     }
 
     @Override
     public String visit(LamboExpression.Application application) {
-        return parenthesize("apply", application.left, application.right);
+        return String.format("{%s %s}", application.getLeft().accept(this), application.getRight().accept(this));
     }
 
     @Override
     public String visit(LamboExpression.Variable variable) {
-        return variable.getName();
+        return variable.getToken().getLexeme();
     }
 
-    private String parenthesize(String name, LamboExpression... lamboExpressions) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("(").append(name);
-        for (LamboExpression lamboExpression : lamboExpressions) {
-            builder.append(" ");
-            builder.append(lamboExpression.accept(this));
-        }
-        builder.append(")");
-
-        return builder.toString();
+    @Override
+    public String visit(LamboStatement.Definition definition) {
+        return String.format("def %s %s;", definition.getIdentifier().getLexeme(), definition.getExpression().accept(this));
     }
 }

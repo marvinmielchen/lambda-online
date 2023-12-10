@@ -1,11 +1,12 @@
 package com.marvinmielchen.lambo.lexicalanalysis;
 
 import com.marvinmielchen.lambo.Lambo;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class Lexer {
@@ -45,7 +46,7 @@ public class Lexer {
             case '\n': line++; break;
             default:
                 if (isAlpha(c)) {
-                    identifier();
+                    identifierOrKeyword();
                 } else {
                     Lambo.error(line, "Unexpected character.");
                 }
@@ -54,9 +55,12 @@ public class Lexer {
 
     }
 
-    private void identifier() {
+    private void identifierOrKeyword() {
         while (isAlphaNumeric(peek())) advance();
-        addToken(TokenType.IDENTIFIER);
+        String text = source.substring(start, current);
+        TokenType type = keywords.get(text);
+        if (type == null) type = TokenType.IDENTIFIER;
+        addToken(type);
     }
 
     private boolean isAlpha(char c) {
@@ -104,4 +108,12 @@ public class Lexer {
     private boolean isAtEnd() {
         return current >= source.length();
     }
+
+    private static final Map<String, TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("def", TokenType.DEF);
+    }
+
 }

@@ -13,15 +13,29 @@ public class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
-    public LamboExpression parse() {
-        try {
-            return lambdaExpression();
-        } catch (ParseError error) {
-            return null;
+    public List<LamboStatement> parse() {
+        List<LamboStatement> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            try {
+                LamboStatement statement = statement();
+                statements.add(statement);
+            } catch (ParseError error) {
+                synchronize();
+            }
         }
+        return statements;
     }
 
-    private LamboExpression lambdaExpression(){
+    private LamboStatement statement(){
+        consume(TokenType.DEF, "Expected 'def'.");
+        Token identifier = consume(TokenType.IDENTIFIER, "Expected identifier.");
+        LamboExpression expression = expression();
+        consume(TokenType.SEMICOLON, "Expected ';'.");
+
+        return new LamboStatement.Definition(identifier, expression);
+    }
+
+    private LamboExpression expression(){
         if(peek().getTokenType() == TokenType.IDENTIFIER){
             return variable();
         }
@@ -65,10 +79,10 @@ public class Parser {
 
     private LamboExpression expressionBody(){
         consume(TokenType.LEFT_BRACE, "Expected '{'.");
-        LamboExpression expression = lambdaExpression();
+        LamboExpression expression = expression();
         while (List.of(TokenType.LEFT_BRACE, TokenType.LEFT_PAREN, TokenType.IDENTIFIER)
                 .contains(peek().getTokenType())){
-            LamboExpression newExpression = lambdaExpression();
+            LamboExpression newExpression = expression();
             expression = new LamboExpression.Application(expression, newExpression);
         }
         consume(TokenType.RIGHT_BRACE, "Expected '}'.");

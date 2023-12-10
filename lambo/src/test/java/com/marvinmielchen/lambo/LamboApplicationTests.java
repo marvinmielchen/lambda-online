@@ -13,12 +13,16 @@ class LamboApplicationTests {
         String source =
                 """
                 //this is a comment
-                (x y){
+                def crazy_function(x){
                     (number){
                         add number x
                     }
                     one
-                }
+                };
+                
+                def add(x y){
+                    x y
+                };
                 """;
         Lambo.run(source);
     }

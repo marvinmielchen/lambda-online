@@ -8,8 +8,8 @@ public abstract class LamboExpression {
     @AllArgsConstructor
     @Getter
     public static class Abstraction extends LamboExpression {
-        final Variable boundVariable;
-        final LamboExpression body;
+        private final Variable boundVariable;
+        private final LamboExpression body;
 
         @Override
         public <R> R accept(Visitor<R> visitor) {
@@ -20,8 +20,8 @@ public abstract class LamboExpression {
     @AllArgsConstructor
     @Getter
     public static class Application extends LamboExpression {
-        final LamboExpression left;
-        final LamboExpression right;
+        private final LamboExpression left;
+        private final LamboExpression right;
 
         @Override
         public <R> R accept(Visitor<R> visitor) {
@@ -32,7 +32,7 @@ public abstract class LamboExpression {
     @AllArgsConstructor
     @Getter
     public static class Variable extends LamboExpression {
-        private final String name;
+        private final Token token;
         @Override
         public <R> R accept(Visitor<R> visitor) {
             return visitor.visit(this);
