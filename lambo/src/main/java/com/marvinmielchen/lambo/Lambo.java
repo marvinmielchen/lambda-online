@@ -50,7 +50,7 @@ public class Lambo {
     }
 
     public static void runtimeError(RuntimeError error){
-        log.error(error.getMessage() + "\n[line " + error.getToken().getLine() + "]");
+        log.error(error.getMessage() + "\n[line " + error.getLine() + "]");
         hadRuntimeError = true;
     }
 

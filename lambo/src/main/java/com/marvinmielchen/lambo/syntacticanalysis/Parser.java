@@ -50,7 +50,7 @@ public class Parser {
 
     private LamboExpression.Variable variable(){
         if(match(TokenType.IDENTIFIER)){
-            return new LamboExpression.Variable(previous());
+            return new LamboExpression.Variable(previous().getLexeme(), previous().getLine());
         }
         throw error(peek(), "Expected lambda expression.");
     }

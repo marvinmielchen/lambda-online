@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Slf4j
-public class Interpreter implements LamboExpression.Visitor<Void>, LamboStatement.Visitor<Void>{
+public class Interpreter implements LamboStatement.Visitor<Void>{
 
     private Environment environment = new Environment();
 
@@ -29,7 +29,7 @@ public class Interpreter implements LamboExpression.Visitor<Void>, LamboStatemen
         for (LamboStatement s : statement) {
             try {
                 if (s instanceof LamboStatement.Definition definition){
-                    definition.getExpression().accept(this);
+
                 }
             } catch (RuntimeError error) {
                 Lambo.runtimeError(error);
@@ -46,23 +46,4 @@ public class Interpreter implements LamboExpression.Visitor<Void>, LamboStatemen
         environment.define(identifier, expression);
         return null;
     }
-
-
-    //Expression Visitors
-    @Override
-    public Void visit(LamboExpression.Abstraction abstraction) {
-        return null;
-    }
-
-    @Override
-    public Void visit(LamboExpression.Application application) {
-        return null;
-    }
-
-    @Override
-    public Void visit(LamboExpression.Variable variable) {
-        return null;
-    }
-
-
 }

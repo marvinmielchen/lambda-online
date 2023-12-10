@@ -8,10 +8,7 @@ public class AstPrinter implements LamboExpression.Visitor<String>, LamboStateme
     }
     @Override
     public String visit(LamboExpression.Abstraction abstraction) {
-
-        //return "(" + abstraction.getBoundVariable().getToken().getLexeme() + ")" + abstraction.getBody().accept(this);
-
-        return String.format("(%s) %s", abstraction.getBoundVariable().getToken().getLexeme(), abstraction.getBody().accept(this));
+        return String.format("(%s) %s", abstraction.getBoundVariable().getName(), abstraction.getBody().accept(this));
     }
 
     @Override
@@ -21,7 +18,7 @@ public class AstPrinter implements LamboExpression.Visitor<String>, LamboStateme
 
     @Override
     public String visit(LamboExpression.Variable variable) {
-        return variable.getToken().getLexeme();
+        return variable.getName();
     }
 
     @Override

@@ -10,7 +10,7 @@ public class Environment {
 
     void define(Token identifier, Object value) {
         if (values.containsKey(identifier.getLexeme())) {
-            throw new RuntimeError(identifier,
+            throw new RuntimeError(identifier.getLine(),
                     "Variable '" + identifier.getLexeme() + "' was already defined. Redefinition is not allowed in Lambo.");
         }
         values.put(identifier.getLexeme(), value);
@@ -20,7 +20,7 @@ public class Environment {
         if (values.containsKey(identifier.getLexeme())) {
             return values.get(identifier.getLexeme());
         }
-        throw new RuntimeError(identifier,
+        throw new RuntimeError(identifier.getLine(),
                 "Undefined variable '" + identifier.getLexeme() + "'.");
     }
 }
