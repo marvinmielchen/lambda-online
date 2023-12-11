@@ -25,7 +25,7 @@ public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpre
         environment.define(lambdaVar.getLexeme());
         DeBruijnExpression body = abstraction.getBody().accept(this);
         environment = environment.getEnclosing();
-        return new DeBruijnExpression.Abstraction(body);
+        return new DeBruijnExpression.Abstraction(body, lambdaVar.getLexeme());
     }
 
     @Override

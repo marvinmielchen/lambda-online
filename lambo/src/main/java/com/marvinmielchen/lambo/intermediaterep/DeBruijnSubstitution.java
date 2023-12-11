@@ -18,7 +18,7 @@ public class DeBruijnSubstitution implements DeBruijnExpression.Visitor<DeBruijn
     @Override
     public DeBruijnExpression visit(DeBruijnExpression.Abstraction abstraction) {
         depth++;
-        DeBruijnExpression.Abstraction result = new DeBruijnExpression.Abstraction(abstraction.getBody().accept(this));
+        DeBruijnExpression.Abstraction result = new DeBruijnExpression.Abstraction(abstraction.getBody().accept(this), abstraction.getOldTokenLexeme());
         depth--;
         return result;
     }

@@ -13,7 +13,7 @@ public class DeBruijnClone implements DeBruijnExpression.Visitor<DeBruijnExpress
 
     @Override
     public DeBruijnExpression visit(DeBruijnExpression.Abstraction abstraction) {
-        return new DeBruijnExpression.Abstraction(abstraction.getBody().accept(this));
+        return new DeBruijnExpression.Abstraction(abstraction.getBody().accept(this), abstraction.getOldTokenLexeme());
     }
 
     @Override

@@ -10,6 +10,7 @@ public abstract class DeBruijnExpression {
     @Getter
     public static class Abstraction extends DeBruijnExpression{
         private final DeBruijnExpression body;
+        private final String oldTokenLexeme;
 
         @Override
         public <R> R accept(Visitor<R> visitor) {

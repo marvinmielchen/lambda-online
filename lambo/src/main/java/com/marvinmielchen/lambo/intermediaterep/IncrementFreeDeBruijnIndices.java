@@ -17,9 +17,9 @@ public class IncrementFreeDeBruijnIndices implements DeBruijnExpression.Visitor<
     @Override
     public DeBruijnExpression visit(DeBruijnExpression.Abstraction abstraction) {
         numOfBinders++;
-        DeBruijnExpression.Abstraction result = new DeBruijnExpression.Abstraction(abstraction.getBody().accept(this));
+        DeBruijnExpression.Abstraction result = new DeBruijnExpression.Abstraction(abstraction.getBody().accept(this), abstraction.getOldTokenLexeme());
         numOfBinders--;
-        return new DeBruijnExpression.Abstraction(result.getBody());
+        return result;
     }
 
     @Override

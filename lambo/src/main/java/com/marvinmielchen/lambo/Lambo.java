@@ -2,7 +2,6 @@ package com.marvinmielchen.lambo;
 
 import com.marvinmielchen.lambo.intermediaterep.DeBruijnExpression;
 import com.marvinmielchen.lambo.intermediaterep.DeBruijnPrinter;
-import com.marvinmielchen.lambo.intermediaterep.DeBruijnTranslator;
 import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
@@ -39,9 +38,11 @@ public class Lambo {
 
         HashMap<String, DeBruijnExpression> env = interpreter.calculateBindingEnvironment(statements);
         env = interpreter.substituteDefinitionsOnce(env);
-        DeBruijnPrinter deBruijnPrinter = new DeBruijnPrinter();
-        for (String key : env.keySet()) {
-            log.info(key + " = " + deBruijnPrinter.print(env.get(key)));
+        for (LamboStatement statement : statements) {
+            if (statement instanceof LamboStatement.Definition definition){
+                String key = definition.getIdentifier().getLexeme();
+                log.info(new DeBruijnPrinter(env.get(key), key).evaluate());
+            }
         }
 
     }
