@@ -3,13 +3,16 @@ package com.marvinmielchen.lambo.intermediaterep;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpression>{
 
     private DeBruijnEnvironment environment = new DeBruijnEnvironment(null);
+    private final LamboExpression input;
 
-    public DeBruijnExpression translate(LamboExpression expression){
-        return expression.accept(this);
+    public DeBruijnExpression translate(){
+        return input.accept(this);
     }
 
     @Override

@@ -1,9 +1,14 @@
 package com.marvinmielchen.lambo.intermediaterep;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class DeBruijnClone implements DeBruijnExpression.Visitor<DeBruijnExpression> {
 
-    public DeBruijnExpression clone(DeBruijnExpression expression){
-        return expression.accept(this);
+    private final DeBruijnExpression input;
+
+    public DeBruijnExpression evaluate(){
+        return input.accept(this);
     }
 
     @Override

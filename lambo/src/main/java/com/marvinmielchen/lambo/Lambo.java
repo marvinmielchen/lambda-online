@@ -1,5 +1,6 @@
 package com.marvinmielchen.lambo;
 
+import com.marvinmielchen.lambo.intermediaterep.DeBruijnExpression;
 import com.marvinmielchen.lambo.intermediaterep.DeBruijnPrinter;
 import com.marvinmielchen.lambo.intermediaterep.DeBruijnTranslator;
 import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
@@ -12,12 +13,13 @@ import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import com.marvinmielchen.lambo.syntacticanalysis.Parser;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
 public class Lambo {
 
-    private static final Interpreter interpreter = new Interpreter();
+    static Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
@@ -35,11 +37,13 @@ public class Lambo {
             log.info(astPrinter.print(statement));
         }
 
-        DeBruijnTranslator deBruijnTranslator = new DeBruijnTranslator();
+        HashMap<String, DeBruijnExpression> env = interpreter.calculateBindingEnvironment(statements);
+        env = interpreter.substituteDefinitionsOnce(env);
         DeBruijnPrinter deBruijnPrinter = new DeBruijnPrinter();
-        for (LamboStatement statement : statements) {
-            log.info(deBruijnPrinter.print(deBruijnTranslator.translate(((LamboStatement.Definition) statement).getExpression())));
+        for (String key : env.keySet()) {
+            log.info(key + " = " + deBruijnPrinter.print(env.get(key)));
         }
+
     }
 
     public static void error(int line, String message){
