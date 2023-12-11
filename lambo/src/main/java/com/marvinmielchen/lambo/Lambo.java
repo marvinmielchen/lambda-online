@@ -1,5 +1,7 @@
 package com.marvinmielchen.lambo;
 
+import com.marvinmielchen.lambo.intermediaterep.DeBruijnPrinter;
+import com.marvinmielchen.lambo.intermediaterep.DeBruijnTranslator;
 import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
@@ -28,14 +30,15 @@ public class Lambo {
 
         if (hadError| hadRuntimeError) return;
 
-
-        List<LamboStatement> simplifiedStatements = interpreter.simplifyOneStep(statements);
-        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
-        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
-        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
         AstPrinter astPrinter = new AstPrinter();
-        for (LamboStatement statement : simplifiedStatements) {
+        for (LamboStatement statement : statements) {
             log.info(astPrinter.print(statement));
+        }
+
+        DeBruijnTranslator deBruijnTranslator = new DeBruijnTranslator();
+        DeBruijnPrinter deBruijnPrinter = new DeBruijnPrinter();
+        for (LamboStatement statement : statements) {
+            log.info(deBruijnPrinter.print(deBruijnTranslator.translate(((LamboStatement.Definition) statement).getExpression())));
         }
     }
 

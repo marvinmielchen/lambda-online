@@ -21,7 +21,7 @@ class LamboApplicationTests {
                 
                 def result () { if true a b };
                 
-                def test () { (x) {x} a };
+                def test (a) { (x) {a} (x) {x} };
                 """;
         Lambo.run(source);
     }

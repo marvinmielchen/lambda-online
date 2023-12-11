@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class RuntimeError extends RuntimeException{
-    private final Integer line;
+    private final int line;
 
-    public RuntimeError(Integer line, String message){
+    public RuntimeError(int line, String message){
         super(message);
         this.line = line;
     }
