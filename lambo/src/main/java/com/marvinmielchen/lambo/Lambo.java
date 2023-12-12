@@ -40,9 +40,7 @@ public class Lambo {
 
         HashMap<String, DeBruijnExpression> env = interpreter.calculateBindingEnvironment(statements);
         env = interpreter.substituteDefinitionsOnce(env);
-        env = interpreter.performSomeBetaReductions(env);
-        env = interpreter.performSomeBetaReductions(env);
-        env = interpreter.performSomeBetaReductions(env);
+        //env = interpreter.performSomeBetaReductions(env);
 
 
         for (LamboStatement statement : statements) {
