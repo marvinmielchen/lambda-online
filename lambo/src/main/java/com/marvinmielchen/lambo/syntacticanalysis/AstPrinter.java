@@ -8,12 +8,12 @@ public class AstPrinter implements LamboExpression.Visitor<String>, LamboStateme
     }
     @Override
     public String visit(LamboExpression.Abstraction abstraction) {
-        return String.format("(%s) %s", abstraction.getBoundVariable().getToken().getLexeme(), abstraction.getBody().accept(this));
+        return String.format("(λ %s %s)", abstraction.getBoundVariable().getToken().getLexeme(), abstraction.getBody().accept(this));
     }
 
     @Override
     public String visit(LamboExpression.Application application) {
-        return String.format("{%s %s}", application.getLeft().accept(this), application.getRight().accept(this));
+        return String.format("(apply %s %s)", application.getLeft().accept(this), application.getRight().accept(this));
     }
 
     @Override
@@ -23,6 +23,6 @@ public class AstPrinter implements LamboExpression.Visitor<String>, LamboStateme
 
     @Override
     public String visit(LamboStatement.Definition definition) {
-        return String.format("def %s %s;", definition.getIdentifier().getLexeme(), definition.getExpression().accept(this));
+        return String.format("%s = %s;", definition.getIdentifier().getLexeme(), definition.getExpression().accept(this));
     }
 }

@@ -2,10 +2,7 @@ package com.marvinmielchen.lambo.semanticanalysis;
 
 
 import com.marvinmielchen.lambo.Lambo;
-import com.marvinmielchen.lambo.intermediaterep.DeBruijnClone;
-import com.marvinmielchen.lambo.intermediaterep.DeBruijnExpression;
-import com.marvinmielchen.lambo.intermediaterep.DeBruijnSubstitution;
-import com.marvinmielchen.lambo.intermediaterep.DeBruijnTranslator;
+import com.marvinmielchen.lambo.intermediaterep.*;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +46,14 @@ public class Interpreter {
         return newEnvironment;
     }
 
+    public HashMap<String, DeBruijnExpression> performSomeBetaReductions(HashMap<String, DeBruijnExpression> environment){
+        HashMap<String, DeBruijnExpression> newEnvironment = new HashMap<>();
+        for (Map.Entry<String, DeBruijnExpression> entry : environment.entrySet()) {
+            DeBruijnExpression result = new FindAndPerformOneBetaReduction(entry.getValue()).evaluate();
+            newEnvironment.put(entry.getKey(), result);
+        }
+        return newEnvironment;
+    }
 
 
 

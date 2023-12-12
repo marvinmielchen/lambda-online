@@ -28,7 +28,7 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
             name = nextName(name);
         }
         nameSpace.push(name);
-        String result = String.format("("  + name + ") %s", abstraction.getBody().accept(this));
+        String result = String.format("("  + name + ") {%s}", abstraction.getBody().accept(this));
         nameSpace.pop();
         return result;
     }

@@ -16,12 +16,11 @@ class LamboApplicationTests {
                 
                 def true (t f) { t };
                 
-                def test () { true };
-                //def false (t f) { f };
+                def false (t f) { f };
                 
-                //def if (c x y) { c x y };
+                def if (c x y) { c x y };
                 
-                //def result () { if true a b };
+                def result () { if true a b };
                 
                 //def test (a) { (x) {a} (x) {x} };
                 """;

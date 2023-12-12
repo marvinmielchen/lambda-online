@@ -36,8 +36,15 @@ public class Lambo {
             log.info(astPrinter.print(statement));
         }
 
+        log.info("--------------------------------------------------");
+
         HashMap<String, DeBruijnExpression> env = interpreter.calculateBindingEnvironment(statements);
         env = interpreter.substituteDefinitionsOnce(env);
+        env = interpreter.performSomeBetaReductions(env);
+        env = interpreter.performSomeBetaReductions(env);
+        env = interpreter.performSomeBetaReductions(env);
+
+
         for (LamboStatement statement : statements) {
             if (statement instanceof LamboStatement.Definition definition){
                 String key = definition.getIdentifier().getLexeme();

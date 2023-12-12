@@ -3,14 +3,14 @@ package com.marvinmielchen.lambo.intermediaterep;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class IncrementFreeDeBruijnIndices implements DeBruijnExpression.Visitor<DeBruijnExpression> {
+public class BetaReduction implements DeBruijnExpression.Visitor<DeBruijnExpression> {
 
-    private final int increment;
-    private final DeBruijnExpression input;
+    private final DeBruijnExpression.Abstraction abstraction;
+    private final DeBruijnExpression substitute;
     private int numOfBinders = 0;
 
     public DeBruijnExpression evaluate(){
-        return input.accept(this);
+        return abstraction.getBody().accept(this);
     }
 
     @Override
@@ -23,10 +23,9 @@ public class IncrementFreeDeBruijnIndices implements DeBruijnExpression.Visitor<
 
     @Override
     public DeBruijnExpression visit(DeBruijnExpression.Application application) {
-        return new DeBruijnExpression.Application(
-                application.getLeft().accept(this),
-                application.getRight().accept(this)
-        );
+        DeBruijnExpression left = application.getLeft().accept(this);
+        DeBruijnExpression right = application.getRight().accept(this);
+        return new DeBruijnExpression.Application(left, right);
     }
 
     @Override
@@ -36,8 +35,13 @@ public class IncrementFreeDeBruijnIndices implements DeBruijnExpression.Visitor<
 
     @Override
     public DeBruijnExpression visit(DeBruijnExpression.DeBruijnIndex deBruijnIndex) {
-        return deBruijnIndex.getIndex() >= numOfBinders
-                ? new DeBruijnExpression.DeBruijnIndex(deBruijnIndex.getIndex() + increment)
-                : new DeBruijnExpression.DeBruijnIndex(deBruijnIndex.getIndex());
+        int index = deBruijnIndex.getIndex();
+        if(index == numOfBinders){
+            return new IncrementFreeDeBruijnIndices(numOfBinders, substitute).evaluate();
+        }else if(index > numOfBinders){
+            return new DeBruijnExpression.DeBruijnIndex(index - 1);
+        }else{
+            return new DeBruijnExpression.DeBruijnIndex(index);
+        }
     }
 }
