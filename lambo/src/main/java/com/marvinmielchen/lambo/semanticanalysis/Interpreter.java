@@ -2,39 +2,57 @@ package com.marvinmielchen.lambo.semanticanalysis;
 
 
 import com.marvinmielchen.lambo.Lambo;
+import com.marvinmielchen.lambo.intermediaterep.*;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
-import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
-public class Interpreter{
+@RequiredArgsConstructor
+public class Interpreter {
 
-
-    public List<LamboStatement> simplifyOneStep(List<LamboStatement> statement){
-        RecursiveBetaReduction betaReductionConverter = new RecursiveBetaReduction();
-        List<LamboStatement> simplifiedStatements = new ArrayList<>();
-        for (LamboStatement s : statement) {
-            try {
-                if (s instanceof LamboStatement.Definition definition){
-                    Token identifier = definition.getIdentifier();
-                    LamboExpression expression = betaReductionConverter.evaluate(definition.getExpression());
-                    simplifiedStatements.add(new LamboStatement.Definition(identifier, expression));
+    public HashMap<String, DeBruijnExpression> calculateBindingEnvironment(List<LamboStatement> statements){
+        HashMap<String, DeBruijnExpression> environment = new HashMap<>();
+        try {
+            for (LamboStatement statement : statements) {
+                if(statement instanceof LamboStatement.Definition definition){
+                    Token lambdaVar = definition.getIdentifier();
+                    if(environment.containsKey(lambdaVar.getLexeme())){
+                        throw new RuntimeError(lambdaVar.getLine(), String.format("Variable %s already defined in this scope", lambdaVar.getLexeme()));
+                    }else {
+                        DeBruijnTranslator translator = new DeBruijnTranslator(definition.getExpression());
+                        environment.put(lambdaVar.getLexeme(), translator.translate());
+                    }
                 }
-            } catch (RuntimeError error) {
-                Lambo.runtimeError(error);
-                break;
             }
+        } catch (RuntimeError error){
+            Lambo.runtimeError(error);
         }
-        return simplifiedStatements;
+        return environment;
     }
 
-    public List<LamboStatement> substituteDefinitionsOnStep(List<LamboStatement> statement){
-        return null;
+    public HashMap<String, DeBruijnExpression> substituteDefinitionsOnce(HashMap<String, DeBruijnExpression> environment){
+        HashMap<String, DeBruijnExpression> newEnvironment = new HashMap<>();
+        for (Map.Entry<String, DeBruijnExpression> entry : environment.entrySet()) {
+            DeBruijnExpression expression = new DeBruijnClone(entry.getValue()).evaluate();
+            newEnvironment.put(entry.getKey(), new DeBruijnSubstitution(expression, environment).evaluate());
+        }
+        return newEnvironment;
+    }
+
+    public HashMap<String, DeBruijnExpression> performSomeBetaReductions(HashMap<String, DeBruijnExpression> environment){
+        HashMap<String, DeBruijnExpression> newEnvironment = new HashMap<>();
+        for (Map.Entry<String, DeBruijnExpression> entry : environment.entrySet()) {
+            DeBruijnExpression result = new FindAndPerformOneBetaReduction(entry.getValue()).evaluate();
+            newEnvironment.put(entry.getKey(), result);
+        }
+        return newEnvironment;
     }
 
 

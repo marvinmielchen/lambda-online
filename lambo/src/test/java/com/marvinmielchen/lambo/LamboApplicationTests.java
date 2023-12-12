@@ -15,13 +15,14 @@ class LamboApplicationTests {
                 //this is a comment
                 
                 def true (t f) { t };
+                
                 def false (t f) { f };
                 
                 def if (c x y) { c x y };
                 
                 def result () { if true a b };
                 
-                def test () { (x) {x} a };
+                //def test (a) { (x) {a} (x) {x} };
                 """;
         Lambo.run(source);
     }

@@ -1,5 +1,7 @@
 package com.marvinmielchen.lambo;
 
+import com.marvinmielchen.lambo.intermediaterep.DeBruijnExpression;
+import com.marvinmielchen.lambo.intermediaterep.DeBruijnPrinter;
 import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.lexicalanalysis.TokenType;
@@ -10,12 +12,13 @@ import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import com.marvinmielchen.lambo.syntacticanalysis.Parser;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
 public class Lambo {
 
-    private static final Interpreter interpreter = new Interpreter();
+    static Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
@@ -28,15 +31,27 @@ public class Lambo {
 
         if (hadError| hadRuntimeError) return;
 
-
-        List<LamboStatement> simplifiedStatements = interpreter.simplifyOneStep(statements);
-        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
-        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
-        simplifiedStatements = interpreter.simplifyOneStep(simplifiedStatements);
         AstPrinter astPrinter = new AstPrinter();
-        for (LamboStatement statement : simplifiedStatements) {
+        for (LamboStatement statement : statements) {
             log.info(astPrinter.print(statement));
         }
+
+        log.info("--------------------------------------------------");
+
+        HashMap<String, DeBruijnExpression> env = interpreter.calculateBindingEnvironment(statements);
+        env = interpreter.substituteDefinitionsOnce(env);
+        env = interpreter.performSomeBetaReductions(env);
+        env = interpreter.performSomeBetaReductions(env);
+        env = interpreter.performSomeBetaReductions(env);
+
+
+        for (LamboStatement statement : statements) {
+            if (statement instanceof LamboStatement.Definition definition){
+                String key = definition.getIdentifier().getLexeme();
+                log.info(new DeBruijnPrinter(env.get(key), key).evaluate());
+            }
+        }
+
     }
 
     public static void error(int line, String message){
