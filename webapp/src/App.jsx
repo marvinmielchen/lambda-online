@@ -17,7 +17,7 @@ function App(){
                 height="100vh"
                 width="100%"
                 theme="vs-dark"
-                defaultLanguage="javascript"
+                defaultLanguage="text"
             />
         </div>
     )
