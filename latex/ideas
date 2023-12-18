@@ -1,0 +1,8 @@
+
+
+
+- es muss einen Teil in der Arbeit geben der sich mit den Limitierungen der Arbeit beschäftigt
+    - probleme mit rekusion in lambo
+    - probleme mit speicher in lambo: z.B. sind while schleifen über große arrays wahrscheinlich nicht möglich weil alle expressions ausgewertet werden müssen und
+    das also nicht "echt" iterativ ist
+    - usw.
