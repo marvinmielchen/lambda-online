@@ -11,46 +11,70 @@ import com.marvinmielchen.lambo.syntacticanalysis.AstPrinter;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import com.marvinmielchen.lambo.syntacticanalysis.Parser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
+@Service
 public class Lambo {
 
     static Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
+    static final List<String> lastErrors = new ArrayList<>();
 
-    public static void run(String source){
+    public static synchronized List<String> syntaxCheck(String source) {
+        lastErrors.clear();
+
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
+
+        if (hadError| hadRuntimeError) return lastErrors;
 
         Parser parser = new Parser(tokens);
         List<LamboStatement> statements = parser.parse();
 
-        if (hadError| hadRuntimeError) return;
+        if (hadError | hadRuntimeError) return lastErrors;
 
-        AstPrinter astPrinter = new AstPrinter();
-        for (LamboStatement statement : statements) {
-            log.info(astPrinter.print(statement));
-        }
+        interpreter.calculateBindingEnvironment(statements);
 
-        log.info("--------------------------------------------------");
+        return lastErrors;
+    }
+
+    public static synchronized List<String> betaReduction(String source) {
+        lastErrors.clear();
+
+        Lexer lexer = new Lexer(source);
+        List<Token> tokens = lexer.scanTokens();
+
+        if (hadError | hadRuntimeError) return lastErrors;
+
+        Parser parser = new Parser(tokens);
+        List<LamboStatement> statements = parser.parse();
+
+        if (hadError | hadRuntimeError) return lastErrors;
 
         HashMap<String, DeBruijnExpression> env = interpreter.calculateBindingEnvironment(statements);
-        env = interpreter.substituteDefinitionsOnce(env);
-        //env = interpreter.performSomeBetaReductions(env);
 
+        if (hadError | hadRuntimeError) return lastErrors;
 
+        env = interpreter.performSomeBetaReductions(env);
+
+        if (hadError | hadRuntimeError) return lastErrors;
+
+        List<String> result = new ArrayList<>();
         for (LamboStatement statement : statements) {
             if (statement instanceof LamboStatement.Definition definition){
                 String key = definition.getIdentifier().getLexeme();
-                log.info(new DeBruijnPrinter(env.get(key), key).evaluate());
+                result.add(new DeBruijnPrinter(env.get(key), key).evaluate());
             }
         }
-
+        return result;
     }
+
 
     public static void error(int line, String message){
         report(line, "", message);
@@ -65,12 +89,12 @@ public class Lambo {
     }
 
     public static void runtimeError(RuntimeError error){
-        log.error("Runtime Error: " + error.getMessage() + " [line " + error.getLine() + "]");
+        lastErrors.add("Runtime Error: " + error.getMessage() + " [line " + error.getLine() + "]");
         hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message) {
-        log.error("[line " + line + "] Error" + where + ": " + message);
+        lastErrors.add("[line " + line + "] Error" + where + ": " + message);
         hadError = true;
     }
 }
