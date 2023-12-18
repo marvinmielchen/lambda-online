@@ -25,6 +25,8 @@ def one_argument_application(){
 }
 
 //if your abstraction doesnt have a lambda bound variable you can leaf away the parentheses
+
+
 def example_function(func){
     func
     {
@@ -48,4 +50,33 @@ def crazy_function(x){
 
 
 def x {a b b}
+
+
+
+
+
+
+
+
+
+
+//ein kommentar
+
+def true(t f){
+    t
+}
+
+def false(t f){
+    f
+}
+
+def if(condition a b){
+    condition a b
+}
+
+
+
+
+
+
 
