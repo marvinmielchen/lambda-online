@@ -17,7 +17,7 @@ public class Lexer {
     private int current = 0;
     private int line = 1;
 
-    public List<Token> scanTokens() {
+    public List<Token> scanTokens() throws LexingError{
         while(!isAtEnd()){
             start = current;
             scanToken();
@@ -26,7 +26,7 @@ public class Lexer {
         return tokens;
     }
 
-    private void scanToken() {
+    private void scanToken() throws LexingError{
         char c = advance();
         switch (c) {
             case '(': addToken(TokenType.LEFT_PAREN); break;
@@ -39,7 +39,7 @@ public class Lexer {
                 if (match('/')) {
                     while (peek() != '\n' && !isAtEnd()) advance();
                 } else {
-                    Lambo.error(line, "Unexpected character.");
+                    throw new LexingError(line, "Unexpected character.");
                 }
                 break;
             case ' ': case '\r': case '\t': break;
@@ -48,7 +48,7 @@ public class Lexer {
                 if (isAlpha(c)) {
                     identifierOrKeyword();
                 } else {
-                    Lambo.error(line, "Unexpected character.");
+                    throw new LexingError(line, "Unexpected character.");
                 }
                 break;
         }

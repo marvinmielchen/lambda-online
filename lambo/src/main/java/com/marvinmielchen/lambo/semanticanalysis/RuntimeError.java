@@ -3,7 +3,7 @@ package com.marvinmielchen.lambo.semanticanalysis;
 import lombok.Getter;
 
 @Getter
-public class RuntimeError extends RuntimeException{
+public class RuntimeError extends Exception{
     private final int line;
 
     public RuntimeError(int line, String message){

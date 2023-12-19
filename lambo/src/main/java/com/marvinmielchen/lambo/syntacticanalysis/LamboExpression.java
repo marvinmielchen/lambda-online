@@ -1,6 +1,7 @@
 package com.marvinmielchen.lambo.syntacticanalysis;
 
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
+import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public abstract class LamboExpression {
         private final LamboExpression body;
 
         @Override
-        public <R> R accept(Visitor<R> visitor) {
+        public <R> R accept(Visitor<R> visitor) throws RuntimeError {
             return visitor.visit(this);
         }
     }
@@ -24,7 +25,7 @@ public abstract class LamboExpression {
         private final LamboExpression right;
 
         @Override
-        public <R> R accept(Visitor<R> visitor) {
+        public <R> R accept(Visitor<R> visitor) throws RuntimeError {
             return visitor.visit(this);
         }
     }
@@ -34,16 +35,16 @@ public abstract class LamboExpression {
     public static class Variable extends LamboExpression {
         private final Token token;
         @Override
-        public <R> R accept(Visitor<R> visitor) {
+        public <R> R accept(Visitor<R> visitor) throws RuntimeError {
             return visitor.visit(this);
         }
     }
 
-    public abstract <R> R accept(Visitor<R> visitor);
+    public abstract <R> R accept(Visitor<R> visitor) throws RuntimeError;
 
     public interface Visitor<R>{
-        R visit(Abstraction abstraction);
-        R visit(Application application);
-        R visit(Variable variable);
+        R visit(Abstraction abstraction) throws RuntimeError;
+        R visit(Application application) throws RuntimeError;
+        R visit(Variable variable) throws RuntimeError;
     }
 }

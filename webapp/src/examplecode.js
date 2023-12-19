@@ -6,10 +6,10 @@ export const text =
 
 def true(t f){
     t
-}
+};
 
 def false(t f){
     f
-}
+};
 
 `

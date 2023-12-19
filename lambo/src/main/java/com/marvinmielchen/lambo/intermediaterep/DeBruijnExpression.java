@@ -1,6 +1,7 @@
 package com.marvinmielchen.lambo.intermediaterep;
 
 
+import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

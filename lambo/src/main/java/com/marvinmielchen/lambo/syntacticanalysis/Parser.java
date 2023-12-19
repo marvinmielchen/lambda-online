@@ -13,20 +13,21 @@ public class Parser {
     private final List<Token> tokens;
     private int current = 0;
 
-    public List<LamboStatement> parse() {
+    public List<LamboStatement> parse() throws ParseError {
         List<LamboStatement> statements = new ArrayList<>();
         while (!isAtEnd()) {
             try {
                 LamboStatement statement = statement();
                 statements.add(statement);
             } catch (ParseError error) {
-                synchronize();
+                //synchronize();
+                throw error;
             }
         }
         return statements;
     }
 
-    private LamboStatement statement(){
+    private LamboStatement statement() throws ParseError {
         consume(TokenType.DEF, "Expected 'def'.");
         Token identifier = consume(TokenType.IDENTIFIER, "Expected identifier.");
         LamboExpression expression = expression();
@@ -35,7 +36,7 @@ public class Parser {
         return new LamboStatement.Definition(identifier, expression);
     }
 
-    private LamboExpression expression(){
+    private LamboExpression expression() throws ParseError {
         if(peek().getTokenType() == TokenType.IDENTIFIER){
             return variable();
         }
@@ -48,14 +49,14 @@ public class Parser {
         throw error(peek(), "Expected expression.");
     }
 
-    private LamboExpression.Variable variable(){
+    private LamboExpression.Variable variable() throws ParseError {
         if(match(TokenType.IDENTIFIER)){
             return new LamboExpression.Variable(previous());
         }
         throw error(peek(), "Expected lambda expression.");
     }
 
-    private LamboExpression expressionHead(){
+    private LamboExpression expressionHead() throws ParseError {
         consume(TokenType.LEFT_PAREN, "Expected '('.");
         List<LamboExpression.Variable> variables = new ArrayList<>();
         while(peek().getTokenType() == TokenType.IDENTIFIER){
@@ -77,7 +78,7 @@ public class Parser {
         return abstraction;
     }
 
-    private LamboExpression expressionBody(){
+    private LamboExpression expressionBody() throws ParseError {
         consume(TokenType.LEFT_BRACE, "Expected '{'.");
         LamboExpression expression = expression();
         while (List.of(TokenType.LEFT_BRACE, TokenType.LEFT_PAREN, TokenType.IDENTIFIER)
@@ -90,7 +91,7 @@ public class Parser {
     }
 
 
-    private Token consume(TokenType type, String message) {
+    private Token consume(TokenType type, String message) throws ParseError {
         if (check(type)) return advance();
 
         throw error(peek(), message);
@@ -129,8 +130,7 @@ public class Parser {
     }
 
     private ParseError error(Token token, String message) {
-        Lambo.error(token, message);
-        return new ParseError();
+        return new ParseError(token, message);
     }
 
     private void synchronize() {

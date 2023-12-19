@@ -1,7 +1,7 @@
 import Editor from "@monaco-editor/react"
 import './App.css'
 
-import { useState, useEffect } from 'react'
+import {useState, useEffect, useRef} from 'react'
 import {text} from './examplecode.js'
 
 
@@ -27,6 +27,7 @@ function App() {
     );
 }
 function MainPage() {
+    const editorRef = useRef(null)
     const [content, setContent] = useState(() => {
         const content = window.sessionStorage.getItem("content")
         return content || text
@@ -74,6 +75,54 @@ function MainPage() {
             })
     }
 
+    const handleSyntaxCheck = () => {
+        const payload = window.sessionStorage.getItem("content")
+        fetch("http://localhost:8080/api/syntax", {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            body: payload,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                if (data.error) {
+                    const marker = {
+                        severity: monaco.MarkerSeverity.Error,
+                        message: data.error.message,
+                        startLineNumber: data.error.line,
+                        startColumn: 1,
+                        endLineNumber: data.error.line,
+                        endColumn: 100,
+                    }
+                    const markers = [marker]
+                    monaco.editor.setModelMarkers(editorRef.current.getModel(), "test", markers)
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error)
+            })
+    }
+
+    const handleDefinitionSubstitution = () => {
+        const payload = window.sessionStorage.getItem("content")
+        fetch("http://localhost:8080/api/substitution", {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            body: payload,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error:", error)
+            })
+    }
+
     return (
         <div className="App">
             <div className="sidebar">
@@ -85,7 +134,8 @@ function MainPage() {
             </div>
             <div className="content">
                 <div className="toolbar">
-                    <button>Definitionen-Substitution</button>
+                    <button onClick={handleSyntaxCheck}>Syntax-Überprüfung</button>
+                    <button onClick={handleDefinitionSubstitution}>Definitionen-Substitution</button>
                     <button onClick={handleBetaReduction}>Beta-Reduktion</button>
                     <button onClick={handleReset}>Zurücksetzen</button>
                 </div>
@@ -96,6 +146,9 @@ function MainPage() {
                     defaultLanguage="text"
                     value={String(content)}
                     onChange={handleEditorChange}
+                    editorDidMount={(editor, _) => {
+                        editorRef.current = editor
+                    }}
                 />
             </div>
         </div>
