@@ -6,14 +6,8 @@ body, html {
 }
 
 button {
-    margin-right: 10px;
-}
-
-.buttons {
-    position: fixed;
-    top: 10px;
-    right: 136px;
-    z-index: 1;
+    margin-left: 10px;
+    background-color: #555555;
 }
 
 .App {
@@ -23,12 +17,11 @@ button {
 .sidebar {
     width: 250px;
     min-width: 100px;
-    background-color: #f1f1f1;
+    background-color: #2b2d30;
 }
 
 .content {
     flex-grow: 1;
-    padding: 10px;
 }
 
 .sidebar ul {
@@ -47,4 +40,12 @@ button {
 
 .sidebar ul li a:hover {
     color: #555;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding: 10px;
+    background-color: #252526;
 }
