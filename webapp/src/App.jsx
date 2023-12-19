@@ -4,7 +4,29 @@ import './App.css'
 import { useState, useEffect } from 'react'
 import {text} from './examplecode.js'
 
+
 function App() {
+    const [statusOk, setStatusOk] = useState(false);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/status").then((response) => {
+            if (response.status !== 200) {
+                setStatusOk(false);
+            }else{
+                setStatusOk(true);
+            }
+        });
+    }, []);
+
+    if (statusOk) {
+        return <MainPage />;
+    } else return (
+        <div className="App">
+            <h1>Der Server ist gerade nicht erreichbar</h1>
+        </div>
+    );
+}
+function MainPage() {
     const [content, setContent] = useState(() => {
         const content = window.sessionStorage.getItem("content")
         return content || text
@@ -31,8 +53,25 @@ function App() {
     }
 
     const handleReset = () => {
-        console.log("reset")
         setContent(text)
+    }
+
+    const handleBetaReduction = () => {
+        const payload = window.sessionStorage.getItem("content")
+        fetch("http://localhost:8080/api/reduction", {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            body: payload,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error:", error)
+            })
     }
 
     return (
@@ -47,7 +86,7 @@ function App() {
             <div className="content">
                 <div className="toolbar">
                     <button>Definitionen-Substitution</button>
-                    <button>Beta-Reduktion</button>
+                    <button onClick={handleBetaReduction}>Beta-Reduktion</button>
                     <button onClick={handleReset}>Zurücksetzen</button>
                 </div>
                 <Editor
