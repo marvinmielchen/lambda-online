@@ -16,7 +16,10 @@ function App() {
                 </ul>
             </div>
             <div className="content">
-                <button>Substitute Definitions</button>
+                <div className="buttons">
+                    <button>Definitionen einsetzen</button>
+                    <button>Beta-Reduktion</button>
+                </div>
                 <Editor
                     height="100vh"
                     width="100%"
