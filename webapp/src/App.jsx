@@ -65,6 +65,7 @@ function MainPage() {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data)
+                //TODO: set content
             })
             .catch((error) => {
                 console.error("Error:", error)
@@ -116,6 +117,7 @@ function MainPage() {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data)
+                //TODO: set content
             })
             .catch((error) => {
                 console.error("Error:", error)
