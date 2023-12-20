@@ -28,10 +28,10 @@ public class Parser {
     }
 
     private LamboStatement statement() throws ParseError {
-        consume(TokenType.DEF, "Expected 'def'.");
-        Token identifier = consume(TokenType.IDENTIFIER, "Expected identifier.");
+        consume(TokenType.DEF, "Expected 'def'.", peek());
+        Token identifier = consume(TokenType.IDENTIFIER, "Expected identifier.", previous());
         LamboExpression expression = expression();
-        consume(TokenType.SEMICOLON, "Expected ';'.");
+        consume(TokenType.SEMICOLON, "Expected ';'.", previous());
 
         return new LamboStatement.Definition(identifier, expression);
     }
@@ -46,7 +46,7 @@ public class Parser {
         if (peek().getTokenType() == TokenType.LEFT_PAREN){
             return expressionHead();
         }
-        throw error(peek(), "Expected expression.");
+        throw error(previous(), "Expected expression.");
     }
 
     private LamboExpression.Variable variable() throws ParseError {
@@ -57,13 +57,13 @@ public class Parser {
     }
 
     private LamboExpression expressionHead() throws ParseError {
-        consume(TokenType.LEFT_PAREN, "Expected '('.");
+        consume(TokenType.LEFT_PAREN, "Expected '('.", previous());
         List<LamboExpression.Variable> variables = new ArrayList<>();
         while(peek().getTokenType() == TokenType.IDENTIFIER){
             LamboExpression.Variable variable = variable();
             variables.add(variable);
         }
-        consume(TokenType.RIGHT_PAREN, "Expected ')'.");
+        consume(TokenType.RIGHT_PAREN, "Expected ')'.", previous());
         LamboExpression expression = expressionBody();
         if(variables.isEmpty()){
             return expression;
@@ -79,22 +79,22 @@ public class Parser {
     }
 
     private LamboExpression expressionBody() throws ParseError {
-        consume(TokenType.LEFT_BRACE, "Expected '{'.");
+        consume(TokenType.LEFT_BRACE, "Expected '{'.", previous());
         LamboExpression expression = expression();
         while (List.of(TokenType.LEFT_BRACE, TokenType.LEFT_PAREN, TokenType.IDENTIFIER)
                 .contains(peek().getTokenType())){
             LamboExpression newExpression = expression();
             expression = new LamboExpression.Application(expression, newExpression);
         }
-        consume(TokenType.RIGHT_BRACE, "Expected '}'.");
+        consume(TokenType.RIGHT_BRACE, "Expected '}'.", previous());
         return expression;
     }
 
 
-    private Token consume(TokenType type, String message) throws ParseError {
+    private Token consume(TokenType type, String message, Token errorToken) throws ParseError {
         if (check(type)) return advance();
 
-        throw error(peek(), message);
+        throw error(errorToken, message);
     }
 
     private boolean match(TokenType... types) {

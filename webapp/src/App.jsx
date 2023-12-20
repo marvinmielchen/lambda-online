@@ -49,10 +49,6 @@ function MainPage() {
         setContent(content)
     }, [])
 
-    const handleEditorChange = (value) => {
-        setContent(value)
-    }
-
     const handleReset = () => {
         setContent(text)
     }
@@ -75,18 +71,18 @@ function MainPage() {
             })
     }
 
-    const handleSyntaxCheck = () => {
+    const handleSyntaxCheck = (value) => {
+        setContent(value)
         const payload = window.sessionStorage.getItem("content")
         fetch("http://localhost:8080/api/syntax", {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
             },
-            body: payload,
+            body: value,
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
                 if (data.error) {
                     const marker = {
                         severity: monaco.MarkerSeverity.Error,
@@ -97,6 +93,9 @@ function MainPage() {
                         endColumn: 100,
                     }
                     const markers = [marker]
+                    monaco.editor.setModelMarkers(editorRef.current.getModel(), "test", markers)
+                }else{
+                    const markers = []
                     monaco.editor.setModelMarkers(editorRef.current.getModel(), "test", markers)
                 }
             })
@@ -134,7 +133,6 @@ function MainPage() {
             </div>
             <div className="content">
                 <div className="toolbar">
-                    <button onClick={handleSyntaxCheck}>Syntax-Überprüfung</button>
                     <button onClick={handleDefinitionSubstitution}>Definitionen-Substitution</button>
                     <button onClick={handleBetaReduction}>Beta-Reduktion</button>
                     <button onClick={handleReset}>Zurücksetzen</button>
@@ -145,8 +143,8 @@ function MainPage() {
                     theme="vs-dark"
                     defaultLanguage="text"
                     value={String(content)}
-                    onChange={handleEditorChange}
-                    editorDidMount={(editor, _) => {
+                    onChange={handleSyntaxCheck}
+                    onMount={(editor, _) => {
                         editorRef.current = editor
                     }}
                 />
