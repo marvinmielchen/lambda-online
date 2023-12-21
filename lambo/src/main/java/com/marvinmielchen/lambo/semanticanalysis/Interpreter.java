@@ -8,6 +8,7 @@ import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +20,19 @@ public class Interpreter {
 
     public HashMap<String, DeBruijnExpression> calculateBindingEnvironment(List<LamboStatement> statements) throws RuntimeError {
         HashMap<String, DeBruijnExpression> environment = new HashMap<>();
+        List<String> reservedVariables = new ArrayList<>();
+        for (LamboStatement statement : statements){
+            if( statement instanceof LamboStatement.Definition definition){
+                reservedVariables.add(definition.getIdentifier().getLexeme());
+            }
+        }
         for (LamboStatement statement : statements) {
             if(statement instanceof LamboStatement.Definition definition){
                 Token lambdaVar = definition.getIdentifier();
                 if(environment.containsKey(lambdaVar.getLexeme())){
                     throw new RuntimeError(lambdaVar.getLine(), String.format("Variable %s already defined in this scope", lambdaVar.getLexeme()));
                 }else {
-                    DeBruijnTranslator translator = new DeBruijnTranslator(definition.getExpression());
+                    DeBruijnTranslator translator = new DeBruijnTranslator(reservedVariables, definition.getExpression());
                     environment.put(lambdaVar.getLexeme(), translator.translate());
                 }
             }

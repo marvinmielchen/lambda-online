@@ -3,12 +3,16 @@ package com.marvinmielchen.lambo.intermediaterep;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpression>{
 
     private DeBruijnEnvironment environment = new DeBruijnEnvironment(null);
+    private final List<String> reservedVariables;
     private final LamboExpression input;
 
     public DeBruijnExpression translate() throws RuntimeError {
@@ -18,7 +22,7 @@ public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpre
     @Override
     public DeBruijnExpression visit(LamboExpression.Abstraction abstraction) throws RuntimeError{
         Token lambdaVar = abstraction.getBoundVariable().getToken();
-        if(environment.contains(lambdaVar.getLexeme())){
+        if(environment.contains(lambdaVar.getLexeme()) || reservedVariables.contains(lambdaVar.getLexeme())){
             throw new RuntimeError(lambdaVar.getLine(), String.format("Variable %s already defined in this scope", lambdaVar.getLexeme()));
         }
         environment = new DeBruijnEnvironment(environment);
