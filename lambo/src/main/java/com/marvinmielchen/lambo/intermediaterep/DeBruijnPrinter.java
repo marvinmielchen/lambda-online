@@ -31,6 +31,7 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
             builder.append(getAbstractionName(innerAbstraction));
             localAbstraction = innerAbstraction;
         }
+        DAS HIER FUNZT NICHT WENN MAN DAS REVERSE CURRYING MACHT GEHT DER INTERPERTER KAPUTT
          */
         builder.append(")");
         builder.append("{\n");
