@@ -15,7 +15,7 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
     private int indentAmount = 0;
 
     public String evaluate(){
-        return "\ndef " + this.defName + " " + this.input.accept(this) + ";";
+        return "\ndef " + this.defName + " " + this.input.accept(this) + ";\n";
     }
 
     @Override
