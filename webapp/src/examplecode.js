@@ -12,4 +12,10 @@ def false(t f){
     f
 };
 
+def if(cond a b){
+    cond a b
+};
+
+def result {if true g h};
+
 `

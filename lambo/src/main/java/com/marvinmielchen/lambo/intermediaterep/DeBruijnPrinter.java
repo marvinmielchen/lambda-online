@@ -30,11 +30,18 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
         }
         nameSpace.push(name);
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format("(%s){\n", name));
+
+        builder.append("(");
+        builder.append(name);
+        builder.append(")");
+        builder.append("{\n");
         indentAmount++;
-        builder.append(String.format("%s%s\n", indent(), abstraction.getBody().accept(this)));
+        builder.append(indent());
+        builder.append(abstraction.getBody().accept(this));
+        builder.append("\n");
         indentAmount--;
-        builder.append(String.format("%s}", indent()));
+        builder.append(indent());
+        builder.append("}");
         nameSpace.pop();
         return builder.toString();
     }
@@ -42,21 +49,26 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
     @Override
     public String visit(DeBruijnExpression.Application application) {
         StringBuilder builder = new StringBuilder();
-        if ((application.getLeft() instanceof DeBruijnExpression.Variable)
-                && application.getRight() instanceof DeBruijnExpression.Variable){
-            builder.append(String.format("%s %s", application.getLeft().accept(this), application.getRight().accept(this)));
-            return builder.toString();
-        } else {
-            builder.append(String.format("%s\n", application.getLeft().accept(this)));
-        }
-        if (application.getRight() instanceof DeBruijnExpression.Application){
-            builder.append(String.format("%s{\n", indent()));
+        if(application.getLeft() instanceof DeBruijnExpression.Abstraction ||
+                application.getRight() instanceof DeBruijnExpression.Abstraction ||
+                application.getRight() instanceof DeBruijnExpression.Application ||
+                application.getLeft() instanceof DeBruijnExpression.Application
+        ) {
+            builder.append("{\n");
             indentAmount++;
-            builder.append(String.format("%s%s\n", indent(), application.getRight().accept(this)));
+            builder.append(indent()).append(application.getLeft().accept(this));
+            builder.append("\n");
+            builder.append(indent()).append(application.getRight().accept(this));
+            builder.append("\n");
             indentAmount--;
-            builder.append(String.format("%s}", indent()));
+            builder.append(indent());
+            builder.append("}");
         } else {
-            builder.append(String.format("%s%s", indent(), application.getRight().accept(this)));
+            builder.append("{");
+            builder.append(application.getLeft().accept(this));
+            builder.append(" ");
+            builder.append(application.getRight().accept(this));
+            builder.append("}");
         }
         return builder.toString();
     }

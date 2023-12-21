@@ -50,6 +50,7 @@ function MainPage() {
     }, [])
 
     const handleReset = () => {
+        displayErrors({})
         setContent(text)
     }
 
@@ -64,8 +65,10 @@ function MainPage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
-                //TODO: set content
+                displayErrors(data)
+                if(data.result){
+                    setContent(data.result)
+                }
             })
             .catch((error) => {
                 console.error("Error:", error)
@@ -84,21 +87,7 @@ function MainPage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.error) {
-                    const marker = {
-                        severity: monaco.MarkerSeverity.Error,
-                        message: data.error.message,
-                        startLineNumber: data.error.line,
-                        startColumn: 1,
-                        endLineNumber: data.error.line,
-                        endColumn: 100,
-                    }
-                    const markers = [marker]
-                    monaco.editor.setModelMarkers(editorRef.current.getModel(), "test", markers)
-                }else{
-                    const markers = []
-                    monaco.editor.setModelMarkers(editorRef.current.getModel(), "test", markers)
-                }
+                displayErrors(data)
             })
             .catch((error) => {
                 console.error("Error:", error)
@@ -116,12 +105,32 @@ function MainPage() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
-                //TODO: set content
+                displayErrors(data)
+                if(data.result){
+                    setContent(data.result)
+                }
             })
             .catch((error) => {
                 console.error("Error:", error)
             })
+    }
+
+    const displayErrors = (data) => {
+        if (data.error) {
+            const marker = {
+                severity: monaco.MarkerSeverity.Error,
+                message: data.error.message,
+                startLineNumber: data.error.line,
+                startColumn: 1,
+                endLineNumber: data.error.line,
+                endColumn: 100,
+            }
+            const markers = [marker]
+            monaco.editor.setModelMarkers(editorRef.current.getModel(), "test", markers)
+        }else{
+            const markers = []
+            monaco.editor.setModelMarkers(editorRef.current.getModel(), "test", markers)
+        }
     }
 
     return (

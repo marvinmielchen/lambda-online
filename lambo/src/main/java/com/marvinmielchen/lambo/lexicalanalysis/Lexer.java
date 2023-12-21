@@ -45,7 +45,7 @@ public class Lexer {
             case ' ': case '\r': case '\t': break;
             case '\n': line++; break;
             default:
-                if (isAlpha(c)) {
+                if (isAlphaNumeric(c)) {
                     identifierOrKeyword();
                 } else {
                     throw new LexingError(line, "Unexpected character.");
@@ -64,9 +64,10 @@ public class Lexer {
     }
 
     private boolean isAlpha(char c) {
+
         return (c >= 'a' && c <= 'z') ||
                 (c >= 'A' && c <= 'Z') ||
-                c == '_';
+                c == '_' || c == '\'';
     }
 
     private boolean isAlphaNumeric(char c) {

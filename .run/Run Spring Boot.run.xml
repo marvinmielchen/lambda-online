@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Spring Boot" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="lambo" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.marvinmielchen.lambo.LamboApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
