@@ -15,7 +15,7 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
     private int indentAmount = 0;
 
     public String evaluate(){
-        return "\ndef " + this.defName + " " + this.input.accept(this) + ";\n";
+        return "\ndef " + this.defName + " " + this.input.accept(this) + "\n";
     }
 
     @Override
@@ -25,11 +25,13 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
         DeBruijnExpression.Abstraction localAbstraction = abstraction;
         builder.append("(");
         builder.append(name);
+        /*
         while (localAbstraction.getBody() instanceof DeBruijnExpression.Abstraction innerAbstraction){
             builder.append(" ");
             builder.append(getAbstractionName(innerAbstraction));
             localAbstraction = innerAbstraction;
         }
+         */
         builder.append(")");
         builder.append("{\n");
         indentAmount++;

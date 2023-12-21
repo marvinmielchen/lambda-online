@@ -31,8 +31,6 @@ public class Parser {
         consume(TokenType.DEF, "Expected 'def'.", peek());
         Token identifier = consume(TokenType.IDENTIFIER, "Expected identifier.", previous());
         LamboExpression expression = expression();
-        consume(TokenType.SEMICOLON, "Expected ';'.", previous());
-
         return new LamboStatement.Definition(identifier, expression);
     }
 
