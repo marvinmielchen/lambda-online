@@ -20,24 +20,21 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
 
     @Override
     public String visit(DeBruijnExpression.Abstraction abstraction) {
-        String name = abstraction.getOldTokenLexeme();
-        name = nameSpace.contains(name) ? name + "'" : name;
-        if(nameSpace.contains(name)) {
-            name = nextName(abstraction.getOldTokenLexeme());
-        }
-        while(nameSpace.contains(name)){
-            name = nextName(name);
-        }
-        nameSpace.push(name);
+        String name = getAbstractionName(abstraction);
         StringBuilder builder = new StringBuilder();
-
+        DeBruijnExpression.Abstraction localAbstraction = abstraction;
         builder.append("(");
         builder.append(name);
+        while (localAbstraction.getBody() instanceof DeBruijnExpression.Abstraction innerAbstraction){
+            builder.append(" ");
+            builder.append(getAbstractionName(innerAbstraction));
+            localAbstraction = innerAbstraction;
+        }
         builder.append(")");
         builder.append("{\n");
         indentAmount++;
         builder.append(indent());
-        builder.append(abstraction.getBody().accept(this));
+        builder.append(localAbstraction.getBody().accept(this));
         builder.append("\n");
         indentAmount--;
         builder.append(indent());
@@ -98,5 +95,18 @@ public class DeBruijnPrinter implements DeBruijnExpression.Visitor<String> {
 
     private String indent(){
         return "    ".repeat(indentAmount);
+    }
+
+    private String getAbstractionName(DeBruijnExpression.Abstraction abstraction){
+        String name = abstraction.getOldTokenLexeme();
+        name = nameSpace.contains(name) ? name + "'" : name;
+        if(nameSpace.contains(name)) {
+            name = nextName(abstraction.getOldTokenLexeme());
+        }
+        while(nameSpace.contains(name)){
+            name = nextName(name);
+        }
+        nameSpace.push(name);
+        return name;
     }
 }
