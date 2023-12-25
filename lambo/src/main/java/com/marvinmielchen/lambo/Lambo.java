@@ -1,5 +1,6 @@
 package com.marvinmielchen.lambo;
 
+import com.marvinmielchen.lambo.intermediaterep.DeBruijnAlphaEquivalence;
 import com.marvinmielchen.lambo.intermediaterep.DeBruijnExpression;
 import com.marvinmielchen.lambo.intermediaterep.DeBruijnPrinter;
 import com.marvinmielchen.lambo.lexicalanalysis.Lexer;
@@ -7,12 +8,14 @@ import com.marvinmielchen.lambo.lexicalanalysis.LexingError;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.semanticanalysis.Interpreter;
 import com.marvinmielchen.lambo.semanticanalysis.RuntimeError;
+import com.marvinmielchen.lambo.syntacticanalysis.LamboExpression;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
 import com.marvinmielchen.lambo.syntacticanalysis.ParseError;
 import com.marvinmielchen.lambo.syntacticanalysis.Parser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,7 +41,32 @@ public class Lambo {
         List<LamboStatement> statements = syntaxCheck(source);
         HashMap<String, DeBruijnExpression> env = interpreter.calculateBindingEnvironment(statements);
         env = interpreter.performSomeBetaReductions(env);
-        return stringifyStatements(statements, env);
+
+        HashMap<String, DeBruijnExpression> alphaEquivalentEnv = new HashMap<>();
+        for (LamboStatement statement1 : statements) {
+            if (statement1 instanceof LamboStatement.Definition definition) {
+                boolean foundEquivalence = false;
+                for (String key : alphaEquivalentEnv.keySet()) {
+                    DeBruijnAlphaEquivalence deBruijnAlphaEquivalence = new DeBruijnAlphaEquivalence(
+                            env.get(definition.getIdentifier().getLexeme()),
+                            alphaEquivalentEnv.get(key)
+                    );
+                    if (deBruijnAlphaEquivalence.evaluate()) {
+                        foundEquivalence = true;
+                        alphaEquivalentEnv.put(
+                                definition.getIdentifier().getLexeme(),
+                                new DeBruijnExpression.Variable(key));
+                        break;
+                    }
+                }
+                if (!foundEquivalence) {
+                    alphaEquivalentEnv.put(
+                            definition.getIdentifier().getLexeme(),
+                            env.get(definition.getIdentifier().getLexeme()));
+                }
+            }
+        }
+        return stringifyStatements(statements, alphaEquivalentEnv);
     }
 
     public static synchronized String statementSubstitution(String source) throws LexingError, ParseError, RuntimeError {

@@ -1,7 +1,6 @@
 package com.marvinmielchen.lambo.semanticanalysis;
 
 
-import com.marvinmielchen.lambo.Lambo;
 import com.marvinmielchen.lambo.intermediaterep.*;
 import com.marvinmielchen.lambo.lexicalanalysis.Token;
 import com.marvinmielchen.lambo.syntacticanalysis.LamboStatement;
@@ -57,7 +56,4 @@ public class Interpreter {
         }
         return newEnvironment;
     }
-
-
-
 }
