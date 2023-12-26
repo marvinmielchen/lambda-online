@@ -1,9 +1,12 @@
 \documentclass{report}
 
 % Packages
+\usepackage[style=ieee]{biblatex}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+
+\addbibresource{literatur.bib}
 
 % Title page
 \title{Thesis Title}
@@ -15,6 +18,16 @@
 \maketitle
 
 \chapter{Introduction}
+
+
+
+- es muss einen Teil in der Arbeit geben der sich mit den Limitierungen der Arbeit beschäftigt
+    - probleme mit rekusion in lambo
+    - probleme mit speicher in lambo: z.B. sind while schleifen über große arrays wahrscheinlich nicht möglich weil alle expressions ausgewertet werden müssen und
+    das also nicht "echt" iterativ ist
+    - usw.
+
+    
 % BEGIN: Introduction
 This is the introduction of your thesis.
 % END: Introduction
@@ -37,6 +50,9 @@ This is the results section of your thesis.
 \chapter{Conclusion}
 % BEGIN: Conclusion
 This is the conclusion of your thesis.
+\cite{dao}
 % END: Conclusion
+
+\printbibliography
 
 \end{document}

@@ -1,10 +1,1 @@
-latex/*.gz
-latex/*.fdb_latexmk
-latex/*.fls
-latex/*.log
-latex/*.out
-latex/*.synctex.gz
-latex/*.pdf
-latex/*.aux
-
 .idea

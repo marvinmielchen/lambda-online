@@ -1,0 +1,28 @@
+# LaTeX build files
+*.aux
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.bbl
+*.blg
+*.out
+*.lot
+*.lof
+*.bcf
+
+# LaTeX output files
+*.pdf
+*.dvi
+*.ps
+
+# LaTeX editor files
+*.swp
+*.bak
+*.synctex(busy)
+*.synctex.gz(busy)
+*.synctex.gz(busy_uncompressed)
+
+
+*.run.xml
