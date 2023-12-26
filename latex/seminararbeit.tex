@@ -1,15 +1,19 @@
-\documentclass{report}
+\documentclass{article}
+\usepackage{csquotes}
 
 % Packages
+\usepackage[german]{babel}
+
 \usepackage[style=ieee]{biblatex}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{hyperref} 
 
 \addbibresource{literatur.bib}
 
 % Title page
-\title{Thesis Title}
+\title{Implementierung eines Interpreters für eine Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes.}
 \author{Marvin Mielchen}
 \date{\today}
 
@@ -17,7 +21,7 @@
 
 \maketitle
 
-\chapter{Introduction}
+\section{Introduction}
 
 
 
@@ -32,27 +36,26 @@
 This is the introduction of your thesis.
 % END: Introduction
 
-\chapter{Background}
+\section{Background}
 % BEGIN: Background
 This is the background section of your thesis.
 % END: Background
 
-\chapter{Methodology}
+\section{Methodology}
 % BEGIN: Methodology
 This is the methodology section of your thesis.
 % END: Methodology
 
-\chapter{Results}
+\section{Results}
 % BEGIN: Results
 This is the results section of your thesis.
 % END: Results
 
-\chapter{Conclusion}
+\section{Conclusion}
 % BEGIN: Conclusion
 This is the conclusion of your thesis.
-\cite{dao}
+\cite[S. 8]{nystrom}
 % END: Conclusion
 
 \printbibliography
-
 \end{document}
