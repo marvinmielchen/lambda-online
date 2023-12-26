@@ -13,7 +13,7 @@
 \addbibresource{literatur.bib}
 
 % Title page
-\title{Implementierung eines Interpreters für eine Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes.}
+\title{Implementierung eines Interpreters für eine simple Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes.}
 \author{Marvin Mielchen}
 \date{\today}
 
@@ -21,41 +21,64 @@
 
 \maketitle
 
-\section{Introduction}
-
-
-
+%\cite[S. 8]{nystrom}
 - es muss einen Teil in der Arbeit geben der sich mit den Limitierungen der Arbeit beschäftigt
     - probleme mit rekusion in lambo
     - probleme mit speicher in lambo: z.B. sind while schleifen über große arrays wahrscheinlich nicht möglich weil alle expressions ausgewertet werden müssen und
     das also nicht "echt" iterativ ist
     - usw.
 
-    
-% BEGIN: Introduction
-This is the introduction of your thesis.
-% END: Introduction
+\section{Einleitung}
 
-\section{Background}
-% BEGIN: Background
-This is the background section of your thesis.
-% END: Background
+\subsection{Hintergrund und Motivation}
 
-\section{Methodology}
-% BEGIN: Methodology
-This is the methodology section of your thesis.
-% END: Methodology
+Im Jahr 1936 veröffentlichte Alonzo Church seine Arbeit (AUSFÜLLEN!!!) in der er den Lambda-Kalkül einführte. 
+Der Lambda-Kalkül ist eine formale Sprache, die zur Untersuchung von Funktionen und deren Auswertung dient. Er ist die Grundlage der funktionalen Programmierung und hat einen großen Einfluss auf die Entwicklung von Programmiersprachen wie Lisp, ML, Haskell und vielen anderen.
+Mit dem Lambda-Kalkül gibt es neben dem gängigen Modell der Turingmaschine ein weiteres Modell der Berechenbarkeit. Alle Berechnungen, die mit einer Turingmaschine durchgeführt werden können, können auch mit dem Lambda-Kalkül durchgeführt werden und umgekehrt.
+Gleichzeitig entsprechen die Probleme die von Turingmaschinen gelöst werden können genau den intuitiv berechenbaren Problemen und das gilt so also auch für die Probleme, die mit dem Lambda-Kalkül modeliert werden können.
+Der Lambda-Kalkül ist also ein universelles Modell der Berechenbarkeit und ist damit ein wichtiger Bestandteil der theoretischen Informatik. Viele Funktionale Sprachen werden auf den Grundlagen des Lambda Kalküls aufgebaut obwol unsere modernen Rechner mit ihrer von Neuman Architektur (CITE!) eher zu dem Modell der Turingmaschine passen.
+Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System ausgewertet werden kann ist also eine interressante und komplizierte Problemstellung und soll die Motivation für diese Arbeit sein.
 
-\section{Results}
-% BEGIN: Results
-This is the results section of your thesis.
-% END: Results
+\subsection{Ziel der Hausarbeit}
 
-\section{Conclusion}
-% BEGIN: Conclusion
-This is the conclusion of your thesis.
-\cite[S. 8]{nystrom}
-% END: Conclusion
+- es soll auf der basis des untypisierten lambda Kalküls eine Sprache entwickelt werden die turingvollstäding (wenn auch nicht praktisch ist)
+    - es werden also nur die allernötigsten features implementiert und entscheidende Eigenschaften einer "nützlichen" Sprache gegen Funktionalität eingetauscht die eine einfache und verständliche Interaktion mit den Regeln des Lambda Kalküls ermöglichen
+- es soll ein Tree-Walk Interpreter entwickelt werden der die Sprache auswertet und dabei grundlegenden Anforderungen an einen modernen Interpreter und Ansprüchen an solche Implementationen zumindest im Ansatz gerecht wird 
+- (optional) villeicht noch evaluation in irgendeiner form und vergleich mit anderen Sprachen 
+- auch limitierungen der implementation betrachten (die sind schon schwerwiegend)
 
-\printbibliography
+- im Anhang kann noch auf die Website eingegangen werden die eine Interaktion mit der entwickelten Sprache ermöglicht
+
+\subsection{Übersicht über die folgenden Abschnitte}
+
+
+
+\section{Grundlagen}
+
+\subsection{Lambda-Kalkül}
+
+\subsubsection{Einfürhung in das Lambda-Kalkül}
+
+\subsubsection{Darsellung von Lambda-Termen}
+
+\subsubsection{Reduktionsregeln}
+
+\subsubsection{Alpha-Äquivalenz}
+
+\subsubsection{De-Bruijn-Indizes}
+
+\subsection{Auswertung von Programmiersprache im Algemeinen}
+
+\subsubsection{Tree-Walk Interpreter}
+
+\subsubsection{Hieracrhie der Analyse - Lexer, Parser, Interpreter}
+
+
+\section{Design und Implementierung des Interpreters}
+
+
+
+
+
+%\printbibliography
 \end{document}
