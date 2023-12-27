@@ -1,7 +1,9 @@
 \documentclass{article}
-\usepackage{csquotes}
+
 
 % Packages
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
 \usepackage[german]{babel}
 \usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
 \usepackage[style=ieee]{biblatex}
@@ -70,6 +72,13 @@ Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System aus
 Der Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird und dieselbe Klasse von berechenbaren Funktionen definiert wie die Turing-Maschine.
 In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
 
+\begin{align*}
+    \text{\textless ausdruck\textgreater} & ::= \text{\textless variable\textgreater} \\
+                      & \; | \; ( \lambda \text{\textless variable\textgreater} . \text{\textless ausdruck\textgreater} )\\
+                      & \; | \; (\text{\textless ausdruck\textgreater} \; \text{\textless ausdruck\textgreater})
+\end{align*}
+
+
 
 Ein Lambda Ternm is dabei entweder eine Variable, eine Abstraktion oder eine Applikation.
 Variablen wie z.B. $x, y, z, ...$ können dabei beliebige Zeichenketten außer das Lambda Symbol $\lambda$, oder die Klammern und der Punkt sein und funktionieren so ähnlich wie Variablen in der Mathematik da man ihnen Werte zuweisen kann.
@@ -90,6 +99,8 @@ Die Applikation entspricht dabei dem Aufruf einer Funktion in der Mathematik. De
 Sowohl die Applikation als auch die Abstraktion stehen allerdings in Klammern. Das ist notwendig um bei verschachtelten Applikationen und Abstraktionen die Reihenfolge der Auswertung festzulegen.
 
 \subsubsection{Abstraktion}
+
+
 
 \subsubsection{Applikation}
 
