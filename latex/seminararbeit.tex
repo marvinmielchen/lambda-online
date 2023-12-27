@@ -3,18 +3,27 @@
 
 % Packages
 \usepackage[german]{babel}
-
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
 \usepackage[style=ieee]{biblatex}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage{hyperref} 
+\usepackage{hyperref}
+\usepackage{titling}
 
 \addbibresource{literatur.bib}
 
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
 % Title page
-\title{Implementierung eines Interpreters für eine simple Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
+\title{Implementierung eines Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
 \author{Marvin Mielchen}
+\subtitle{Hausarbeit aus dem Seminar: Grundlagen und Meilensteine der funktionalen Programmierung}
 \date{\today}
 
 \begin{document}
@@ -27,6 +36,7 @@
     - probleme mit speicher in lambo: z.B. sind while schleifen über große arrays wahrscheinlich nicht möglich weil alle expressions ausgewertet werden müssen und
     das also nicht "echt" iterativ ist
     - usw.
+- DER Lambda Kalkül (üpberall ausbessern)
 
 \section{Einleitung}
 
@@ -51,19 +61,40 @@ Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System aus
 
 \subsection{Übersicht über die folgenden Abschnitte}
 
-
-
 \section{Grundlagen}
 
 \subsection{Lambda-Kalkül}
 
 \subsubsection{Einfürhung in das Lambda-Kalkül}
 
-\subsubsection{Darsellung von Lambda-Termen}
+Der Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird und dieselbe Klasse von berechenbaren Funktionen definiert wie die Turing-Maschine.
+In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
 
-\subsubsection{Reduktionsregeln}
+Ein Lambda Ternm is dabei entweder eine Variable, eine Abstraktion oder eine Applikation.
+Variablen wie z.B. $x, y, z, ...$ können dabei beliebige Zeichenketten außer das Lambda Symbol $\lambda$, oder die Klammern und der Punkt sein und funktionieren so ähnlich wie Variablen in der Mathematik da man ihnen Werte zuweisen kann.
+
+
+Eine Abstraktion besteht aus dem Lambda Symbol $\lambda$, einer Variablen und einem Punkt gefolgt von einem Lambda Term. 
+
+Beispiel: $\lambda x.x$ oder $\lambda y.y$ oder $\lambda z.z$ o
+
+Die Abstraktion entspricht dabei einer Funktionsdefinition in der Mathematik. Die Variable ist dabei der Funktionsparameter und der Lambda Term ist der Funktionskörper. Die Variable wird dabei gebunden und kann nur innerhalb des Funktionskörpers verwendet werden. Die Abstraktion entspricht also einer Funktion in der Mathematik.
+
+Eine Applikation besteht aus zwei Lambda Termen die durch ein Leerzeichen getrennt sind. 
+
+Beispiel: $(t_1 t_2)$ 
+
+Die Applikation entspricht dabei dem Aufruf einer Funktion in der Mathematik. Der erste Lambda Term ist dabei die Funktion und der zweite Lambda Term ist das Argument. Die Applikation wird dabei von links nach rechts ausgewertet. Der erste Lambda Term muss aber nicht unbedingt eine Abstraktion sein. Er kann auch eine Variable oder eine Applikation sein. In diesem Fall wird der zweite Lambda Term als Argument an den ersten Lambda Term übergeben. Die Applikation entspricht also einem Funktionsaufruf in der Mathematik.
+
+Sowohl die Applikation als auch die Abstraktion stehen allerdings in Klammern. Das ist notwendig um bei verschachtelten Applikationen und Abstraktionen die Reihenfolge der Auswertung festzulegen.
+
+\subsubsection{Abstraktion}
+
+\subsubsection{Applikation}
 
 \subsubsection{Alpha-Äquivalenz}
+
+\subsubsection{Beta Reduktion}
 
 \subsubsection{De-Bruijn-Indizes}
 
@@ -76,34 +107,47 @@ Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System aus
 
 \section{Design und Implementierung des Interpreters}
 
-III. Design und Implementierung des Interpreters
-A. Beschreibung der Programmiersprache "Lambo"
-1. Syntax und Semantik
-2. Beispiele für Lambo-Code
-B. Wahl des Tree-Walk-Interpreters für Lambo
-C. Implementierung des Interpreters
-1. Verwendung von De-Bruijn-Indizes
-2. Herausforderungen und Lösungen
+\subsection{Beschreibung der Programmiersprache Lambo}
 
-IV. Evaluation und Tests
-A. Testfälle und Teststrategien
-B. Performance-Analyse des Interpreters
-C. Vergleich mit anderen Interpretern
+\subsubsection{Syntax und Semantik}
 
-V. Anwendungen und Erweiterungen
-A. Mögliche Anwendungen von Lambo
-B. Potenzielle Erweiterungen des Interpreters
-C. Zukünftige Entwicklungsrichtungen
+\subsubsection{Beispiele für Lambo-Code}
 
-VI. Zusammenfassung und Fazit
-A. Zusammenfassung der Ergebnisse
-B. Schlussfolgerungen und Ausblick
+\subsection{Wahl des Tree-Walk-Interpreters für Lambo}
 
-VII. Literaturverzeichnis
-A. Verwendete Quellen und Referenzen
+\subsection{Implementierung des Interpreters}
+
+\subsubsection{Lexer}
+
+\subsubsection{Parser}
+
+\subsubsection{De-Bruijn-Indizes}
+
+\subsubsection{interpreter}
+
+\subsection{Herausforderungen und Lösungen - Limitierungen der Implementation}
 
 
+\section{Evaluation und Tests}
 
+\subsection{Konstruktion von Natürlichen Zahlen, Boolean Artimethik und Listen}
+
+\subsection{Performance-Analyse des Interpreters}
+
+\subsection{Vergleich mit anderen Interpretern}
+
+
+\section{Zusammenfassung, Fazit und Ausblick}
+
+\subsection{Mögliche Anwendungen von Lambo}
+
+\subsection{Potenzielle Erweiterungen des Interpreters}
+
+\subsection{Zukünftige Entwicklungsrichtungen}
+
+\subsection{Zusammenfassung der Ergebnisse}
+
+\subsection{Schlussfolgerungen und Ausblick}
 
 %\printbibliography
 \end{document}
