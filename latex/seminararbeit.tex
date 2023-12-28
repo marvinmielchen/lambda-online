@@ -1,6 +1,5 @@
 \documentclass{article}
 
-
 % Packages
 \usepackage[utf8]{inputenc}
 \usepackage{csquotes}
@@ -21,7 +20,6 @@
     \begin{center}\large#1\end{center}
     \vskip0.5em}%
 }
-
 
 \title{Implementierung eines Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
 \author{Marvin Mielchen}
@@ -73,14 +71,11 @@ Der Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analy
 In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
 
 \begin{align*}
-    \text{\textless ausdruck\textgreater} & ::= \text{\textless variable\textgreater} \\
-                      & \; | \; ( \lambda \text{\textless variable\textgreater} . \text{\textless ausdruck\textgreater} )\\
-                      & \; | \; (\text{\textless ausdruck\textgreater} \; \text{\textless ausdruck\textgreater})
+    \text{\textless term\textgreater} & ::= \text{\textless variable\textgreater} \\
+                      & \; | \; ( \lambda \text{\textless variable\textgreater} . \text{\textless term\textgreater} )\\
+                      & \; | \; (\text{\textless term\textgreater} \; \text{\textless term\textgreater})
 \end{align*}
-
-
-
-Ein Lambda Ternm is dabei entweder eine Variable, eine Abstraktion oder eine Applikation.
+Ein Lambda Term is dabei entweder eine Variable (z.B. $x, y, z, ...$), eine Abstraktion (z.B. $\lambda x.x$) oder eine Applikation.
 Variablen wie z.B. $x, y, z, ...$ können dabei beliebige Zeichenketten außer das Lambda Symbol $\lambda$, oder die Klammern und der Punkt sein und funktionieren so ähnlich wie Variablen in der Mathematik da man ihnen Werte zuweisen kann.
 
 
