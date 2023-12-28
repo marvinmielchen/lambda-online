@@ -1,9 +1,11 @@
-\documentclass{article}
+\documentclass[ngerman]{article}
 
 % Packages
 \usepackage[utf8]{inputenc}
-\usepackage{csquotes}
 \usepackage[german]{babel}
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+
 \usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
 \usepackage[style=ieee]{biblatex}
 \usepackage{amsmath}
@@ -20,6 +22,8 @@
     \begin{center}\large#1\end{center}
     \vskip0.5em}%
 }
+
+\newcommand{\doublelinebreak}{\par\vspace{\baselineskip}}
 
 \title{Implementierung eines Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
 \author{Marvin Mielchen}
@@ -65,19 +69,32 @@ Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System aus
 
 \subsection{Lambda-Kalkül}
 
-\subsubsection{Einfürhung in den Lambda-Kalkül}
+\subsubsection{Syntax und Regeln im untypisierten Lambda-Kalkül}
 
 Der Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird und dieselbe Klasse von berechenbaren Funktionen definiert wie die Turing-Maschine.
 In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
-
 \begin{align*}
     \text{\textless term\textgreater} & ::= \text{\textless variable\textgreater} \\
                       & \; | \; ( \lambda \text{\textless variable\textgreater} . \text{\textless term\textgreater} )\\
                       & \; | \; (\text{\textless term\textgreater} \; \text{\textless term\textgreater})
 \end{align*}
-Ein Lambda Term is dabei entweder eine Variable (z.B. $x, y, z, ...$), eine Abstraktion (z.B. $\lambda x.x$) oder eine Applikation.
-Variablen wie z.B. $x, y, z, ...$ können dabei beliebige Zeichenketten außer das Lambda Symbol $\lambda$, oder die Klammern und der Punkt sein und funktionieren so ähnlich wie Variablen in der Mathematik da man ihnen Werte zuweisen kann.
+Ein Lambda Term is dabei eine der drei definierten Formen, wobei diese wiederum aus verschachtelten Lambda Termen bestehen können.
 
+Eine Variable $\text{\textless variable\textgreater}$ kann im Lambda-Lalkül eine beliebige Zeichenketten sein (z.B. "x" oder "supervar") soweit keine der folgenden Zeichen enthalten ist: $\lambda$ . ( ). Variablen werden dabei als Platzhalter für beliebige Lambda Terme verwendet oder als formale Parameter von Abstraktionen und können dabei auch mehrfach in einem Lambda Term vorkommen.
+
+$(\lambda \text{\textless variable\textgreater} . \text{\textless term\textgreater})$ heist Abstraktion und representiert eine Funktion. Die Variable ist dabei der formale Funktionsparameter und der Lambda Term nach dem Punkt ist der Funktionskörper. Ein Beispiel für eine Abstraktion ist die Identitätsfunktion $(\lambda x.x)$ welche ein Argument entgegennimmt und dieses unverändert zurückgibt.
+
+$(\text{\textless term\textgreater} \; \text{\textless term\textgreater})$ heist Applikation und representiert den Aufruf einer Funktion. Der erste Lambda Term ist dabei die Funktion und der zweite Lambda Term ist das Argument. Die Applikation wird dabei von links nach rechts ausgewertet. Der erste Lambda Term muss aber nicht unbedingt eine Abstraktion sein. Er kann auch eine Variable oder eine Applikation sein. In diesem Fall wird der zweite Lambda Term als Argument an den ersten Lambda Term übergeben. Ein Beispiel für eine Applikation ist $((\lambda x.x) \; y)$ welches die Identitätsfunktion mit dem Argument $y$ aufruft und dabei $y$ zurückgibt.
+
+\doublelinebreak
+
+kldsflgkj
+
+\doublelinebreak
+
+%ab hier altes Zeug
+entweder eine Variable (z.B. $x, y, z, ...$), eine Abstraktion (z.B. $(\lambda x.x)$) oder eine Applikation (z.B. $()$).
+Variablen wie z.B. $x, y, z, ...$ können dabei beliebige Zeichenketten außer das Lambda Symbol $\lambda$, oder die Klammern und der Punkt sein und funktionieren so ähnlich wie Variablen in der Mathematik da man ihnen Werte zuweisen kann.
 
 Eine Abstraktion besteht aus dem Lambda Symbol $\lambda$, einer Variablen und einem Punkt gefolgt von einem Lambda Term. 
 
