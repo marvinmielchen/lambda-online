@@ -69,7 +69,7 @@ Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System aus
 
 \subsection{Syntax und Regeln im untypisierten Lambda-Kalkül !!ZITATE!!}
 
-Der Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird und dieselbe Klasse von berechenbaren Funktionen definiert wie die Turing-Maschine.
+Der untypisierte Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird und dieselbe Klasse von berechenbaren Funktionen definiert wie die Turing-Maschine.
 In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
 \begin{align*}
     \text{\textless term\textgreater} & ::= \text{\textless variable\textgreater} \\
@@ -86,7 +86,7 @@ $(\text{\textless term\textgreater} \; \text{\textless term\textgreater})$ heist
 
 \doublelinebreak
 Um die Notation zu vereinfachen gibt es einige Konventionen die in der Literatur verwendet werden.
-Zunächst soll Applikation linksassoziativ sein, d.h. $(t_1 \; t_2 \; t_3)$ soll als $((t_1 \; t_2) \; t_3)$ interpretiert werden. Bei einer langen Applikation werden also immer die ersten beiden Terme zuerst ausgewertet und das Ergebnis dann mit dem nächsten Term verknüpft. Die Abstraktion hingegen bindet immer so weit wie möglich nach Rechts. $(\lambda x.x \; x)$ wird also nicht als Applikation von $(\lambda x.x)$ auf $(x \; x)$ interpretiert sondern als Abstraktion von $x$ auf $(x \; x)$. Mit explizieter Klammerung wird der Lambda Term also als $(\lambda x.(x \; x))$ geschrieben. Mit diesen Vereinfachungen kann ein komplexer Lambda Term wie
+Zunächst soll Applikation linksassoziativ sein, d.h. $(t_1 \; t_2 \; t_3)$ soll als $((t_1 \; t_2) \; t_3)$ interpretiert werden. Bei einer langen Applikation werden also immer die ersten beiden Terme zuerst ausgewertet und das Ergebnis dann mit dem nächsten Term verknüpft. Die Abstraktion hingegen bindet immer so weit wie möglich nach Rechts. $(\lambda x.x \; x)$ wird also nicht als Applikation von $(\lambda x.x)$ auf $x$ interpretiert sondern als Abstraktion von $x$ auf $(x \; x)$. Mit explizieter Klammerung wird der Lambda Term also als $(\lambda x.(x \; x))$ geschrieben. Mit diesen Vereinfachungen kann ein komplexer Lambda Term wie
 \begin{align*}
     (\lambda x.(\lambda y.(\lambda z.((x \; z) \; (y \; z)))))
 \end{align*}
@@ -97,9 +97,39 @@ mit der folgenden Schreibweise dargestellt werden:
 
 \doublelinebreak
 
-%Alpha-Äquivalenz
+Ein sinvoller Äquivalenzbegriff für Lambda Terme ist die $\alpha$-Äquivalenz. Zwei Lambda Terme sind genau dann $\alpha$-Äquivalent, wenn sie sich nur in der Wahl der Variablennamen unterscheiden. Die folgenden Terme sind also $\alpha$-Äquivalent: $(\lambda x.x)$ und $(\lambda y.y)$.
+Als $\alpha$-Konversion (geschrieben $\rightarrow_\alpha$) wird die Umbenennung von Variablen bezeichnet. Dabei wird eine Variable in einem Lambda Term durch eine andere Variable ersetzt wobei dabei keine freien Variablen gebunden werden dürfen. Zwei Terme sind auch genau dann $\alpha$-Äquivalent, wenn sie durch $\alpha$-Konversion ineinander überführt werden können.
+
+\doublelinebreak
+
 %Beta-Reduktion
-%De-Bruijn-Indizes
+Die Auswertung von Lambda Termen wird durch die $\beta$-Reduktion beschrieben.
+Dabei wird eine Applikation $((\lambda x.t_1) \; t_2)$ durch die Substitution von $t_2$ für $x$ in $t_1$ ersetzt. Die Substitution wird dabei so durchgeführt, dass keine freien Variablen gebunden werden. Die folgenden Beispiele sollen diesen Zusammenhang verdeutlichen:
+\begin{align*}
+    ((\lambda x.x) \; y)
+\end{align*}
+kann direkt durch die Substitution von $y$ für $x$ in $(\lambda x.x)$ ersetzt werden. Da in diesem Fall keine freien Variablen gebunden wird, kann die Substitution direkt durchgeführt werden und die Reduktion ergibt
+\begin{align*}
+    ((\lambda x.x) \; y) \rightarrow_\beta y.
+\end{align*}
+Das folgende Beispiel ist etwas komplexer:
+\begin{align*}
+    ((\lambda x.\lambda y.x \; y) \; y)
+\end{align*}
+Hier wird $y$ für $x$ in $\lambda y.x \; y$ substituiert. Da $y$ in $\lambda y.x \; y$ vorkommt, muss $y$ in $\lambda y.x \; y$ umbenannt werden damit das freie $y$ nicht gebunden wird. Es ergibt sich also
+\begin{align*}
+    ((\lambda x.\lambda y.x \; y) \; y) \rightarrow_\alpha ((\lambda x.\lambda z.x \; z) \; y) \rightarrow_\beta (\lambda z.y \; z).
+\end{align*}
+
+\doublelinebreak
+Das sind alle Regeln die für den untypisierten Lambda-Kalkül benötigt werden. Mit diesen Regeln können alle berechenbaren Funktionen beschrieben werden wie sie auch mit einer Turingmaschine modeliert werden können.
+Allerdings soll jetzt noch auf die De-Bruijn-Indizes eingegangen werden, die eine alternative Darstellung von Lambda Termen ermöglichen und die Implementierung eines Interpreters vereinfachen.
+
+\subsection{De-Bruijn-Indizes}
+
+%HIER GEHTS WEITER
+
+%Auswertungsstrategien
 
 \subsection{Auswertung von Programmiersprache im Algemeinen}
 
