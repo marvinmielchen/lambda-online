@@ -69,7 +69,7 @@ Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System aus
 
 \subsection{Lambda-Kalkül}
 
-\subsubsection{Syntax und Regeln im untypisierten Lambda-Kalkül}
+\subsubsection{Syntax und Regeln im untypisierten Lambda-Kalkül !!ZITATE!!}
 
 Der Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird und dieselbe Klasse von berechenbaren Funktionen definiert wie die Turing-Maschine.
 In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
@@ -78,7 +78,7 @@ In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Na
                       & \; | \; ( \lambda \text{\textless variable\textgreater} . \text{\textless term\textgreater} )\\
                       & \; | \; (\text{\textless term\textgreater} \; \text{\textless term\textgreater})
 \end{align*}
-Ein Lambda Term is dabei eine der drei definierten Formen, wobei diese wiederum aus verschachtelten Lambda Termen bestehen können.
+Ein Lambda Term is dabei in einer der drei definierten Formen, wobei diese wiederum aus verschachtelten Lambda Termen bestehen können.
 
 Eine Variable $\text{\textless variable\textgreater}$ kann im Lambda-Lalkül eine beliebige Zeichenketten sein (z.B. "x" oder "supervar") soweit keine der folgenden Zeichen enthalten ist: $\lambda$ . ( ). Variablen werden dabei als Platzhalter für beliebige Lambda Terme verwendet oder als formale Parameter von Abstraktionen und können dabei auch mehrfach in einem Lambda Term vorkommen.
 
@@ -87,34 +87,17 @@ $(\lambda \text{\textless variable\textgreater} . \text{\textless term\textgreat
 $(\text{\textless term\textgreater} \; \text{\textless term\textgreater})$ heist Applikation und representiert den Aufruf einer Funktion. Der erste Lambda Term ist dabei die Funktion und der zweite Lambda Term ist das Argument. Die Applikation wird dabei von links nach rechts ausgewertet. Der erste Lambda Term muss aber nicht unbedingt eine Abstraktion sein. Er kann auch eine Variable oder eine Applikation sein. In diesem Fall wird der zweite Lambda Term als Argument an den ersten Lambda Term übergeben. Ein Beispiel für eine Applikation ist $((\lambda x.x) \; y)$ welches die Identitätsfunktion mit dem Argument $y$ aufruft und dabei $y$ zurückgibt.
 
 \doublelinebreak
-
-kldsflgkj
+Um die Notation zu vereinfachen gibt es einige Konventionen die in der Literatur verwendet werden.
+Zunächst soll Applikation linksassoziativ sein, d.h. $(t_1 \; t_2 \; t_3)$ soll als $((t_1 \; t_2) \; t_3)$ interpretiert werden. Bei einer langen Applikation werden also immer die ersten beiden Terme zuerst ausgewertet und das Ergebnis dann mit dem nächsten Term verknüpft. Die Abstraktion hingegen bindet immer so weit wie möglich nach Rechts. $(\lambda x.x \; x)$ wird also nicht als Applikation von $(\lambda x.x)$ auf $(x \; x)$ interpretiert sondern als Abstraktion von $x$ auf $(x \; x)$. Mit explizieter Klammerung wird der Lambda Term also als $(\lambda x.(x \; x))$ geschrieben. Mit diesen Vereinfachungen kann ein komplexer Lambda Term wie
+\begin{align*}
+    (\lambda x.(\lambda y.(\lambda z.((x \; z) \; (y \; z)))))
+\end{align*}
+mit der folgenden Schreibweise dargestellt werden:
+\begin{align*}
+    (\lambda x. \lambda y. \lambda z. x \; z \; (y \; z)).
+\end{align*}
 
 \doublelinebreak
-
-%ab hier altes Zeug
-entweder eine Variable (z.B. $x, y, z, ...$), eine Abstraktion (z.B. $(\lambda x.x)$) oder eine Applikation (z.B. $()$).
-Variablen wie z.B. $x, y, z, ...$ können dabei beliebige Zeichenketten außer das Lambda Symbol $\lambda$, oder die Klammern und der Punkt sein und funktionieren so ähnlich wie Variablen in der Mathematik da man ihnen Werte zuweisen kann.
-
-Eine Abstraktion besteht aus dem Lambda Symbol $\lambda$, einer Variablen und einem Punkt gefolgt von einem Lambda Term. 
-
-Beispiel: $\lambda x.x$ oder $\lambda y.y$ oder $\lambda z.z$ o
-
-Die Abstraktion entspricht dabei einer Funktionsdefinition in der Mathematik. Die Variable ist dabei der Funktionsparameter und der Lambda Term ist der Funktionskörper. Die Variable wird dabei gebunden und kann nur innerhalb des Funktionskörpers verwendet werden. Die Abstraktion entspricht also einer Funktion in der Mathematik.
-
-Eine Applikation besteht aus zwei Lambda Termen die durch ein Leerzeichen getrennt sind. 
-
-Beispiel: $(t_1 t_2)$ 
-
-Die Applikation entspricht dabei dem Aufruf einer Funktion in der Mathematik. Der erste Lambda Term ist dabei die Funktion und der zweite Lambda Term ist das Argument. Die Applikation wird dabei von links nach rechts ausgewertet. Der erste Lambda Term muss aber nicht unbedingt eine Abstraktion sein. Er kann auch eine Variable oder eine Applikation sein. In diesem Fall wird der zweite Lambda Term als Argument an den ersten Lambda Term übergeben. Die Applikation entspricht also einem Funktionsaufruf in der Mathematik.
-
-Sowohl die Applikation als auch die Abstraktion stehen allerdings in Klammern. Das ist notwendig um bei verschachtelten Applikationen und Abstraktionen die Reihenfolge der Auswertung festzulegen.
-
-\subsubsection{Abstraktion}
-
-
-
-\subsubsection{Applikation}
 
 \subsubsection{Alpha-Äquivalenz}
 
@@ -135,8 +118,9 @@ grundlegegende dinge zu compilern und interpretern um später unsere eigene Spra
 
 \subsection{Beschreibung der Programmiersprache Lambo}
 
-\subsubsection{Syntax und Semantik}
+\subsubsection{Syntax und Semantic}
 
+currying muss 
 \subsubsection{Beispiele für Lambo-Code}
 
 \subsection{Wahl des Tree-Walk-Interpreters für Lambo}
@@ -146,6 +130,8 @@ grundlegegende dinge zu compilern und interpretern um später unsere eigene Spra
 \subsubsection{Lexer}
 
 \subsubsection{Parser}
+
+currying muss rein irgendwo
 
 \subsubsection{De-Bruijn-Indizes}
 
