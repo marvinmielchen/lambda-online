@@ -148,7 +148,6 @@ werden mit De-Bruijn-Indizes zu
     (\lambda 1).
 \end{align*}
 Die Identitätsfunktion kann mit der herkömmlichen Notation auf beliebig viele Arten dargestellt werden aber mit De-Bruijn-Indizes gibt es nur eine Möglichkeit. Der Index $1$ steht dabei für den nächsten Binder, also für das $\lambda$ und bedeutet bei der Substitution dass diese Variable dann ersetzt wird wenn das erste bindende $\lambda$ entfernt wird. 
-
 Betrachten wir nun noch den komplizierteren Term
 \begin{align*}
     (\lambda z.((\lambda y.y) \; (\lambda x.x)) \; (\lambda x.z \; x)).
@@ -158,14 +157,20 @@ Mit De-Bruijn-Indizes lässt sich dieser mit
     (\lambda ((\lambda 1) \; (\lambda 1)) \; (\lambda 2 \; 1))
 \end{align*}
 darstellen. Die gebundenen $y$, $x$ und $z$ werden dabei alle durch den Index $1$ dargestellt weil sie alle nur ein $\lambda$ von ihrem Binder entfernt sind. $z$ hingegen bekommt den Index $2$ weil es zwei $\lambda$ von seinem Binder entfernt ist.
+Mit dieser Notation werden die Änderungen der Indizies bei der Substitution während einer $\beta$-Reduktion deutlich einfacher. Wenn in einer Applikation der Term $N$ in die Abstraktion $M$ eingesetzt wird, müssen die Indizes in $M$ und $N$ wie folgt angepasst werden:
+\begin{enumerate}
+    \item Finde die Instanzen der Variablen $n_1, n_2, ..., n_k$ in einer Abstraktion $M$ die durch das $\lambda$ in $(\lambda \; M)$ gebunden werden.
+    \item Dekkrementiere die freien Variablen in $M$ um die entfernung des äußeren $\lambda$-Binders zu kompensieren.
+    \item Ersetze $n_1, n_2, ..., n_k$ durch $N$ und inkrementiere die freien Variablen in $N$ um die Anzahl der $\lambda$-Binder die mit der Substitution in $M$ dazu kommen.
+\end{enumerate}
+Eine $\beta$-Reduktion mit De-Bruijn-Indizes könnte dann z.B. wie folgt aussehen:
+\begin{align*}
+    ((\lambda \lambda 2) \; (\lambda 1)) \rightarrow_\beta (\lambda\lambda 1).
+\end{align*}
 
-%HIER GEHTS WEITER
+\subsection{Funktionsweite von Interpretern}
 
-%Auswertungsstrategien
-
-\subsection{Auswertung von Programmiersprache im Allgemeinen}
-
-grundlegegende dinge zu compilern und interpretern um später unsere eigene Sprache zu implementieren
+Als nächstes ist es noch sinvoll einige Grundlagen über die Funktionsweise von Interpretern zu erläutern. %HIER GEHT ES JETZT WEITER
 
 \subsubsection{Tree-Walk Interpreter}
 
