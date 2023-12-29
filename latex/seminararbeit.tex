@@ -25,7 +25,7 @@
 
 \newcommand{\doublelinebreak}{\par\vspace{\baselineskip}}
 
-\title{Implementierung eines nicht-ausführenden Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
+\title{Implementierung eines ,,transformierenden" Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
 \author{Marvin Mielchen}
 \subtitle{Hausarbeit aus dem Seminar: Grundlagen und Meilensteine der funktionalen Programmierung}
 \date{\today}
@@ -175,10 +175,6 @@ Traditionell gibt es bei der Ausführung von Programmen auf einem Computer zwei 
 
 Blickt man allerdings hinter den Vorhang, so sind die Unterschiede zwischen einem Compiler und einem Interpreter nicht so groß wie es auf den ersten Blick scheint. Wie Robert Nystrom in seinem Buch "Crafting Interpreters" (CITE!) beschreibt, gibt es verschiedene Stufen der Analyse die sowohl bei einem Compiler als auch bei einem Interpreter durchgeführt werden müssen.
 
-Der erste Schritt ist die Lexikalische Analyse. Dabei wird der Quellcode in einzelne Tokens zerlegt. Ein Token ist dabei eine Zeichenkette die eine Bedeutung hat. Ein Token kann z.B. ein Schlüsselwort wie "if" oder "while" sein, eine Zahl oder eine Variable. Die Tokens werden dabei in einer Liste gespeichert und an den Parser weitergegeben.
-
-Der Parser ist der nächste Schritt. Er nimmt die Liste von Tokens und baut daraus eine Datenstruktur auf. Diese Datenstruktur wird in der Literatur Syntax Baum (engl. Syntax Tree) oder Abtract Syntax Tree (AST) genannt. Ein AST ist eine Baumstruktur die den Quellcode repräsentiert. Die Knoten des Baums sind dabei die Operatoren und die Blätter sind die Operanden. Der Syntax Baum ist dabei eine abstrakte Repräsentation des Quellcodes und enthält keine Informationen über die Bedeutung der einzelnen Knoten. 
-
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{mountain.png}
@@ -186,12 +182,19 @@ Der Parser ist der nächste Schritt. Er nimmt die Liste von Tokens und baut dara
     \label{fig:interpreter}
 \end{figure}
 
+Der erste Schritt ist die Lexikalische Analyse. Dabei wird der Quellcode in einzelne Tokens zerlegt. Ein Token ist dabei eine Zeichenkette die eine Bedeutung hat. Ein Token kann z.B. ein Schlüsselwort wie "if" oder "while" sein, eine Zahl oder eine Variable. Die Tokens werden dabei in einer Liste gespeichert und an den Parser weitergegeben.
+
+Der Parser ist der nächste Schritt. Er nimmt die Liste von Tokens und baut daraus eine Datenstruktur auf. Diese Datenstruktur wird in der Literatur Syntax Baum (engl. Syntax Tree) oder Abtract Syntax Tree (AST) genannt. Ein AST ist eine Baumstruktur die den Quellcode repräsentiert. Die Knoten des Baums sind dabei die Operatoren und die Blätter sind die Operanden. Der Syntax Baum ist dabei eine abstrakte Repräsentation des Quellcodes und enthält keine Informationen über die Bedeutung der einzelnen Knoten. 
+
+\doublelinebreak
+
 Von hier aus gibt es nun verschiedenste Möglichkeiten wie der Syntax Baum weiter verarbeitet werden kann. Bei einem Compiler wird der Syntax Baum in eine Zwischensprache übersetzt und dann in Maschinencode. Bei einem Interpreter wird der Syntax Baum direkt ausgeführt. Es gibt aber auch noch andere Möglichkeiten. So kann der Syntax Baum z.B. in eine andere Sprache übersetzt werden oder in eine andere Form der Zwischensprache. Der Syntax Baum kann auch in eine andere Form der Zwischensprache übersetzt werden und dann von einem Interpreter ausgeführt werden. Es gibt also viele verschiedene Möglichkeiten wie ein Interpreter oder Compiler aufgebaut sein kann.
 
 Bei modernen Interpretern gibt es z.B. das Konzept von Just-In-Time (JIT) Compilation. Dabei wird der Syntax Baum in eine Zwischensprache übersetzt und dann aber nicht direkt ausgeführt sondern in einem JIT Compiler in Maschinencode übersetzt. Dieser Maschinencode wird dann ausgeführt. Der Vorteil dieses Ansatzes ist, dass der JIT Compiler den Maschinencode optimieren kann und so die Ausführung beschleunigt werden kann. So arbeiten viele Interpreter intern trotzdem mit einem Compiler und Ausführung von Maschinencode.
 
+Weiterer Erklärungsbedard besteht noch bei dem Begriff eines transformierenden Interpreters so wie er in dem Titel dieser Arbeit angekündigt wird. Im Rest der Arbeit soll eine Sprache entwickelt werden welche grundlegenden Regeln des Lambda Kalküls implementiert und so die Modellierung aller berechenbaren Funktionen ermöglicht. Dieser Interpreter soll Quellcode mit Lexikalischer Analyse und Parsing in einen Syntax Baum übersetzen, diesen Syntax Baum dann in eine Zwischenrepresentation (IR) übersetzen, Umformungen und berechungen durchführen und den Resultierenden AST dann wieder in die Ausgangssprache übersetzten. Der Interpreter soll also den Quellcode nicht komplett ausführen sondern nur in eine andere Form übersetzen. Damit handelt es sich nicht um einen traditionellen Interpreter sondern um ein System das eher einem Transpiler ähnelt - Transpiler übersetzen Programme von einer Sprache in eine andere. Der Begriff Interpreter soll hier aber trotzdem verwendet werden weil die Interaktion des Nutzers mit dem System eher der eines Interpreters als eines Transpilers ähnelt. hier werden tatsächlich berechnungen durchgeführt und es werden auch immer Teile des ASTs tatsächlich ausgewertet.
 
-
+Daher wurde hier auch der unübliche Begriff eines transformierenden Interpreters gewählt, wobei das Transformieren für die Umformungen und Berechnungen steht die der Interpreter durchführt um dies Ausgabe zu erzeugen.
 
 \subsubsection{Tree-Walk Interpreter}
 
