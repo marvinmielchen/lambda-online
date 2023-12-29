@@ -103,7 +103,7 @@ Als $\alpha$-Konversion (geschrieben $\rightarrow_\alpha$) wird die Umbenennung 
 \doublelinebreak
 
 %Beta-Reduktion
-Die Auswertung von Lambda Termen wird durch die $\beta$-Reduktion beschrieben.
+Die Auswertung von Lambda Termen wird durch die $\beta$-Reduktion (geschrieben $\rightarrow_\beta$) beschrieben.
 Dabei wird eine Applikation $((\lambda x.t_1) \; t_2)$ durch die Substitution von $t_2$ für $x$ in $t_1$ ersetzt. Die Substitution wird dabei so durchgeführt, dass keine freien Variablen gebunden werden. Die folgenden Beispiele sollen diesen Zusammenhang verdeutlichen:
 \begin{align*}
     ((\lambda x.x) \; y)
@@ -127,11 +127,41 @@ Allerdings soll jetzt noch auf die De-Bruijn-Indizes eingegangen werden, die ein
 
 \subsection{De-Bruijn-Indizes}
 
+Für die eben diskutierte $\beta$-Reduktion und die $\alpha$-Konversion gibt es einen entscheidenden Vorgang der sich für einen allgemeinen Lambda Term als schwierig erweist.
+Bei beiden Äquivalentumformungen dürfen keine freien Variabeln gebunden werden und deshalb müssen kollidierende Variablen gefunden und umbenannt werden.
+De-Bruijn-Indizes sind eine alternative Darstellung von Lambda Termen, bei denen dieses Problem deutlich vereinfacht wird weil die Variablen hier nicht mithilfe von Namen sondern mithilfe von Indizes identifiziert werden die nur von der Struktur des Lambda Terms abhängen.
+
+Für einen Lambda Term in der Notation mit De-Bruijn Indizes verändert sich die Definition der Syntax wie folgt:
+\begin{align*}
+    \text{\textless term\textgreater} & ::= \text{\textless index\textgreater} \\
+                      & \; | \; ( \lambda \text{\textless term\textgreater} )\\
+                      & \; | \; (\text{\textless term\textgreater} \; \text{\textless term\textgreater})
+\end{align*}
+Ein Lambda Term ist also entweder ein Index, eine Abstraktion oder eine Applikation. Ein Index ist dabei eine natürliche Zahl die angibt wie weit der nächste Binder entfernt ist. Ein Index $0$ steht dabei für den nächsten Binder, ein Index $1$ für den übernächsten Binder und so weiter. Die folgenden Beispiele sollen diese Notation verdeutlichen:
+\begin{align*}
+    (\lambda x.x), (\lambda y.y), (\lambda z.z), usw.
+\end{align*}
+werden mit De-Bruijn-Indizes zu
+\begin{align*}
+    (\lambda 1).
+\end{align*}
+Die Identitätsfunktion kann mit der herkömmlichen Notation auf beliebig viele Arten dargestellt werden aber mit De-Bruijn-Indizes gibt es nur eine Möglichkeit. Der Index $1$ steht dabei für den nächsten Binder, also für das $\lambda$ und bedeutet bei der Substitution dass diese Variable dann ersetzt wird wenn das erste bindende $\lambda$ entfernt wird. 
+
+Betrachten wir nun noch den komplizierteren Term
+\begin{align*}
+    (\lambda z.((\lambda y.y) \; (\lambda x.x)) \; (\lambda x.z \; x)).
+\end{align*}
+Mit De-Bruijn-Indizes lässt sich dieser mit
+\begin{align*}
+    (\lambda ((\lambda 1) \; (\lambda 1)) \; (\lambda 2 \; 1))
+\end{align*}
+darstellen. Die gebundenen $y$, $x$ und $z$ werden dabei alle durch den Index $1$ dargestellt weil sie alle nur ein $\lambda$ von ihrem Binder entfernt sind. $z$ hingegen bekommt den Index $2$ weil es zwei $\lambda$ von seinem Binder entfernt ist.
+
 %HIER GEHTS WEITER
 
 %Auswertungsstrategien
 
-\subsection{Auswertung von Programmiersprache im Algemeinen}
+\subsection{Auswertung von Programmiersprache im Allgemeinen}
 
 grundlegegende dinge zu compilern und interpretern um später unsere eigene Sprache zu implementieren
 
