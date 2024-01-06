@@ -13,6 +13,18 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{titling}
+\usepackage{listings}
+\lstset
+{
+    basicstyle=\footnotesize,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+    xleftmargin=.3\textwidth
+}
 
 \addbibresource{literatur.bib}
 
@@ -213,10 +225,88 @@ Daher wir die zu entwickelnde Sprache im folgenden Lambo (angelehnt an Lambda On
 
 \subsubsection{Syntax und Semantic}
 
-currying muss 
-\subsubsection{Beispiele für Lambo-Code}
-
-\subsection{Wahl des Tree-Walk-Interpreters für Lambo}
+Wie im Lambda Kalkül soll es in der Sprache Lambo nur Funktionen geben. 
+Um allerdings mehrere Funktionen in einem Programm modelieren zu können wird zusätzlich auch ein Statement für die Wertezuweisung benötigt. Dafür soll in Lambo das Schlüsselwort "def" verwendet werden. Außerdem soll statt der herkömlichen Notation mit $\lambda$ und . die Notation mit runden Klammern und geschweiften Klammern verwendet werden, da diese Notation für einen Qellcode sorgt der populären Programmiersprachen wie z.B. Python ähnelt.
+Eine erste Skizze der Syntax von Lambo hat also die folgende Strucktur:
+\begin{align*}
+    \text{\textless lambo-programm\textgreater} & ::= \text{\textless statement\textgreater}* \\
+    \text{\textless statement\textgreater} & ::= \text{\textless definition\textgreater} \\
+    \text{\textless definition\textgreater} & ::= \text{def} \; \text{\textless variable\textgreater} \; \text{\textless expression\textgreater}\\
+    \text{\textless expression\textgreater} & ::= \text{\textless variable\textgreater} \; | \; \text{\textless abstraction\textgreater} \; | \; \text{\textless application\textgreater}\\
+    \text{\textless variable\textgreater} & ::= \text{\textless letter\textgreater +} \\
+    \text{\textless abstraction\textgreater} & ::= (\text{\textless variable\textgreater})\{\text{\textless lambda-term\textgreater}\}\\
+    \text{\textless application\textgreater} & ::= \{\text{\textless lambda-term\textgreater} \; \text{\textless lambda-term\textgreater}\} \\
+    \text{\textless letter\textgreater} & ::= a \; | \; b \; | \; c \; | \; ... \; | \; z | \; A \; | \; B \; | \; C \; | \; ... \; | \; Z | \; 0 \; | \; 1 \; | \; 2 \; | \; ... \; | \; 9
+\end{align*}
+Die BNF zeigt die grundlegende Strucktur für ein Lambo Programm. Ein Lambo Programm besteht aus beliebig vielen Statements. Ein Statement wiederum ist eine Definition die mit dem Schlüsselwort "def" beginnt und einer Variable einen Lambda Ausdruck zuweist. Ein Lambda Ausdruck wiederum ist wie gewohnt entweder eine Variable, eine Abstraktion oder eine Applikation wobei die Syntax für die Lambda Ausdrücke hier ein Bisschen anderes gewählt ist als für das Lambda Kalkül üblich. Um diese Syntax verständlicher zu machen folgen nun einige Beispiele für Lambo Programme. \\ \\
+Eine einfache Identitätsfunktion wie $(\lambda x.x)$ kann in Lambo wie folgt aussehen:
+\begin{lstlisting}
+def ifunc (x) {
+    x
+}
+\end{lstlisting}
+In Lambo muss aber jeder Ausrduckt eine Definition sein deshalb wird der Lambda Ausdruch hier dem Symbol "ifunc" zugewiesen. Gleichermaßen lässt sich auch eine Variable in Lambo definieren:
+\begin{lstlisting}
+def a b
+\end{lstlisting}
+Hier wird die Variable b dem Symbol "a" zugewiesen. Für eine Applikation geht das ganze dann so:
+\begin{lstlisting}
+def app {
+    a b
+}
+\end{lstlisting}
+Wieder ist eine Definition nötig um den Lambda Ausdurck in Lambo darzustellen. Hier wird die Aplikation von a auf b dem Symbol "app" zugewiesen. Auch verschachtelte Funktionen sind mit dieser Definition der Syntax möglich:
+\begin{lstlisting}
+def someapp {
+    (x) {
+        x
+    }
+    a
+}
+\end{lstlisting}
+Hier wird someapp die Applikation der Identitätsfunktion auf a zugewiesen. 
+Da unsere Syntax bereits mehrere Funktionen in einem Programm ermöglicht, ist es auch der folgende Quellcode ein gültiges Lambo Programm:
+\begin{lstlisting}
+def a b
+def c d
+def e f
+\end{lstlisting}
+\doublelinebreak
+Damit lässt sich bereits alles modelieren was an berechnbaren Fukntionen möglich ist. Allerdings ist die Syntax noch nicht ganz vollständig. Es fehlt noch die Möglichkeit Funktionen mit mehreren Parametern zu definieren. Dafür soll in Lambo die Syntax für Abstraktionen erweitert werden. Die erweiterte Syntax für Abstraktionen sieht dann wie folgt aus:
+\begin{align*}
+    \text{\textless abstraction\textgreater} & ::= (\text{\textless variable\textgreater}*)\{\text{\textless lambda-term\textgreater}\}\\
+\end{align*}
+Damit sind nun auch Funktionen mit mehreren Parametern möglich z.B.:
+\begin{lstlisting}
+def func (x y) {
+    x
+}
+\end{lstlisting}
+Das entspricht dann der Funktion $(\lambda x.\lambda y.x)$ im Lambda Kalkül. Und kann in Lambo auch mit einstelligen Funktionen umgesetzt werden:
+\begin{lstlisting}
+def func (x) {
+    (y) {
+        x
+    }
+}
+\end{lstlisting}
+Dieses Konzept wird auch Currying genannt und ist eine wichtige Eigenschaft von Lambo. Currying bedeutet, dass eine Funktion mit mehreren Parametern in mehrere Funktionen mit jeweils einem Parameter umgewandelt wird. Die Funktion $(\lambda x.\lambda y.x)$ wird also in Lambo zu $(\lambda x.(\lambda y.x))$ umgewandelt. Das hat den Vorteil, dass Funktionen mit mehreren Parametern in Lambo nicht anders behandelt werden müssen als Funktionen mit nur einem Parameter. Das vereinfacht die Implementation des Interpreters und ist auch ein Grund warum die Syntax von Lambo so gewählt wurde wie sie ist. Um eine ähliche Vereinfachung auch für die Applikationen zu erreichen, soll in Lambo auch die Syntax für Applikationen erweitert werden. Die erweiterte Syntax für Applikationen sieht dann wie folgt aus:
+\begin{align*}
+    \text{\textless application\textgreater} & ::= \{\text{\textless lambda-term\textgreater} \; \text{\textless lambda-term\textgreater}*\} \\
+\end{align*}
+Damit wird die linksassoziativ der Applikation auch in Lambo übernommen und ermöglicht es so eineige Klammern einzusparen. Statt
+\begin{lstlisting}
+def app {
+    {{a b} c}
+}
+\end{lstlisting}
+kann in Lambo also auch
+\begin{lstlisting}
+def app {
+    a b c
+}
+\end{lstlisting}
+geschrieben werden. Damit ist die Syntax von Lambo vollständig und es kann mit der Implementation des Interpreters begonnen werden.
 
 \subsection{Implementierung des Interpreters}
 
