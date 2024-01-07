@@ -342,15 +342,68 @@ public class Token {
 Ein Token hat dabei einen Typ und ein Lexeme welches den Inhalt des Tokens repräsentiert. Der Typ des Tokens wird dabei durch eine Enumeration definiert:
 \begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
 public enum TokenType {
-    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, SEMICOLON, EQUAL,
+    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, EQUAL,
     IDENTIFIER,
     DEF,
     EOF
 }
 \end{lstlisting}
 Jeder Token in der Sprache Lambo lässt sich also genau einem Typ zuordnen. Ein Token kann dabei ein Sonderzeichen wie "(" oder ")" sein, ein Schlüsselwort wie "def" oder eine Variable. Die Variable wird dabei durch den Typ "IDENTIFIER" repräsentiert und das Lexeme der Variable ist dann der Name der Variable.
+Mit diesem Grundgerüst lässt sich nun der Lexer implementieren.
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+public class Lexer{
+    private final String source;
+    private final List<Token> tokens;
+    ...Hilfsvariablen wie aktuelle Position im Quelltext usw. 
 
+    public Lexer(String source){
+        this.source = source;
+        this.tokens = new ArrayList<>();
+    }
 
+    public List<Token> scanTokens(){
+        while(!isAtEnd()){
+            scanToken();
+        }
+        tokens.add(new Token(TokenType.EOF, "", null, line));
+        return tokens;
+    }
+
+    private void scanToken() throws LexingError{
+        char c = advance();
+        switch (c) {
+            case '(': addToken(TokenType.LEFT_PAREN); break;
+            case ')': addToken(TokenType.RIGHT_PAREN); break;
+            case '{': addToken(TokenType.LEFT_BRACE); break;
+            case '}': addToken(TokenType.RIGHT_BRACE); break;
+            case '=': addToken(TokenType.EQUAL); break;
+            case ' ': case '\r': case '\t': break;
+            case '\n': line++; break;
+            default:
+                if (isAlphaNumeric(c)) {
+                    identifierOrKeyword();
+                }
+                break;
+        }
+    }
+
+    private void identifierOrKeyword() {
+        while (isAlphaNumeric(peek())) advance();
+        String text = source.substring(start, current);
+        if (text == "def") {
+            addToken(TokenType.DEF);
+        } else {
+            addToken(TokenType.IDENTIFIER);
+        }
+        addToken(type);
+    }
+
+    ...Hilfsmethoden wie addToken usw.
+}
+\end{lstlisting}
+Zugunsten der Übersicht wurde hier sehr viel weggelassen aber die wichtigsten Teile der Implementation sind hier zu sehen. Der Lexer wird mit dem Quelltext initialisiert und kann dann mit der Methode "scanTokens" die Liste der Tokens zurückgeben. Die Methode "scanTokens" iteriert dabei über den Quelltext und ruft für jedes Zeichen die Methode "scanToken" auf. Die Methode "scanToken" entscheidet dann anhand des aktuellen Zeichens welcher Typ von Token vorliegt und fügt diesen der Liste der Tokens hinzu. Die Methode "identifierOrKeyword" wird dabei aufgerufen wenn ein alphanumerisches Zeichen gefunden wird und entscheidet dann ob es sich um ein Schlüsselwort oder eine Variable handelt. Die Methode "addToken" fügt dann den Token der Liste der Tokens hinzu. In dem Teilen die hier ausgelassen wurden wird sich dazu immer das aktuell gelesene Lexeme gemerkt damit dieses dann in der Methode addToken dem Token hinzugefügt werden kann.
+
+So kann mit nur einem Durchlauf über den Quelltext (und ein Bischen vor und zurückgucken) eine Liste von Tokens erstellt werden die dann an den Parser weitergegeben werden kann.
 
 \subsubsection{Parser}
 
