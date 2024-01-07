@@ -195,8 +195,7 @@ Daher wurde hier auch der unübliche Begriff eines transformierenden Interpreter
 
 \section{Design und Implementierung des Interpreters}
 
-- nachdem jetzt die Grundlagen geklärt sind kann es jetzt um die eigentliche Implementation gehen
-- Sprache soll Lambo heißen (Lambda Online)
+Nachdem jetzt alle grundlegenden Konzepte betrachtet wurden, soll es jetzt um die Implementation des Interpreters gehen. 
 
 \subsection{Beschreibung der Programmiersprache Lambo}
 
@@ -206,9 +205,6 @@ Das Ziel soll eine Website mit einem Code Editor sein in dem man Quellcode einge
 
 Weil die zu entwickelnde Sprache in einem Online Editor verwendet werden soll und nur auf den grundlagen des Lambda Kalküls basiert soll sie auch einen Namen bekommen der diese Eigenschaften widerspiegelt:
 Daher wir die zu entwickelnde Sprache im folgenden Lambo (angelehnt an Lambda Online) genannt.
-
-
-\subsubsection{Syntax und Semantic}
 
 Wie im Lambda Kalkül soll es in der Sprache Lambo nur Funktionen geben. 
 Um allerdings mehrere Funktionen in einem Programm modelieren zu können wird zusätzlich auch ein Statement für die Wertezuweisung benötigt. Dafür soll in Lambo das Schlüsselwort "def" verwendet werden. Außerdem soll statt der herkömlichen Notation mit $\lambda$ und . die Notation mit runden Klammern und geschweiften Klammern verwendet werden, da diese Notation für einen Qellcode sorgt der populären Programmiersprachen wie z.B. Python ähnelt.
@@ -484,7 +480,7 @@ Dieser unvollständigen Parser ohne Currying und ohne Definitionen, liest immer 
 
 An diesem Punkt liegt nun ein Syntax Baum vor der alle Informationen enthält die für die Auswertung der Lambda Ausdrücke nötig sind. In einem herkömlichen Interpreter kann nun der Syntax Baum direkt ausgeführt werden indem mann Knoten des Baums rekursiv abarbeiten und entsprechen mit der Host-Sprache (hier Java) ausführt. Da Lambo aber ein, wie oben selbst definiert, transformierender Interpreter ist, soll der Syntax Baum nicht direkt ausgeführt werden sondern in eine andere Form übersetzt werden. Dafür braucht es zunächst eine Klasse für die Zwischenrepresentation (ZR):
 
-\subsubsection{AST mit De-Bruijn-Indizes}
+\subsubsection{AST mit De-Bruijn-Indizes als Zwischenrepresentation}
 
 Im Zusammenhang mit den Regeln des Lambda Kalküls wurde bereits die Notation mit De-Bruijn-Indizes vorgestellt die imense Vorteile bei der Substitution von Variablen bietet. Um diese Notation auch im Lambo Interpreter nutzbar zu machen muss der vorhandene Systax Baum in einen neuen Systax Baum mit De-Bruijn-Indizes übersetzt werden. Dafür wird wieder das Visitor Pattern verwendet um nun die Repräsentation für einen Sysntax Baum in der Zwischenrepresentation zu definieren:
 \begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
@@ -563,7 +559,7 @@ public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpre
 \end{lstlisting}
 Das Visitor Pattern erlaubt es die rekursive Übersetzung des AST in einen AST mit De-Bruijn-Indizes sehr entkoppelt zu Programmieren. Für jeden Knoten in unserem Ausgangs-AST gibt es eine Methode die diesen Knoten in einen Knoten des Ziel-AST übersetzt. Wird dabei in einem Teil-Ausdruck ein weiterer Knoten gefunden der übersetzt werden muss, wird mit accept() dieser ebenfalls rekursiv übersetzt. Das Ergebnis ist eine DeBruijnExpression wie sie zuvor definiert wurde.
 
-\subsubsection{interpreter}
+\subsubsection{Interpretieren der Zwischenrepresentation}
 
 Genau wie diese Übersetzung werden auch alle möglichen anderen Umformungen und Berechnungen mit Hilfe des Visitor Interface implementiert. Die absolut wichtigste Umformung ist dabei die Substitution von Variablen. Nur hierfür wurde überhaupt der Aufwand betrieben den AST in einen AST mit De-Bruijn-Indizes zu übersetzen.
 Hierfür wird nun ein weiterer Visitor implementiert der diesemal rekursiv den AST mit De-Bruijn-Indizes durchläuft und dabei die Substitution von Variablen durch weitere DeBruijnExpressions durchführt:
@@ -614,7 +610,7 @@ Die Klasse DeBruijnSubstitution nimmt dabei einen AST mit De-Bruijn-Indizes und 
 
 Ohne den Quelltext für eine Implementation hier im feinsten Deteil darzustellen sollte es klar sein das mit dem gleichen Visitor Interface auch wieder eine Umformung in die ursprüngliche Lambo Syntax möglich ist. Dafür wurde für die Sprache die Klasse DeBruijnPrinter (REF ANHANG) implementiert die den AST mit De-Bruijn-Indizes rekursiv wieder in einen gültigen Quelltext der Sprache Lambo übersetzt. Dieser wird dann zurück an den Nutzer gegeben und schließt so den Kreis der Interkation. Der Nutzer kann nun Lambo Code an den Interpreter geben, verschiedene Umformungen durchführen und bekommt dann wieder Lambo Code zurück. Damit ist der ,,Transformierende Interpreter'' fertig implementiert.
 
-\section{Evaluation und Tests}
+\section{Evaluation und Ausblick}
 
 \lstset
 {
@@ -688,7 +684,7 @@ def berechnung true
 \end{lstlisting}
 Auch die Disjunktion funktioniert wie erwartet. Ab hier lässt sich beliebige lange Fortfahen um noch viele weitere Konzepte mit Lambo zu implementieren. Für mehr Beispiele kann dazu wieder im Anhang nachgelesen werden (TODO: Referenz zu Anhang).
 
-\section{Limitierungen der Implementation}
+\subsection{Limitierungen der Implementation}
 
 Ganz zum Schluss soll noch kurz auf die Limitierungen von Lambo und des Lambo Interpreters eingeganen werden. Wo diese Sprache natürlich in der Theorie jede Berechenbare Funktion modelieren kann gibt es einige sehr starke Einschränkungen. 
 
