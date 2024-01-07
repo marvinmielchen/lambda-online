@@ -407,11 +407,228 @@ So kann mit nur einem Durchlauf über den Quelltext (und ein Bischen vor und zur
 
 \subsubsection{Parser}
 
-currying muss rein irgendwo
+Weiterhin angelehnt an das Buch von Nystrom (TODO: CITE!) soll auch hier ein rekursiver Parser verwendet werden. Der Parser nimmt dabei die Liste von Tokens und baut daraus einen Syntax Baum auf. Dafür braucht es zunächst Klassen für die Knoten des Syntax Baums. Wie diese aufgebaut sind soll kurz am Beispiel der Klassen für die Knoten von Abstraktionen, Applikationen und Variablen gezeigt werden:
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+    public abstract class LamboExpression {
+        public static class Abstraction extends LamboExpression {
+            private final Variable boundVariable;
+            private final LamboExpression body;
+            ...
+        }
+    
+        public static class Application extends LamboExpression {
+            private final LamboExpression left;
+            private final LamboExpression right;
+            ...
+        }
+    
+        public static class Variable extends LamboExpression {
+            private final Token token;
+            ...
+        }
+    
+        public abstract <R> R accept(Visitor<R> visitor);
+    
+        public interface Visitor<R>{
+            R visit(Abstraction abstraction);
+            R visit(Application application);
+            R visit(Variable variable);
+        }
+    }
+\end{lstlisting}
+Um die Abhängigkeiten zwischen den verschiedenen Expression Typen und den Methoden die diese verabeiten müssen leicht zu entkoppeln bietet sich das "Visitor Pattern" an (TODO: CITE!). Die Klasse LamboExpression ist dabei die abstrakte Basisklasse für alle Knoten des Syntax Baums die zu einem Lambda Ausdruck gehöhren (d.h. nicht für Definitionen). Auf die gleiche Art müssen auch noch Klassen für die Knoten der Statements und des gesamten Syntax Baums erstellt werden. Diese Klassen sind aber nicht so wichtig für das Verständnis des Interpreters und werden deshalb hier nicht gezeigt.
 
-\subsubsection{De-Bruijn-Indizes}
+Die Umwandelung von der Liste von Tokens in einen Syntax Baum wird dann genau anhand der Regeln der BNF durchgeführt:
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+public class Parser {
+    private final List<Token> tokens;
+    private int current = 0;
+
+    public List<LamboExpression> parse(){
+        List<LamboExpression> expressions = new ArrayList<>();
+        while (!isAtEnd()) {
+            LamboExpression expression = matchExpression();
+            expressions.add(expression);
+        }
+        return expressions;
+    }
+
+    private LamboExpression matchExpression(){
+        if(peek().getTokenType() == TokenType.IDENTIFIER){
+            return matchVariable();
+        }
+        if(peek().getTokenType() == TokenType.LEFT_BRACE){
+            return matchApplication();
+        }
+        if (peek().getTokenType() == TokenType.LEFT_PAREN){
+            return matchAbstraction();
+        }
+        throw error(previous(), "Expected expression.");
+    }
+
+    private LamboExpression.Variable matchVariable(){
+        if(match(TokenType.IDENTIFIER)){
+            return new LamboExpression.Variable(previous());
+        }
+        throw error(peek(), "Expected lambda expression.");
+    }
+
+    private LamboExpression matchAbstraction(){
+        consume(TokenType.LEFT_PAREN, "Expected '('.", previous());
+        LamboExpression.Variable variable = matchVariable();
+        consume(TokenType.RIGHT_PAREN, "Expected ')'.", previous());
+        consume(TokenType.LEFT_BRACE, "Expected '{'.", previous());
+        LamboExpression expression = matchExpression();
+        consume(TokenType.RIGHT_BRACE, "Expected '}'.", previous());
+        LamboExpression.Abstraction abstraction = new LamboExpression.Abstraction(variable, expression);;
+        return abstraction;
+    }
+
+    private LamboExpression matchApplication(){
+        consume(TokenType.LEFT_BRACE, "Expected '{'.", previous());
+        LamboExpression left = matchExpression();
+        LamboExpression right = matchExpression();
+        LamboExpression.Application application = new LamboExpression.Application(left, right);
+        consume(TokenType.RIGHT_BRACE, "Expected '}'.", previous());
+        return application;
+    }
+
+    ...Hilfsmethoden wie match, consume, error usw.
+}
+\end{lstlisting}
+Dieser unvollständigen Parser ohne Currying und ohne Definitionen, liest immer den nächsten Token und versucht dann eine der Regeln aus der BNF der Lambo Grammatik zu vervollständigen. Die Methode parse() iteriert dabei über die Liste der Tokens und ruft für jeden Token die Methode matchExpression() auf. Die Methode matchExpression() entscheidet dann anhand des aktuellen Tokens welche Regel aus der BNF angewendet werden muss und ruft dann die entsprechende Methode auf. Die Methode matchVariable() erzeugt dabei einen Knoten für eine Variable, die Methode matchAbstraction() erzeugt einen Knoten für eine Abstraktion und die Methode matchApplication() erzeugt einen Knoten für eine Applikation. Die Methode matchExpression() wird dabei rekursiv aufgerufen um auch verschachtelte Lambda Ausdrücke zu verarbeiten. Die Methode parse() gibt dann eine Liste von Lambda Ausdrücken zurück die dann an den Interpreter weitergegeben werden kann. Diese simplen rekursiven Vergleiche mit der BNF reichen aus um einen Syntax Baum aufzubauen der dann an den Interpreter weitergegeben werden kann. Für die ganze Sprache von Lambo fehlen hier aber natürlich noch die Regeln für die Definitionen und für das Currying. Diese können im Anhang nachgelesen werden (TODO: Referenz zu Anhang).
+
+An diesem Punkt liegt nun ein Syntax Baum vor der alle Informationen enthält die für die Auswertung der Lambda Ausdrücke nötig sind. In einem herkömlichen Interpreter kann nun der Syntax Baum direkt ausgeführt werden indem mann Knoten des Baums rekursiv abarbeiten und entsprechen mit der Host-Sprache (hier Java) ausführt. Da Lambo aber ein, wie oben selbst definiert, transformierender Interpreter ist, soll der Syntax Baum nicht direkt ausgeführt werden sondern in eine andere Form übersetzt werden. Dafür braucht es zunächst eine Klasse für die Zwischenrepresentation (ZR):
+
+\subsubsection{AST mit De-Bruijn-Indizes}
+
+Im Zusammenhang mit den Regeln des Lambda Kalküls wurde bereits die Notation mit De-Bruijn-Indizes vorgestellt die imense Vorteile bei der Substitution von Variablen bietet. Um diese Notation auch im Lambo Interpreter nutzbar zu machen muss der vorhandene Systax Baum in einen neuen Systax Baum mit De-Bruijn-Indizes übersetzt werden. Dafür wird wieder das Visitor Pattern verwendet um nun die Repräsentation für einen Sysntax Baum in der Zwischenrepresentation zu definieren:
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+public abstract class DeBruijnExpression {
+
+    public static class Abstraction extends DeBruijnExpression{
+        private final DeBruijnExpression body;
+        private final String oldTokenLexeme;
+    }
+
+    public static class Application extends DeBruijnExpression{
+        private final DeBruijnExpression left;
+        private final DeBruijnExpression right;
+    }
+
+    public static class Variable extends DeBruijnExpression{
+        private final String name;
+    }
+
+    public static class DeBruijnIndex extends DeBruijnExpression{
+        private final int index;
+    }
+
+    public abstract <R> R accept(Visitor<R> visitor);
+
+    public interface Visitor<R>{
+        R visit(Abstraction abstraction);
+        R visit(Application application);
+        R visit(Variable variable);
+        R visit(DeBruijnIndex deBruijnIndex);
+    }
+}
+\end{lstlisting}
+Ein AST in dieser ZR hat dabei fast die gleiche Strucktur wie der ursprüngliche AST nur dass hier alle gebundenen Variabeln durch entsprechende De-Bruijn-Indizes ersetzt werden.
+Hier beginnt dann auch die erste Kernaufgabe des Interpreters. Der Interpreter muss den vorhandenen AST in einen AST mit De-Bruijn-Indizes übersetzen. Dafür wird hier zum ersten mal das Visitor Interface implementiert:
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpression>{
+
+    private DeBruijnEnvironment environment = new DeBruijnEnvironment(null);
+    private final List<String> reservedVariables;
+    private final LamboExpression input;
+
+    public DeBruijnExpression translate() throws RuntimeError {
+        return input.accept(this);
+    }
+
+    @Override
+    public DeBruijnExpression visit(LamboExpression.Abstraction abstraction) throws RuntimeError{
+        Token lambdaVar = abstraction.getBoundVariable().getToken();
+        if(environment.contains(lambdaVar.getLexeme()) || reservedVariables.contains(lambdaVar.getLexeme())){
+            throw new RuntimeError(lambdaVar.getLine(), String.format("Variable %s already defined in this scope", lambdaVar.getLexeme()));
+        }
+        environment = new DeBruijnEnvironment(environment);
+        environment.define(lambdaVar.getLexeme());
+        DeBruijnExpression body = abstraction.getBody().accept(this);
+        environment = environment.getEnclosing();
+        return new DeBruijnExpression.Abstraction(body, lambdaVar.getLexeme());
+    }
+
+    @Override
+    public DeBruijnExpression visit(LamboExpression.Application application) throws RuntimeError {
+        DeBruijnExpression left = application.getLeft().accept(this);
+        DeBruijnExpression right = application.getRight().accept(this);
+        return new DeBruijnExpression.Application(left, right);
+    }
+
+    @Override
+    public DeBruijnExpression visit(LamboExpression.Variable variable) {
+        if (environment.contains(variable.getToken().getLexeme())) {
+            return new DeBruijnExpression.DeBruijnIndex(environment.getVariableIndex(variable.getToken().getLexeme()));
+        }else {
+            return new DeBruijnExpression.Variable(variable.getToken().getLexeme());
+        }
+    }
+}
+\end{lstlisting}
+Das Visitor Pattern erlaubt es die rekursive Übersetzung des AST in einen AST mit De-Bruijn-Indizes sehr entkoppelt zu Programmieren. Für jeden Knoten in unserem Ausgangs-AST gibt es eine Methode die diesen Knoten in einen Knoten des Ziel-AST übersetzt. Wird dabei in einem Teil-Ausdruck ein weiterer Knoten gefunden der übersetzt werden muss, wird mit accept() dieser ebenfalls rekursiv übersetzt. Das Ergebnis ist eine DeBruijnExpression wie sie zuvor definiert wurde.
 
 \subsubsection{interpreter}
+
+Genau wie diese Übersetzung werden auch alle möglichen anderen Umformungen und Berechnungen mit Hilfe des Visitor Interface implementiert. Die absolut wichtigste Umformung ist dabei die Substitution von Variablen. Nur hierfür wurde überhaupt der Aufwand betrieben den AST in einen AST mit De-Bruijn-Indizes zu übersetzen.
+Hierfür wird nun ein weiterer Visitor implementiert der diesemal rekursiv den AST mit De-Bruijn-Indizes durchläuft und dabei die Substitution von Variablen durch weitere DeBruijnExpressions durchführt:
+
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+public class DeBruijnSubstitution implements DeBruijnExpression.Visitor<DeBruijnExpression>{
+
+    private final DeBruijnExpression input;
+    private final Map<String, DeBruijnExpression> substitutes;
+    private int depth = 0;
+
+    public DeBruijnExpression evaluate(){
+        return input.accept(this);
+    }
+
+    @Override
+    public DeBruijnExpression visit(DeBruijnExpression.Abstraction abstraction) {
+        depth++;
+        DeBruijnExpression.Abstraction result = new DeBruijnExpression.Abstraction(abstraction.getBody().accept(this), abstraction.getOldTokenLexeme());
+        depth--;
+        return result;
+    }
+
+    @Override
+    public DeBruijnExpression visit(DeBruijnExpression.Application application) {
+        DeBruijnExpression left = application.getLeft().accept(this);
+        DeBruijnExpression right = application.getRight().accept(this);
+        return new DeBruijnExpression.Application(left, right);
+    }
+
+    @Override
+    public DeBruijnExpression visit(DeBruijnExpression.Variable variable) {
+        if(substitutes.containsKey(variable.getName())){
+            IncrementFreeDeBruijnIndices incrementor = new IncrementFreeDeBruijnIndices(depth, substitutes.get(variable.getName()));
+            return incrementor.evaluate();
+        }
+        return new DeBruijnExpression.Variable(variable.getName());
+    }
+
+    public DeBruijnExpression visit(DeBruijnExpression.DeBruijnIndex deBruijnIndex) {
+        return new DeBruijnExpression.DeBruijnIndex(deBruijnIndex.getIndex());
+    }
+}
+\end{lstlisting}
+Die Klasse DeBruijnSubstitution nimmt dabei einen AST mit De-Bruijn-Indizes und eine Map von Variablen zu DeBruijnExpressions und ersetzt dann alle Variablen im AST durch die entsprechenden DeBruijnExpressions. Dabei wird die Tiefe der Verschachtelung mitgezählt um die DeBruijnExpressions entsprechend zu inkrementieren. Die Klasse IncrementFreeDeBruijnIndices ist dabei eine weitere Klasse die mit Hilfe des Visitor Interface die eigentliche Inkrementierung durchführt (REF ANHANG). Aufbauend darauf können alle weiteren Funktionen mit Hilfe des Visitor Interface implementiert werden. Um hier nicht den Rahmen zu sprengen werden hier werden allerdings die rekursiven Implemtationen für die Beta-Reduktion und die Alpha-Konversion nicht gezeigt da die gerade implementierte DeBruijnSubstitution bereits die wichtigste dieser Umformungen ist. Die restlichen Klassen können im Anhang gefunen werden (TODO: Referenz zu Anhang).
+
+\subsubsection{Zurück zum Quellcode}
+
+Ohne den Quelltext für eine Implementation hier im feinsten Deteil darzustellen sollte es klar sein das mit dem gleichen Visitor Interface auch wieder eine Umformung in die ursprüngliche Lambo Syntax möglich ist. Dafür wurde für die Sprache die Klasse DeBruijnPrinter (REF ANHANG) implementiert die den AST mit De-Bruijn-Indizes rekursiv wieder in einen gültigen Quelltext der Sprache Lambo übersetzt. Dieser wird dann zurück an den Nutzer gegeben und schließt so den Kreis der Interkation. Der Nutzer kann nun Lambo Code an den Interpreter geben, verschiedene Umformungen durchführen und bekommt dann wieder Lambo Code zurück. Damit ist der ,,Transformierende Interpreter'' fertig implementiert.
 
 \section{Evaluation und Tests}
 
