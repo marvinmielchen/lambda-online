@@ -48,43 +48,27 @@
 \maketitle
 
 %\cite[S. 8]{nystrom}
-- es muss einen Teil in der Arbeit geben der sich mit den Limitierungen der Arbeit beschäftigt
-    - probleme mit rekusion in lambo
-    - probleme mit speicher in lambo: z.B. sind while schleifen über große arrays wahrscheinlich nicht möglich weil alle expressions ausgewertet werden müssen und
-    das also nicht "echt" iterativ ist
-    - usw.
-- DER Lambda Kalkül (üpberall ausbessern)
 
-\section{Einleitung}
-
-\subsection{Hintergrund und Motivation}
+\section{Einleitung - TODO: Bessere Überschrift}
 
 Im Jahr 1936 veröffentlichte Alonzo Church seine Arbeit (AUSFÜLLEN!!!) in der er den Lambda-Kalkül einführte. 
 Der Lambda-Kalkül ist eine formale Sprache, die zur Untersuchung von Funktionen und deren Auswertung dient. Er ist die Grundlage der funktionalen Programmierung und hat einen großen Einfluss auf die Entwicklung von Programmiersprachen wie Lisp, ML, Haskell und vielen anderen.
-Mit dem Lambda-Kalkül gibt es neben dem gängigen Modell der Turingmaschine ein weiteres Modell der Berechenbarkeit. Alle Berechnungen, die mit einer Turingmaschine durchgeführt werden können, können auch mit dem Lambda-Kalkül durchgeführt werden und umgekehrt.
-Gleichzeitig entsprechen die Probleme die von Turingmaschinen gelöst werden können genau den intuitiv berechenbaren Problemen und das gilt so also auch für die Probleme, die mit dem Lambda-Kalkül modeliert werden können.
-Der Lambda-Kalkül ist also ein universelles Modell der Berechenbarkeit und ist damit ein wichtiger Bestandteil der theoretischen Informatik. Viele Funktionale Sprachen werden auf den Grundlagen des Lambda Kalküls aufgebaut obwol unsere modernen Rechner mit ihrer von Neuman Architektur (CITE!) eher zu dem Modell der Turingmaschine passen.
-Wie ein komplex verschachtelter Lambda Ausdruck mit einem imperativen System ausgewertet werden kann ist also eine interressante und komplizierte Problemstellung und soll die Motivation für diese Arbeit sein.
+Mit dem Lambda-Kalkül gibt es neben dem gängigen Modell der Turingmaschine ein weiteres Modell der Berechenbarkeit. 
+Die Probleme die mit dem Lambda-Kalkül modeliert werden können, entprechen also genau wie bei der Turingmaschinen den intuitiv berechenbaren Problemen.
+Der Lambda-Kalkül ist also ein universelles Modell der Berechenbarkeit und ist damit ein wichtiger Bestandteil der theoretischen Informatik. 
+Viele Funktionale Sprachen werden auf den Grundlagen des Lambda Kalküls aufgebaut und das, obwol unsere modernen Rechner mit ihrer von Neuman Architektur (CITE!) eher zu dem Modell der Turingmaschine passen.
+Wie ein komplex verschachtelter Lambda-Ausdruck mit einem von Neuman ähnlichen System ausgewertet werden kann ist also eine interressante und komplizierte Problemstellung und soll die Motivation für diese Arbeit sein.
 
-\subsection{Ziel der Hausarbeit}
+In der folgenden Arbeit soll gezeigt werden, wie auf der Basis des untypisierten Lambda-Kalküls eine Programmiersprache entwickelt werden kann. Der Funktionsumfang der Sprache bleibt dabei auf das nötigste reduziert, wobei entscheidende Eigenschaften einer "nützlichen" Sprache gegen Funktionalitäten eingetauscht werden, die eine einfache und verständliche Interaktion mit den Regeln des Lambda-Kalküls ermöglichen.
 
-- es soll auf der basis des untypisierten lambda Kalküls eine Sprache entwickelt werden die turingvollstäding (wenn auch nicht praktisch ist)
-    - es werden also nur die allernötigsten features implementiert und entscheidende Eigenschaften einer "nützlichen" Sprache gegen Funktionalität eingetauscht die eine einfache und verständliche Interaktion mit den Regeln des Lambda Kalküls ermöglichen
-- es soll ein Tree-Walk Interpreter entwickelt werden der die Sprache auswertet und dabei grundlegenden Anforderungen an einen modernen Interpreter und Ansprüchen an solche Implementationen zumindest im Ansatz gerecht wird 
-- (optional) villeicht noch evaluation in irgendeiner form und vergleich mit anderen Sprachen 
-- auch limitierungen der implementation betrachten (die sind schon schwerwiegend)
+Ein zentrales Element dieser Arbeit ist die Entwicklung eines Interpreters, der die Sprache auswertet. Dieser Interpreter soll grundlegende Anforderungen an einen modernen Interpreter erfüllen und zumindest ansatzweise den Ansprüchen an solche Implementierungen gerecht werden.
 
-- im Anhang kann noch auf die Website eingegangen werden die eine Interaktion mit der entwickelten Sprache ermöglicht
+In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern und Compilern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erläutert.
 
-\subsection{Übersicht über die folgenden Abschnitte}
-
-\section{Grundlagen}
-
-Für die Implementation des Interpreters werden einige Grundlagen benötigt die in den folgenden Abschnitten erläutert werden sollen.
-
+\section{Grundlagen - TODO: Bessere Überschrift}
 \subsection{Syntax und Regeln im untypisierten Lambda-Kalkül !!ZITATE!!}
 
-Der untypisierte Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird und dieselbe Klasse von berechenbaren Funktionen definiert wie die Turing-Maschine.
+Der untypisierte Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird. Als solche Sprache lässt sich der Lambda-Kalkül also auch mit bekannten Mitteln der theoretischen Informatik untersuchen.
 In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
 \begin{align*}
     \text{\textless term\textgreater} & ::= \text{\textless variable\textgreater} \\
@@ -93,11 +77,11 @@ In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Na
 \end{align*}
 Ein Lambda Term is dabei in einer der drei definierten Formen, wobei diese wiederum aus verschachtelten Lambda Termen bestehen können.
 
-Eine Variable $\text{\textless variable\textgreater}$ kann im Lambda-Lalkül eine beliebige Zeichenketten sein (z.B. "x" oder "supervar") soweit keine der folgenden Zeichen enthalten ist: $\lambda$ . ( ). Variablen werden dabei als Platzhalter für beliebige Lambda Terme verwendet oder als formale Parameter von Abstraktionen und können dabei auch mehrfach in einem Lambda Term vorkommen.
+Eine Variable $\text{\textless variable\textgreater}$ kann im Lambda-Lalkül eine beliebige Zeichenketten sein (z.B. "x" oder "supervar") soweit keine der folgenden Zeichen enthalten sind: $\lambda$ . ( ). Variablen werden dabei als Platzhalter für beliebige Lambda Terme verwendet oder als formale Parameter von Abstraktionen und können dabei auch mehrfach in einem Lambda Term vorkommen.
 
 $(\lambda \text{\textless variable\textgreater} . \text{\textless term\textgreater})$ heist Abstraktion und representiert eine Funktion. Die Variable ist dabei der formale Funktionsparameter und der Lambda Term nach dem Punkt ist der Funktionskörper. Ein Beispiel für eine Abstraktion ist die Identitätsfunktion $(\lambda x.x)$ welche ein Argument entgegennimmt und dieses unverändert zurückgibt.
 
-$(\text{\textless term\textgreater} \; \text{\textless term\textgreater})$ heist Applikation und representiert den Aufruf einer Funktion. Der erste Lambda Term ist dabei die Funktion und der zweite Lambda Term ist das Argument. Die Applikation wird dabei von links nach rechts ausgewertet. Der erste Lambda Term muss aber nicht unbedingt eine Abstraktion sein. Er kann auch eine Variable oder eine Applikation sein. In diesem Fall wird der zweite Lambda Term als Argument an den ersten Lambda Term übergeben. Ein Beispiel für eine Applikation ist $((\lambda x.x) \; y)$ welches die Identitätsfunktion mit dem Argument $y$ aufruft und dabei $y$ zurückgibt.
+$(\text{\textless term\textgreater} \; \text{\textless term\textgreater})$ heist Applikation und representiert den Aufruf einer Funktion. Der erste Lambda Term ist dabei die Funktion und der zweite Lambda Term ist das Argument. Die Applikation wird dabei von links nach rechts ausgewertet. Der erste Lambda Term muss aber nicht unbedingt eine Abstraktion sein. Er kann auch eine Variable oder eine Applikation sein. In diesem Fall wird der zweite Lambda Term als Argument an den ersten Lambda Term übergeben. Ein Beispiel-Term für eine Applikation ist $((\lambda x.x) \; y)$ welcher die Identitätsfunktion mit dem Argument $y$ aufruft und dabei $y$ zurückgibt.
 
 \doublelinebreak
 Um die Notation zu vereinfachen gibt es einige Konventionen die in der Literatur verwendet werden.
@@ -137,7 +121,7 @@ Hier wird $y$ für $x$ in $\lambda y.x \; y$ substituiert. Da $y$ in $\lambda y.
 \end{align*}
 
 \doublelinebreak
-Das sind alle Regeln die für den untypisierten Lambda-Kalkül benötigt werden. Mit diesen Regeln können alle berechenbaren Funktionen beschrieben werden wie sie auch mit einer Turingmaschine modeliert werden können.
+Das sind alle Regeln die für den untypisierten Lambda-Kalkül benötigt werden.
 Allerdings soll jetzt noch auf die De-Bruijn-Indizes eingegangen werden, die eine alternative Darstellung von Lambda Termen ermöglichen und die Implementierung eines Interpreters vereinfachen.
 
 \subsection{De-Bruijn-Indizes}
