@@ -13,6 +13,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{titling}
+\usepackage{caption}
 \usepackage{listings}
 \lstset
 {
@@ -310,9 +311,46 @@ geschrieben werden. Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare 
 
 \subsection{Implementierung des Interpreters}
 
+\captionsetup{labelformat=empty}
+\lstset{
+    language=Java,
+    frame=single,
+    breaklines=true,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+    xleftmargin=.1\textwidth,
+    xrightmargin=.1\textwidth
+}
+
 Wie auch bei der ersten Implementationen eines Interpreters aus dem Buch von Nystrom (TODO: CITE!), soll auch hier der Interpreter mit Java implementiert werden. So müssen schwierige Probleme wie die Speicherverwaltung nicht beachtet werden und das Lambda Kalkül steht im Fokus. Außerdem lässt sich für den Lambo Interpreter in Java später leicht mit vorhandenen Java Bibliotheken eine funktionstüchtige HTTP API umsetzen.
 
+Im folgenden werden die einzelnen Komponenten des Interpreters vorgestellt und die Implementation erläutert. Dabei wird allerdings auf den vollständigen Quellcode verzichtet und nur vereinfachte Quelltext-Ausschnitte der wichtigsten Teile der Implementation vorgestellt. Unter den Codebeispielen werden die Zeilennummern der jeweiligen vollständigen Quelltext Datei angegeben die im Anhang zu finden sind.
+
 \subsubsection{Lexer}
+
+Zunächst muss der Quelltext mit einem Lexer in einzelne Tokens zerlegt werden. Dafür braucht es eine Klasse für die Tokens:
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+public class Token {
+    public final TokenType type;
+    public final String lexeme;
+}
+\end{lstlisting}
+Ein Token hat dabei einen Typ und ein Lexeme welches den Inhalt des Tokens repräsentiert. Der Typ des Tokens wird dabei durch eine Enumeration definiert:
+\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+public enum TokenType {
+    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, SEMICOLON, EQUAL,
+    IDENTIFIER,
+    DEF,
+    EOF
+}
+\end{lstlisting}
+Jeder Token in der Sprache Lambo lässt sich also genau einem Typ zuordnen. Ein Token kann dabei ein Sonderzeichen wie "(" oder ")" sein, ein Schlüsselwort wie "def" oder eine Variable. Die Variable wird dabei durch den Typ "IDENTIFIER" repräsentiert und das Lexeme der Variable ist dann der Name der Variable.
+
+
 
 \subsubsection{Parser}
 
