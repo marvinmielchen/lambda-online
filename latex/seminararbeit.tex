@@ -632,26 +632,88 @@ Ohne den Quelltext für eine Implementation hier im feinsten Deteil darzustellen
 
 \section{Evaluation und Tests}
 
-\subsection{Konstruktion von Natürlichen Zahlen, Boolean Artimethik und Listen}
+\lstset
+{
+    frame=no,
+    basicstyle=\footnotesize,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+    xleftmargin=.3\textwidth
+}
 
-\subsection{Herausforderungen und Lösungen - Limitierungen der Implementation}
+Die Sprache Lambo ist eine sehr eingeschränke Sprache. Es gibt keine Literale, keine boolsche Artimethik, keine Listen, keine Schleifen und keine Möglichkeit auf die Funktionen des Betriebsystems zuzugreifen. Dennoch ist es möglich alle berechenbaren Funktionen in Lambo zu implementieren. Das ist natürlich nicht sehr praktisch aber es zeigt das Lambo tatsächlich eine universelle Programmiersprache ist (solange der Speicher nicht ausgeht). 
+Das wird schön sichtbar wenn man bekannte Konzepte wie z.B. die genannte boolsche Artimethik in Lambo implementiert.
 
-\subsection{Performance-Analyse des Interpreters}
+\subsection{Boolschek Artimethik}
 
-\subsection{Vergleich mit anderen Interpretern}
+Um boolsche Artimethik in Lambo zu implementieren braucht es zunächst die Möglichkeit boolsche Werte zu repräsentieren. Da die Zeichenketten "true" und "false" allerdings nicht von der Sprache reserviert sind lassen sich diese einfach selbst definieren:
+\begin{lstlisting}
+def true (t f) {t}
 
+def false (t f) {f}
+\end{lstlisting}
+Gibt man diese Definitionen in den Lambo Interpreter ein und führt dann Beta Reduktionen oder Substitutionen durch passiert erstmal garnichts. Die Parameter sind nicht gebunden und deshalb lassen sich diese ausdrücke also auch nicht weider vereinfachen oder ineinander einsetzen. Fügen wird noch eine Definition für die Konjunktion hinzu um das zu ändern:
+\begin{lstlisting}
+def and (a b) {a b false}
+\end{lstlisting}
+Die Konjunktion ist hier eine einfache Applikation die mit zwei Argumenten aufgerufen werden kann. Fügen wir jetzt noch einen Aufruf unserer "and"-Funktion zu unserem Programm hinzu können wird mit den ersten Berechnungen beginnen:
+\begin{lstlisting}
+def true (t f) {t}
 
-\section{Zusammenfassung, Fazit und Ausblick}
+def false (t f) {f}
 
-\subsection{Mögliche Anwendungen von Lambo}
+def and (a b) {a b false}
 
-\subsection{Potenzielle Erweiterungen des Interpreters}
+def berechnung {
+    and true false
+}
+\end{lstlisting}
+Und tatsächlich: Führt man dieses Programm nun im Lambo aus, indem man den Compiler anweist mehrere Substitutionen und Beta Reduktionen durchzuführen erhält man das folgende Ergebnis:
+\begin{lstlisting}
+def true (t f) {t}
 
-\subsection{Zukünftige Entwicklungsrichtungen}
+def false (t f) {f}
 
-\subsection{Zusammenfassung der Ergebnisse}
+def and (a b) {a b false}
 
-\subsection{Schlussfolgerungen und Ausblick}
+def berechnung false
+\end{lstlisting}
+Wunderbar! Die Konjunktion funktioniert wie erwartet. Fügen wir nun noch eine Definition für die Disjunktion hinzu:
+\begin{lstlisting}
+def or (a b) {a true b}
+\end{lstlisting}
+Und fügen wir noch einen Aufruf der Disjunktion zu unserem Programm hinzu:
+\begin{lstlisting}
+def true (t f) {t}
+def false (t f) {f}
+def and (a b) {a b false}
+def or (a b) {a true b}
+
+def berechnung {
+    or {and true false} false
+}
+\end{lstlisting}
+Und führen wir das Programm wieder aus:
+\begin{lstlisting}
+...
+def berechnung true
+\end{lstlisting}
+Auch die Disjunktion funktioniert wie erwartet. Ab hier lässt sich beliebige lange Fortfahen um noch viele weitere Konzepte mit Lambo zu implementieren. Für mehr Beispiele kann dazu wieder im Anhang nachgelesen werden (TODO: Referenz zu Anhang).
+
+\section{Limitierungen der Implementation}
+
+Ganz zum Schluss soll noch kurz auf die Limitierungen von Lambo und des Lambo Interpreters eingeganen werden. Wo diese Sprache natürlich in der Theorie jede Berechenbare Funktion modelieren kann gibt es einige sehr starke Einschränkungen. 
+
+Als erstes erwähnenswert ist die Tatsache das ein Programm in Lambo nicht im herkömlichen sinne gestartet wird und dann durchläuft. Betrachtet man alle möglichen Definitionen in Lambo so gibt es einige die man beliebig oft reduzieren kann ohne das je eine "stabile" Form ereicht wird. Manche Terme wachsen auch ins unendliche. Deshalb ist der Interpreter auch so konstruiert das der Nutzer immer nur eine Beta-Reduktion oder Substitution auf einmal durchführt. Eine einzelne Beta Reduktion terminiert nämlich immer und der Nutzer kann so selbst entscheiden wie weit er die Berechnung durchführen will. Das ist für diesen Zweck nicht schlimm da es bei Lambo hauptsächlich um die Veranschaulichung von Berechnungen geht und nicht um die Ausführung von Programmen, für eine praktische Programmiersprache wäre das aber natürlich ein sehr disqualifizierendes Problem.
+
+Der Speicherverbrauch ist ein weiteres Problem, welches in Lambo nicht ganz schön gelöst ist. Eine einzelne natürliche Zahl kann in Lambo schon sehr viel Speicher verbrauchen, da diese ja mit verschachtelten Lambda Termen dargestellt werden muss und diese im Sysntax Baum ja immer gleich mehrere Knoten und damit Java Objecte belegen. Das ist natürlich nicht sehr effizient und könnte weiterführen auch gelöst werden wenn Lambo zum Beispiel um grundlegene Literalte und Artimethik erweitert werden würde.
+
+Das Hauptziel einer funkionierenden kleinen Programmiersprache auf der basis des untypisierten Lambda Kalküls wurde aber erreicht und die Implementation des Interpreters ist auch sehr einfach und leicht verständlich. Das macht Lambo zu einem guten Beispiel für die Veranschaulichung der Regeln des Lambda Kalküls und der Implementation eines Interpreters im allgemeinen.
+
 
 %\printbibliography
 \end{document}
