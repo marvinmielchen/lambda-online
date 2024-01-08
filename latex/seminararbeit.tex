@@ -122,7 +122,7 @@ Hier wird $y$ für $x$ in $\lambda y.x \; y$ substituiert. Da $y$ in $\lambda y.
 Das sind alle Regeln die für den untypisierten Lambda-Kalkül benötigt werden.
 Allerdings soll jetzt noch auf die De-Bruijn-Indizes eingegangen werden, die eine alternative Darstellung von Lambda Termen ermöglichen und die Implementierung eines Interpreters vereinfachen.
 
-\subsection{De-Bruijn-Indizes}
+\subsection{De-Bruijn-Indizes - DONE}
 
 Für die eben diskutierte $\beta$-Reduktion und die $\alpha$-Konversion gibt es einen entscheidenden Vorgang der sich für einen allgemeinen Lambda Term als schwierig erweist.
 Bei beiden Äquivalentumformungen dürfen keine freien Variabeln gebunden werden und deshalb müssen kollidierende Variablen gefunden und umbenannt werden.
@@ -513,7 +513,7 @@ public abstract class DeBruijnExpression {
     }
 }
 \end{lstlisting}
-Ein AST in dieser ZR hat dabei fast die gleiche Strucktur wie der ursprüngliche AST nur dass hier alle gebundenen Variabeln durch entsprechende De-Bruijn-Indizes ersetzt werden.
+Ein AST in dieser ZR hat dabei fast die gleiche Strucktur wie der ursprüngliche AST nur dass hier alle gebundenen Variabeln durch entsprechende De-Bruijn-Indizes ersetzt werden. Alle ungebundenen Variablen in einem Lambda-Ausdruck behalten allerdings ihren Variablennamen. In dieser Hinsicht wird hier von der zuvor vorgestellten Notation abgewichen.
 Hier beginnt dann auch die erste Kernaufgabe des Interpreters. Der Interpreter muss den vorhandenen AST in einen AST mit De-Bruijn-Indizes übersetzen. Dafür wird hier zum ersten mal das Visitor Interface implementiert:
 \begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
 public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpression>{
