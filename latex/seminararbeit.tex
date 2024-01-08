@@ -51,24 +51,24 @@
 
 \section{Einleitung - TODO: Bessere Überschrift}
 
-Im Jahr 1936 veröffentlichte Alonzo Church seine Arbeit (AUSFÜLLEN!!!) in der er den Lambda-Kalkül einführte. 
 Der Lambda-Kalkül ist eine formale Sprache, die zur Untersuchung von Funktionen und deren Auswertung dient. Er ist die Grundlage der funktionalen Programmierung und hat einen großen Einfluss auf die Entwicklung von Programmiersprachen wie Lisp, ML, Haskell und vielen anderen.
 Mit dem Lambda-Kalkül gibt es neben dem gängigen Modell der Turingmaschine ein weiteres Modell der Berechenbarkeit. 
 Die Probleme die mit dem Lambda-Kalkül modeliert werden können, entprechen also genau wie bei der Turingmaschinen den intuitiv berechenbaren Problemen.
-Der Lambda-Kalkül ist also ein universelles Modell der Berechenbarkeit und ist damit ein wichtiger Bestandteil der theoretischen Informatik. 
-Viele Funktionale Sprachen werden auf den Grundlagen des Lambda Kalküls aufgebaut und das, obwol unsere modernen Rechner mit ihrer von Neuman Architektur (CITE!) eher zu dem Modell der Turingmaschine passen.
-Wie ein komplex verschachtelter Lambda-Ausdruck mit einem von Neuman ähnlichen System ausgewertet werden kann ist also eine interressante und komplizierte Problemstellung und soll die Motivation für diese Arbeit sein.
+Viele Funktionale Sprachen werden auf den Grundlagen des Lambda Kalküls aufgebaut und das, obwol unsere modernen Rechner mit ihrer von Neuman Architektur eher zu dem Modell der Turingmaschine passen.
+Wie ein komplex verschachtelter Lambda-Ausdruck mit einem Computer ausgewertet werden kann ist also eine interressante und komplizierte Problemstellung und soll die Motivation für diese Arbeit sein.
 
-In der folgenden Arbeit soll gezeigt werden, wie auf der Basis des untypisierten Lambda-Kalküls eine Programmiersprache entwickelt werden kann. Der Funktionsumfang der Sprache bleibt dabei auf das nötigste reduziert, wobei entscheidende Eigenschaften einer "nützlichen" Sprache gegen Funktionalitäten eingetauscht werden, die eine einfache und verständliche Interaktion mit den Regeln des Lambda-Kalküls ermöglichen.
+In der folgenden Arbeit soll gezeigt werden, wie auf der Basis des untypisierten Lambda-Kalküls eine Programmiersprache entwickelt werden kann. Der Funktionsumfang der Sprache bleibt dabei auf das Nötigste reduziert, wobei entscheidende Eigenschaften einer "nützlichen" Sprache gegen Funktionalitäten eingetauscht werden, die eine einfache und verständliche Interaktion mit den Regeln des Lambda-Kalküls ermöglichen.
 
-Ein zentrales Element dieser Arbeit ist die Entwicklung eines Interpreters, der die Sprache auswertet. Dieser Interpreter soll grundlegende Anforderungen an einen modernen Interpreter erfüllen und zumindest ansatzweise den Ansprüchen an solche Implementierungen gerecht werden.
+Ein zentrales Element dieser Arbeit ist die Entwicklung eines "transformierenden" Interpreters, der die Sprache auswertet. Dieser Interpreter soll grundlegende Anforderungen an einen modernen Interpreter erfüllen und zumindest ansatzweise den Ansprüchen an solche Implementierungen gerecht werden.
+Was in diesem Zusammenhang mit einem "transformierenden" Interpreter gemeint ist, wird im Laufe der Arbeit noch genauer erläutert.
 
-In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern und Compilern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erläutert.
+In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
 
 \section{Grundlagen - TODO: Bessere Überschrift}
 \subsection{Syntax und Regeln im untypisierten Lambda-Kalkül !!ZITATE!!}
 
-Der untypisierte Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird. Als solche Sprache lässt sich der Lambda-Kalkül also auch mit bekannten Mitteln der theoretischen Informatik untersuchen.
+Die folgenden Erklärungen zu den Grundlagen des Lambda-Kalküls basieren auf dem Buch "Mathematik für Software Engineering" von Stephan Dreiseitl \cite*{Dreiseitl2018}.
+Der untypisierte Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird. Als solche Sprache lässt sich der Lambda-Kalkül also auch mit bekannten Mitteln der theoretischen Informatik untersuchen. 
 In der einfachsten Form lässt sich diese Sprache wie folgt rekursiv in Bakus Naur Form definieren:
 \begin{align*}
     \text{\textless term\textgreater} & ::= \text{\textless variable\textgreater} \\
@@ -695,5 +695,5 @@ Der Speicherverbrauch ist ein weiteres Problem, welches in Lambo nicht ganz sch�
 Das Hauptziel einer funkionierenden kleinen Programmiersprache auf der basis des untypisierten Lambda Kalküls wurde aber erreicht und die Implementation des Interpreters ist auch sehr einfach und leicht verständlich. Das macht Lambo zu einem guten Beispiel für die Veranschaulichung der Regeln des Lambda Kalküls und der Implementation eines Interpreters im allgemeinen.
 
 
-%\printbibliography
+\printbibliography
 \end{document}
