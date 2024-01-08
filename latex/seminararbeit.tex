@@ -49,7 +49,7 @@
 
 %\cite[S. 8]{nystrom}
 
-\section{Einleitung - TODO: Bessere Überschrift}
+\section{Wie lässt sich der untypisierte Lambda-Kalkül in einer minimalistischen Programmiersprache umsetzen? - DONE}
 
 Der Lambda-Kalkül ist eine formale Sprache, die zur Untersuchung von Funktionen und deren Auswertung dient. Er ist die Grundlage der funktionalen Programmierung und hat einen großen Einfluss auf die Entwicklung von Programmiersprachen wie Lisp, ML, Haskell und vielen anderen.
 Mit dem Lambda-Kalkül gibt es neben dem gängigen Modell der Turingmaschine ein weiteres Modell der Berechenbarkeit. 
@@ -62,10 +62,11 @@ In der folgenden Arbeit soll gezeigt werden, wie auf der Basis des untypisierten
 Ein zentrales Element dieser Arbeit ist die Entwicklung eines "transformierenden" Interpreters, der die Sprache auswertet. Dieser Interpreter soll grundlegende Anforderungen an einen modernen Interpreter erfüllen und zumindest ansatzweise den Ansprüchen an solche Implementierungen gerecht werden.
 Was in diesem Zusammenhang mit einem "transformierenden" Interpreter gemeint ist, wird im Laufe der Arbeit noch genauer erläutert.
 
-In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
+\section{Theorie zum Lambda Kalkül und zu Interpretern - DONE}
 
-\section{Grundlagen - TODO: Bessere Überschrift}
-\subsection{Syntax und Regeln im untypisierten Lambda-Kalkül !!ZITATE!!}
+In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend an diesen Grundlagen Teil wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
+
+\subsection{Syntax und Regeln im untypisierten Lambda-Kalkül - DONE}
 
 Die folgenden Erklärungen zu den Grundlagen des Lambda-Kalküls basieren auf dem Buch "Mathematik für Software Engineering" von Stephan Dreiseitl \cite*{Dreiseitl2018}.
 Der untypisierte Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird. Als solche Sprache lässt sich der Lambda-Kalkül also auch mit bekannten Mitteln der theoretischen Informatik untersuchen. 
@@ -99,9 +100,6 @@ mit der folgenden Schreibweise dargestellt werden:
 Ein sinvoller Äquivalenzbegriff für Lambda Terme ist die $\alpha$-Äquivalenz. Zwei Lambda Terme sind genau dann $\alpha$-Äquivalent, wenn sie sich nur in der Wahl der Variablennamen unterscheiden. Die folgenden Terme sind also $\alpha$-Äquivalent: $(\lambda x.x)$ und $(\lambda y.y)$.
 Als $\alpha$-Konversion (geschrieben $\rightarrow_\alpha$) wird die Umbenennung von Variablen bezeichnet. Dabei wird eine Variable in einem Lambda Term durch eine andere Variable ersetzt wobei dabei keine freien Variablen gebunden werden dürfen. Zwei Terme sind auch genau dann $\alpha$-Äquivalent, wenn sie durch $\alpha$-Konversion ineinander überführt werden können.
 
-\doublelinebreak
-
-%Beta-Reduktion
 Die Auswertung von Lambda Termen wird durch die $\beta$-Reduktion (geschrieben $\rightarrow_\beta$) beschrieben.
 Dabei wird eine Applikation $((\lambda x.t_1) \; t_2)$ durch die Substitution von $t_2$ für $x$ in $t_1$ ersetzt. Die Substitution wird dabei so durchgeführt, dass keine freien Variablen gebunden werden. Die folgenden Beispiele sollen diesen Zusammenhang verdeutlichen:
 \begin{align*}
