@@ -1,0 +1,50 @@
+\documentclass[ngerman]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{titling}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+
+
+\usepackage[german]{babel}
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+
+
+% Konfiguration für das listings-Paket
+\lstset{
+    language=Java, % Setze die Programmiersprache
+    basicstyle=\ttfamily, % Setze den Standardstil
+    keywordstyle=\color{blue}, % Stil für Schlüsselwörter
+    commentstyle=\color{green}, % Stil für Kommentare
+    stringstyle=\color{red}, % Stil für Strings
+    breaklines=true, % Zeilenumbrüche erlauben
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
+}
+
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
+\title{Anhang: Quelltext}
+\author{Marvin Mielchen - Matrikelnummer: 7394385}
+\subtitle{Für die Hausarbeit: Implementierung eines ,,transformierenden“ Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+Im folgenden finden Sie den Quelltext der Implementierung des in der Zugerhörigen Hausarbeit diskutierten Interpreters für die entwickelte Programmiersprache Lambo in vollständiger Form. Die Implementierung wurde in der Programmiersprache Java geschrieben und ist in fünf Pakete aufgeteilt. Das Paket \texttt{com.marvinmielchen.lambo.lexicalanalysis} enthält die Klassen, die für die lexikalische Analyse der Eingabe zuständig sind wie den Lexer und die Token-Klasse. Das Paket \texttt{com.marvinmielchen.lambo.syntacticanalysis} den Parser und die Klassen für den Abstrakten Syntax Baum. Das Paket \texttt{com.marvinmielchen.lambo.intermediatrep} enthält die Klassen für die Zwischendarstellung des Programms, also für die Übersetzung mit De-Bruijn-Indizes sowie alle Klassen für die wichtigen Operationen im Lambda-Kalkül wie die Beta-Reduktion. Das Paket \texttt{com.marvinmielchen.lambo.semanticanalysis} enthält die Klassen für den Interpreter und das Stammpaket \texttt{com.marvinmielchen.lambo} enthält die Klasse Lambo die als Hauptklasse dient und die anderen Pakete aufruft.
+
+\newpage
+\section{com.marvinmielchen.lambo}
+
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/Lambo.java}
+
+
+\end{document}
