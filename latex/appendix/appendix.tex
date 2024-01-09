@@ -5,6 +5,7 @@
 \usepackage{color}
 \usepackage{titling}
 \usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{hyperref}
 
 
 \usepackage[german]{babel}
@@ -15,7 +16,7 @@
 % Konfiguration für das listings-Paket
 \lstset{
     language=Java, % Setze die Programmiersprache
-    basicstyle=\ttfamily, % Setze den Standardstil
+    basicstyle=\scriptsize\ttfamily, % Setze den Standardstil
     keywordstyle=\color{blue}, % Stil für Schlüsselwörter
     commentstyle=\color{green}, % Stil für Kommentare
     stringstyle=\color{red}, % Stil für Strings
@@ -39,12 +40,44 @@
 
 \maketitle
 
-Im folgenden finden Sie den Quelltext der Implementierung des in der Zugerhörigen Hausarbeit diskutierten Interpreters für die entwickelte Programmiersprache Lambo in vollständiger Form. Die Implementierung wurde in der Programmiersprache Java geschrieben und ist in fünf Pakete aufgeteilt. Das Paket \texttt{com.marvinmielchen.lambo.lexicalanalysis} enthält die Klassen, die für die lexikalische Analyse der Eingabe zuständig sind wie den Lexer und die Token-Klasse. Das Paket \texttt{com.marvinmielchen.lambo.syntacticanalysis} den Parser und die Klassen für den Abstrakten Syntax Baum. Das Paket \texttt{com.marvinmielchen.lambo.intermediatrep} enthält die Klassen für die Zwischendarstellung des Programms, also für die Übersetzung mit De-Bruijn-Indizes sowie alle Klassen für die wichtigen Operationen im Lambda-Kalkül wie die Beta-Reduktion. Das Paket \texttt{com.marvinmielchen.lambo.semanticanalysis} enthält die Klassen für den Interpreter und das Stammpaket \texttt{com.marvinmielchen.lambo} enthält die Klasse Lambo die als Hauptklasse dient und die anderen Pakete aufruft.
+Im folgenden finden Sie den Quelltext der Implementierung des in der Zugerhörigen Hausarbeit diskutierten Interpreters für die entwickelte Programmiersprache Lambo in vollständiger Form. Für eine Bessere Übersicht wird allerdings empfohlen den Quelltext direkt über die öffentlich sichtbare GitHub-Repository zu beziehen. Diese finden Sie unter folgender url: \href{https://github.com/marvinmielchen/lambda-online}{github.com/marvinmielchen/lambda-online}.\\\\
+Die Implementierung wurde in der Programmiersprache Java geschrieben und ist in fünf Pakete aufgeteilt. Das Paket \texttt{com.marvinmielchen.lambo.lexicalanalysis} enthält die Klassen, die für die lexikalische Analyse der Eingabe zuständig sind wie den Lexer und die Token-Klasse. Das Paket \texttt{com.marvinmielchen.lambo.syntacticanalysis} den Parser und die Klassen für den Abstrakten Syntax Baum. Das Paket \texttt{com.marvinmielchen.lambo.intermediatrep} enthält die Klassen für die Zwischendarstellung des Programms, also für die Übersetzung mit De-Bruijn-Indizes sowie alle Klassen für die wichtigen Operationen im Lambda-Kalkül wie die Beta-Reduktion. Das Paket \texttt{com.marvinmielchen.lambo.semanticanalysis} enthält die Klassen für den Interpreter und das Stammpaket \texttt{com.marvinmielchen.lambo} enthält die Klasse Lambo die als Hauptklasse dient und die anderen Pakete aufruft.
 
 \newpage
-\section{com.marvinmielchen.lambo}
 
+\section{Lambo.java - com.marvinmielchen.lambo}
 \lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/Lambo.java}
+
+\section{com.marvinmielchen.lambo.lexicalanalysis}
+
+\subsection{Lexer.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/lexicalanalysis/Lexer.java}
+
+\subsection{Token.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/lexicalanalysis/Token.java}
+
+\subsection{TokenType.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/lexicalanalysis/TokenType.java}
+
+\subsection{LexingError.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/lexicalanalysis/LexingError.java}
+
+\section{com.marvinmielchen.lambo.syntacticanalysis}
+
+\subsection{Parser.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/syntacticanalysis/Parser.java}
+
+\subsection{LamboStatement.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/syntacticanalysis/LamboStatement.java}
+
+\subsection{LamboExpression.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/syntacticanalysis/LamboExpression.java}
+
+\subsection{ParserError.java}
+
+\subsection{AstPrinter.java}
+
+\section{com.marvinmielchen.lambo.intermediatrep}
 
 
 \end{document}
