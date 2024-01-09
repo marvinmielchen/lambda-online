@@ -46,7 +46,7 @@
 
 \maketitle
 
-\section{Wie lässt sich der untypisierte Lambda-Kalkül in einer minimalistischen Programmiersprache umsetzen? - DONE}
+\section{Wie lässt sich der untypisierte Lambda-Kalkül in einer minimalistischen Programmiersprache umsetzen?}
 
 Der Lambda-Kalkül ist eine formale Sprache, die zur Untersuchung von Funktionen und deren Auswertung dient. Er ist die Grundlage der funktionalen Programmierung und hat einen großen Einfluss auf die Entwicklung von Programmiersprachen wie Lisp, ML, Haskell und vielen anderen.
 Mit dem Lambda-Kalkül gibt es neben dem gängigen Modell der Turingmaschine ein weiteres Modell der Berechenbarkeit. 
@@ -60,9 +60,9 @@ Was in diesem Zusammenhang mit einem "transformierenden" Interpreter gemeint ist
 
 Zunächst werden die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
 
-\section{Theorie zum Lambda Kalkül und zu Interpretern - DONE}
+\section{Theorie zum Lambda Kalkül und zu Interpretern}
 
-\subsection{Syntax und Regeln im untypisierten Lambda-Kalkül - DONE}
+\subsection{Syntax und Regeln im untypisierten Lambda-Kalkül}
 
 Die folgenden Erklärungen zu den Grundlagen des Lambda-Kalküls basieren auf dem Buch "Mathematik für Software Engineering" von Stephan Dreiseitl \cite*{Dreiseitl2018}.
 Der untypisierte Lambda-Kalkül beschreibt eine formale Sprache, die zur Definition und Analyse von Funktionen verwendet wird. Als solche Sprache lässt sich der Lambda-Kalkül also auch mit bekannten Mitteln der theoretischen Informatik untersuchen. 
@@ -115,7 +115,7 @@ Hier wird $y$ für $x$ in $\lambda y.x \; y$ substituiert. Da $y$ in $\lambda y.
 Das sind alle Regeln die für den untypisierten Lambda-Kalkül benötigt werden.
 Allerdings soll jetzt noch auf die De-Bruijn-Indizes eingegangen werden, die eine alternative Darstellung von Lambda Termen ermöglichen und die Implementierung eines Interpreters vereinfachen.
 
-\subsection{De-Bruijn-Indizes - DONE}
+\subsection{De-Bruijn-Indizes}
 
 Für die eben diskutierte $\beta$-Reduktion und die $\alpha$-Konversion gibt es einen entscheidenden Vorgang der sich für einen allgemeinen Lambda Term als schwierig erweist.
 Bei beiden Äquivalentumformungen dürfen keine freien Variabeln gebunden werden und deshalb müssen kollidierende Variablen gefunden und umbenannt werden.
@@ -157,7 +157,7 @@ Eine $\beta$-Reduktion mit De-Bruijn-Indizes könnte dann z.B. wie folgt aussehe
     ((\lambda \lambda 2) \; (\lambda 1)) \rightarrow_\beta (\lambda\lambda 1).
 \end{align*}
 
-\subsection{Funktionsweise von Interpretern und Compilern - DONE}
+\subsection{Funktionsweise von Interpretern und Compilern}
 
 Als nächstes ist es noch sinvoll einige Grundlagen über die Funktionsweise von Interpretern zu erläutern. Alle Konzepte zur Ausführung von Programmiersprachen bauen dafür in dieser Arbeit auf dem Buch "Crafting Interpreters" von Robert Nystrom \cite*{nystrom} auf.
 Traditionell gibt es bei der Ausführung von Programmen auf einem Computer zwei prominente Ansätze. Bei einem Compiler, wie er z.B. für Systemsprachen wie C oder C++ üblicher weise verwendet wird, wird der schon fast natürlich sprachige Quellcode in eine Maschinensprache übersetzt. Diese Maschinensprache ist dann direkt ausführbar und kann vom Computer verstanden werden. Bei einem Interpreter hingegen wird der Quellcode nicht in eine Maschinensprache übersetzt sondern in eine Zwischensprache die dann vom Interpreter ausgeführt wird. Der Interpreter ist also ein Programm, das den Quellcode eines anderen Programms einliest und ausführt.
@@ -184,7 +184,7 @@ Daher wurde hier auch der unübliche Begriff eines transformierenden Interpreter
 
 \section{Design und Implementierung des Interpreters}
 
-\subsection{Beschreibung der Programmiersprache Lambo - DONE}
+\subsection{Beschreibung der Programmiersprache Lambo}
 \lstset{belowskip=0 \baselineskip}
 
 Die zu entwickelnde Sprache hat keine starken Anforderungen an einen praktischen nutzen für besonders performante Berechungen oder generell an eine nützliche Programmiersprache, deshalb können andere Konzepte und Eigenschaften in den Vordergrund gestellt werden, die normalerweise nicht zu einer gängigen Programmiersprache gehöhren und auch die Implementation vereinfachen.
