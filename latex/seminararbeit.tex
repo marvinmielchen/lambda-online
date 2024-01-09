@@ -191,11 +191,18 @@ Daher wurde hier auch der unübliche Begriff eines transformierenden Interpreter
 
 \section{Design und Implementierung des Interpreters}
 
-\subsection{Beschreibung der Programmiersprache Lambo}
+\subsection{Beschreibung der Programmiersprache Lambo - DONE}
 
 Die zu entwickelnde Sprache hat keine starken Anforderungen an einen praktischen nutzen für besonders performante Berechungen oder generell an eine nützliche Programmiersprache, deshalb können andere Konzepte und Eigenschaften in den Vordergrund gestellt werden, die normalerweise nicht zu einer gängigen Programmiersprache gehöhren und auch die Implementation vereinfachen.
 
-Über den Umfang dieser Arbeit hinaus soll es später eine Website mit einem Code Editor geben in dem man Quellcode eingeben kann und dann die verschachtelten Lambda Terme schritt für Schritt umformen und reduzieren kann (TODO: Screenshot). Dieser Auswertungsmechanismus ermöglicht nicht nur eine Leehrreiche Interaktion, für das Verständlichmachen der Regeln des Lambda Kalküls, sondern vereinfacht auch die Implementation des Interpreters wie sich später zeigen wird.
+Über den Umfang dieser Arbeit hinaus wird es eine Website mit einem Code Editor geben in dem man Quellcode eingeben kann und dann die verschachtelten Lambda Terme schritt für Schritt umformen und reduzieren kann (siehe Abbildung \ref*{fig:lambowebsite}). Dieser schrittweise Auswertung hilft nicht nur beim Verständnis, sondern vereinfacht auch die Implementation des Interpreters wie sich später zeigen wird.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{screenshot.png}
+    \caption{Bildschirmfoto von \href{https://lambo.marvinmielchen.com}{lambo.marvinmielchen.com}}
+    \label{fig:lambowebsite}
+\end{figure}
 
 Weil die zu entwickelnde Sprache in einem Online Editor verwendet werden soll und nur auf den grundlagen des Lambda Kalküls basiert soll sie auch einen Namen bekommen der diese Eigenschaften widerspiegelt:
 Daher wir die zu entwickelnde Sprache im folgenden Lambo (angelehnt an Lambda Online) genannt.
@@ -281,7 +288,7 @@ def app {
     a b c
 }
 \end{lstlisting}
-geschrieben werden. Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare vollständig. Diese werden in Lambo mit \slash \slash  eingeleitet und gehen bis zum Ende der Zeile. Für die folgenden Erklärungen zu der Implementation des Interpreters werden Kommentare allerdings ingoriert.
+geschrieben werden. Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare vollständig. Diese werden in Lambo mit \slash\slash\ eingeleitet und gehen bis zum Ende der Zeile. Für die folgenden Erklärungen zu der Implementation des Interpreters werden Kommentare allerdings ingoriert.
 
 \subsection{Implementierung des Interpreters}
 
