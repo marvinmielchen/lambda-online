@@ -62,9 +62,9 @@ In der folgenden Arbeit soll gezeigt werden, wie auf der Basis des untypisierten
 Ein zentrales Element dieser Arbeit ist die Entwicklung eines "transformierenden" Interpreters, der die Sprache auswertet. Dieser Interpreter soll grundlegende Anforderungen an einen modernen Interpreter erfüllen und zumindest ansatzweise den Ansprüchen an solche Implementierungen gerecht werden.
 Was in diesem Zusammenhang mit einem "transformierenden" Interpreter gemeint ist, wird im Laufe der Arbeit noch genauer erläutert.
 
-\section{Theorie zum Lambda Kalkül und zu Interpretern - DONE}
+In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
 
-In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend an diesen Grundlagen Teil wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
+\section{Theorie zum Lambda Kalkül und zu Interpretern - DONE}
 
 \subsection{Syntax und Regeln im untypisierten Lambda-Kalkül - DONE}
 
@@ -164,11 +164,11 @@ Eine $\beta$-Reduktion mit De-Bruijn-Indizes könnte dann z.B. wie folgt aussehe
     ((\lambda \lambda 2) \; (\lambda 1)) \rightarrow_\beta (\lambda\lambda 1).
 \end{align*}
 
-\subsection{Funktionsweise von Interpretern und Compilern}
+\subsection{Funktionsweise von Interpretern und Compilern - DONE}
 
 Als nächstes ist es noch sinvoll einige Grundlagen über die Funktionsweise von Interpretern zu erläutern. Alle Konzepte zur Ausführung von Programmiersprachen bauen dafür in dieser Arbeit auf dem Buch "Crafting Interpreters" von Robert Nystrom \cite*{nystrom} auf.
 Traditionell gibt es bei der Ausführung von Programmen auf einem Computer zwei prominente Ansätze. Bei einem Compiler, wie er z.B. für Systemsprachen wie C oder C++ üblicher weise verwendet wird, wird der schon fast natürlich sprachige Quellcode in eine Maschinensprache übersetzt. Diese Maschinensprache ist dann direkt ausführbar und kann vom Computer verstanden werden. Bei einem Interpreter hingegen wird der Quellcode nicht in eine Maschinensprache übersetzt sondern in eine Zwischensprache die dann vom Interpreter ausgeführt wird. Der Interpreter ist also ein Programm, das den Quellcode eines anderen Programms einliest und ausführt.
-Blickt man allerdings hinter den Vorhang, so sind die Unterschiede zwischen einem Compiler und einem Interpreter nicht so groß wie es auf den ersten Blick scheint. Wie Robert Nystrom in seinem Buch "Crafting Interpreters" (CITE!) beschreibt, gibt es verschiedene Stufen der Analyse die sowohl bei einem Compiler als auch bei einem Interpreter durchgeführt werden müssen.
+Blickt man allerdings hinter den Vorhang, so sind die Unterschiede zwischen einem Compiler und einem Interpreter nicht so groß wie es auf den ersten Blick scheint. Wie Robert Nystrom beschreibt, gibt es verschiedene Stufen der Analyse die sowohl bei einem Compiler als auch bei einem Interpreter durchgeführt werden müssen.
 
 \begin{figure}
     \centering
