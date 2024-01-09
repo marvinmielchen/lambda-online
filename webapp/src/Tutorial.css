@@ -3,6 +3,24 @@
     color: black;
     overflow-y: scroll;
     overflow-x: hidden;
-    scrollbar-color: #020202 #e0e0e0;
     margin-left: 10px;
+}
+
+/* Styling der Scrollbar */
+.tutorial::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Styling des Tracks (Hintergrund der Scrollbar) */
+.tutorial::-webkit-scrollbar-track {
+    background: #2b2d30;
+}
+
+/* Styling des Thumb (beweglicher Teil der Scrollbar) */
+.tutorial::-webkit-scrollbar-thumb {
+    background: #3a3a3a;
+}
+
+.tutorial::-webkit-scrollbar-thumb:hover {
+    background: #424242;
 }
