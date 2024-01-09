@@ -1,6 +1,6 @@
 \documentclass[ngerman]{article}
 
-% Packages
+\usepackage[parfill]{parskip}
 \usepackage[utf8]{inputenc}
 \usepackage[german]{babel}
 \usepackage{csquotes}
@@ -36,8 +36,6 @@
     \vskip0.5em}%
 }
 
-\newcommand{\doublelinebreak}{\par\vspace{\baselineskip}}
-
 \title{Implementierung eines ,,transformierenden" Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
 \author{Marvin Mielchen - Matrikelnummer: 7394385}
 \subtitle{Hausarbeit aus dem Seminar: Grundlagen und Meilensteine der funktionalen Programmierung}
@@ -60,9 +58,9 @@ Wie ein komplex verschachtelter Lambda-Ausdruck mit einem Computer ausgewertet w
 In der folgenden Arbeit soll gezeigt werden, wie auf der Basis des untypisierten Lambda-Kalküls eine Programmiersprache entwickelt werden kann. Der Funktionsumfang der Sprache bleibt dabei auf das Nötigste reduziert, wobei entscheidende Eigenschaften einer "nützlichen" Sprache gegen Funktionalitäten eingetauscht werden, die eine einfache und verständliche Interaktion mit den Regeln des Lambda-Kalküls ermöglichen.
 
 Ein zentrales Element dieser Arbeit ist die Entwicklung eines "transformierenden" Interpreters, der die Sprache auswertet. Dieser Interpreter soll grundlegende Anforderungen an einen modernen Interpreter erfüllen und zumindest ansatzweise den Ansprüchen an solche Implementierungen gerecht werden.
-Was in diesem Zusammenhang mit einem "transformierenden" Interpreter gemeint ist, wird im Laufe der Arbeit noch genauer erläutert.
+Was in diesem Zusammenhang mit einem "transformierenden" Interpreter gemeint ist, wird im Laufe der Arbeit noch genauer ausgeführt.
 
-In den folgenden Abschnitten werden zunächst die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
+Zunächst werden die Grundlagen des Lambda Kalküls und De-Bruijn-Indizes sowie, die Grundlagen von Interpretern erläutert. Anschließend wird die Sprache Lambo vorgestellt, die in dieser Arbeit entwickelt wird und die Implementation des Interpreters in den Grundzügen erklärt.
 
 \section{Theorie zum Lambda Kalkül und zu Interpretern - DONE}
 
@@ -84,7 +82,6 @@ $(\lambda \text{\textless variable\textgreater} . \text{\textless term\textgreat
 
 $(\text{\textless term\textgreater} \; \text{\textless term\textgreater})$ heist Applikation und representiert den Aufruf einer Funktion. Der erste Lambda Term ist dabei die Funktion und der zweite Lambda Term ist das Argument. Die Applikation wird dabei von links nach rechts ausgewertet. Der erste Lambda Term muss aber nicht unbedingt eine Abstraktion sein. Er kann auch eine Variable oder eine Applikation sein. In diesem Fall wird der zweite Lambda Term als Argument an den ersten Lambda Term übergeben. Ein Beispiel-Term für eine Applikation ist $((\lambda x.x) \; y)$ welcher die Identitätsfunktion mit dem Argument $y$ aufruft und dabei $y$ zurückgibt.
 
-\doublelinebreak
 Um die Notation zu vereinfachen gibt es einige Konventionen die in der Literatur verwendet werden.
 Zunächst soll Applikation linksassoziativ sein, d.h. $(t_1 \; t_2 \; t_3)$ soll als $((t_1 \; t_2) \; t_3)$ interpretiert werden. Bei einer langen Applikation werden also immer die ersten beiden Terme zuerst ausgewertet und das Ergebnis dann mit dem nächsten Term verknüpft. Die Abstraktion hingegen bindet immer so weit wie möglich nach Rechts. $(\lambda x.x \; x)$ wird also nicht als Applikation von $(\lambda x.x)$ auf $x$ interpretiert sondern als Abstraktion von $x$ auf $(x \; x)$. Mit explizieter Klammerung wird der Lambda Term also als $(\lambda x.(x \; x))$ geschrieben. Mit diesen Vereinfachungen kann ein komplexer Lambda Term wie
 \begin{align*}
@@ -94,8 +91,6 @@ mit der folgenden Schreibweise dargestellt werden:
 \begin{align*}
     (\lambda x. \lambda y. \lambda z. x \; z \; (y \; z)).
 \end{align*}
-
-\doublelinebreak
 
 Ein sinvoller Äquivalenzbegriff für Lambda Terme ist die $\alpha$-Äquivalenz. Zwei Lambda Terme sind genau dann $\alpha$-Äquivalent, wenn sie sich nur in der Wahl der Variablennamen unterscheiden. Die folgenden Terme sind also $\alpha$-Äquivalent: $(\lambda x.x)$ und $(\lambda y.y)$.
 Als $\alpha$-Konversion (geschrieben $\rightarrow_\alpha$) wird die Umbenennung von Variablen bezeichnet. Dabei wird eine Variable in einem Lambda Term durch eine andere Variable ersetzt wobei dabei keine freien Variablen gebunden werden dürfen. Zwei Terme sind auch genau dann $\alpha$-Äquivalent, wenn sie durch $\alpha$-Konversion ineinander überführt werden können.
@@ -118,7 +113,7 @@ Hier wird $y$ für $x$ in $\lambda y.x \; y$ substituiert. Da $y$ in $\lambda y.
     ((\lambda x.\lambda y.x \; y) \; y) \rightarrow_\alpha ((\lambda x.\lambda z.x \; z) \; y) \rightarrow_\beta (\lambda z.y \; z).
 \end{align*}
 
-\doublelinebreak
+
 Das sind alle Regeln die für den untypisierten Lambda-Kalkül benötigt werden.
 Allerdings soll jetzt noch auf die De-Bruijn-Indizes eingegangen werden, die eine alternative Darstellung von Lambda Termen ermöglichen und die Implementierung eines Interpreters vereinfachen.
 
@@ -253,7 +248,6 @@ def a b
 def c d
 def e f
 \end{lstlisting}
-\doublelinebreak
 Damit lässt sich bereits alles modelieren was an berechnbaren Fukntionen möglich ist. Allerdings ist die Syntax noch nicht ganz vollständig. Es fehlt noch die Möglichkeit Funktionen mit mehreren Parametern zu definieren. Dafür soll in Lambo die Syntax für Abstraktionen erweitert werden. Die erweiterte Syntax für Abstraktionen sieht dann wie folgt aus:
 \begin{align*}
     \text{\textless abstraction\textgreater} & ::= (\text{\textless variable\textgreater}*)\{\text{\textless lambda-term\textgreater}\}\\
@@ -288,7 +282,9 @@ def app {
     a b c
 }
 \end{lstlisting}
-geschrieben werden. Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare vollständig. Diese werden in Lambo mit \slash\slash\ eingeleitet und gehen bis zum Ende der Zeile. Für die folgenden Erklärungen zu der Implementation des Interpreters werden Kommentare allerdings ingoriert.
+geschrieben werden. 
+
+Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare vollständig. Diese werden in Lambo mit \slash\slash\ eingeleitet und gehen bis zum Ende der Zeile. Für die folgenden Erklärungen zu der Implementation des Interpreters werden Kommentare allerdings ingoriert.
 
 \subsection{Implementierung des Interpreters}
 
@@ -314,7 +310,7 @@ Im folgenden werden die einzelnen Komponenten des Interpreters vorgestellt und d
 \subsubsection{Lexer}
 
 Zunächst muss der Quelltext mit einem Lexer in einzelne Tokens zerlegt werden. Dafür braucht es eine Klasse für die Tokens:
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+\begin{lstlisting}
 public class Token {
     public final TokenType type;
     public final String lexeme;
