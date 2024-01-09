@@ -1,28 +1,26 @@
 \documentclass[ngerman]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+
 \usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Java,                % choose the language of the code
+    showstringspaces=false,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % Setzt die Grundstiloptionen
+    breaklines=true,            % Automatischer Zeilenumbruch
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, % Zeigt den Umbruch an
+    literate={λ}{{$\lambda$}}1,
+}
+
 \usepackage{color}
 \usepackage{titling}
-\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+\usepackage[left=2.5cm,right=2.5cm,top=3cm,bottom=3cm]{geometry}
 \usepackage{hyperref}
 
-
-\usepackage[german]{babel}
-\usepackage{csquotes}
-\MakeOuterQuote{"}
-
-
-% Konfiguration für das listings-Paket
-\lstset{
-    language=Java, % Setze die Programmiersprache
-    basicstyle=\scriptsize\ttfamily, % Setze den Standardstil
-    keywordstyle=\color{blue}, % Stil für Schlüsselwörter
-    commentstyle=\color{green}, % Stil für Kommentare
-    stringstyle=\color{red}, % Stil für Strings
-    breaklines=true, % Zeilenumbrüche erlauben
-    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
-}
 
 \newcommand{\subtitle}[1]{
   \posttitle{
@@ -37,11 +35,13 @@
 \date{\today}
 
 \begin{document}
-
 \maketitle
-
 Im folgenden finden Sie den Quelltext der Implementierung des in der Zugerhörigen Hausarbeit diskutierten Interpreters für die entwickelte Programmiersprache Lambo in vollständiger Form. Für eine Bessere Übersicht wird allerdings empfohlen den Quelltext direkt über die öffentlich sichtbare GitHub-Repository zu beziehen. Diese finden Sie unter folgender url: \href{https://github.com/marvinmielchen/lambda-online}{github.com/marvinmielchen/lambda-online}.\\\\
-Die Implementierung wurde in der Programmiersprache Java geschrieben und ist in fünf Pakete aufgeteilt. Das Paket \texttt{com.marvinmielchen.lambo.lexicalanalysis} enthält die Klassen, die für die lexikalische Analyse der Eingabe zuständig sind wie den Lexer und die Token-Klasse. Das Paket \texttt{com.marvinmielchen.lambo.syntacticanalysis} den Parser und die Klassen für den Abstrakten Syntax Baum. Das Paket \texttt{com.marvinmielchen.lambo.intermediatrep} enthält die Klassen für die Zwischendarstellung des Programms, also für die Übersetzung mit De-Bruijn-Indizes sowie alle Klassen für die wichtigen Operationen im Lambda-Kalkül wie die Beta-Reduktion. Das Paket \texttt{com.marvinmielchen.lambo.semanticanalysis} enthält die Klassen für den Interpreter und das Stammpaket \texttt{com.marvinmielchen.lambo} enthält die Klasse Lambo die als Hauptklasse dient und die anderen Pakete aufruft.
+Die Implementierung wurde in der Programmiersprache Java geschrieben und ist in fünf Pakete aufgeteilt. 
+Das Paket \texttt{com.marvinmielchen.lambo.lexicalanalysis} enthält die Klassen, die für die lexikalische Analyse der Eingabe zuständig sind wie den Lexer und die Token-Klasse. 
+\\Das Paket \texttt{com.marvinmielchen.lambo.syntacticanalysis} den Parser und die Klassen für den Abstrakten Syntax Baum. 
+Das Paket \texttt{com.marvinmielchen.lambo.intermediatrep} enthält die Klassen für die Zwischendarstellung des Programms, also für die Übersetzung mit De-Bruijn-Indizes sowie alle Klassen für die wichtigen Operationen im Lambda-Kalkül wie die Beta-Reduktion. 
+\\Das Paket \texttt{com.marvinmielchen.lambo.semanticanalysis} enthält die Klassen für den Interpreter und das Stammpaket \texttt{com.marvinmielchen.lambo} enthält die Klasse Lambo die als Hauptklasse dient und die anderen Pakete aufruft.
 
 \newpage
 
@@ -74,8 +74,7 @@ Die Implementierung wurde in der Programmiersprache Java geschrieben und ist in 
 \lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/syntacticanalysis/LamboExpression.java}
 
 \subsection{ParserError.java}
-
-\subsection{AstPrinter.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/syntacticanalysis/ParseError.java}
 
 \section{com.marvinmielchen.lambo.intermediatrep}
 
