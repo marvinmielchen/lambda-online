@@ -3,6 +3,7 @@ import './App.css'
 
 import {useState, useEffect, useRef} from 'react'
 import {text} from './examplecode.js'
+import Tutorial from "./Tutorial.jsx";
 
 
 function App() {
@@ -136,11 +137,7 @@ function MainPage() {
     return (
         <div className="App">
             <div className="sidebar">
-                <ul>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                    <li><a href="#"></a></li>
-                </ul>
+                <Tutorial />
             </div>
             <div className="content">
                 <div className="toolbar">
