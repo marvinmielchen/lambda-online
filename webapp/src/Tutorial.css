@@ -1,4 +1,8 @@
 .tutorial {
+    height: 100vh;
     color: black;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-color: #020202 #e0e0e0;
     margin-left: 10px;
 }
