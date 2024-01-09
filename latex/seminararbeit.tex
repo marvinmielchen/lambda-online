@@ -193,20 +193,18 @@ Daher wurde hier auch der unübliche Begriff eines transformierenden Interpreter
 
 \section{Design und Implementierung des Interpreters}
 
-Nachdem jetzt alle grundlegenden Konzepte betrachtet wurden, soll es jetzt um die Implementation des Interpreters gehen. 
-
 \subsection{Beschreibung der Programmiersprache Lambo}
 
-Das Ziel dieser Arbeit ist sich die Implementation des Lambda Kalküls in einer Programmiersprache zu betrachten und dabei die grundlegenden Regeln des Lambda Kalküls zu implementieren. Da die Sprache so also keine starken Anforderungen an einen praktischen nutzen für besonders performante Berechungen oder generell an eine nützliche Programmiersprache stellt, können andere Konzepte und Eigenschaften in den Vordergrund gestellt werden, die normalerweise nicht zu einer gängigen Programmiersprache gehöhren und auch die Implementation vereinfachen.
+Die zu entwickelnde Sprache hat keine starken Anforderungen an einen praktischen nutzen für besonders performante Berechungen oder generell an eine nützliche Programmiersprache, deshalb können andere Konzepte und Eigenschaften in den Vordergrund gestellt werden, die normalerweise nicht zu einer gängigen Programmiersprache gehöhren und auch die Implementation vereinfachen.
 
-Das Ziel soll eine Website mit einem Code Editor sein in dem man Quellcode eingeben kann und dann die verschachtelten Lambda Terme schritt für Schritt umformen und reduzieren kann (TODO: Screenshot). Dieser Auswertungsmechanismus ermöglicht nicht nur eine Leehrreiche Interaktion, für das verständlich machen der Regeln des Lambda Kalküls, sondern vereinfacht auch die Implementation des Interpreters wie sich später zeigen wird.
+Über den Umfang dieser Arbeit hinaus soll es später eine Website mit einem Code Editor geben in dem man Quellcode eingeben kann und dann die verschachtelten Lambda Terme schritt für Schritt umformen und reduzieren kann (TODO: Screenshot). Dieser Auswertungsmechanismus ermöglicht nicht nur eine Leehrreiche Interaktion, für das Verständlichmachen der Regeln des Lambda Kalküls, sondern vereinfacht auch die Implementation des Interpreters wie sich später zeigen wird.
 
 Weil die zu entwickelnde Sprache in einem Online Editor verwendet werden soll und nur auf den grundlagen des Lambda Kalküls basiert soll sie auch einen Namen bekommen der diese Eigenschaften widerspiegelt:
 Daher wir die zu entwickelnde Sprache im folgenden Lambo (angelehnt an Lambda Online) genannt.
 
 Wie im Lambda Kalkül soll es in der Sprache Lambo nur Funktionen geben. 
 Um allerdings mehrere Funktionen in einem Programm modelieren zu können wird zusätzlich auch ein Statement für die Wertezuweisung benötigt. Dafür soll in Lambo das Schlüsselwort "def" verwendet werden. Außerdem soll statt der herkömlichen Notation mit $\lambda$ und . die Notation mit runden Klammern und geschweiften Klammern verwendet werden, da diese Notation für einen Qellcode sorgt der populären Programmiersprachen wie z.B. Python ähnelt.
-Eine erste Skizze der Syntax von Lambo hat also die folgende Strucktur:
+Eine erste Skizze der Syntax von Lambo hat die folgende Strucktur:
 \begin{align*}
     \text{\textless lambo-programm\textgreater} & ::= \text{\textless statement\textgreater}* \\
     \text{\textless statement\textgreater} & ::= \text{\textless definition\textgreater} \\
@@ -285,7 +283,7 @@ def app {
     a b c
 }
 \end{lstlisting}
-geschrieben werden. Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare (TODO: siehe Anhang) vollständig.
+geschrieben werden. Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare vollständig. Diese werden in Lambo mit \slash \slash  eingeleitet und gehen bis zum Ende der Zeile. Für die folgenden Erklärungen zu der Implementation des Interpreters werden Kommentare allerdings ingoriert.
 
 \subsection{Implementierung des Interpreters}
 
