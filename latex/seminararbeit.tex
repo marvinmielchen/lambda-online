@@ -15,6 +15,7 @@
 \usepackage{titling}
 \usepackage{caption}
 \usepackage{listings}
+\usepackage{color}
 \lstset
 {
     basicstyle=\footnotesize,
@@ -45,8 +46,6 @@
 
 \maketitle
 
-%\cite[S. 8]{nystrom}
-
 \section{Wie lässt sich der untypisierte Lambda-Kalkül in einer minimalistischen Programmiersprache umsetzen? - DONE}
 
 Der Lambda-Kalkül ist eine formale Sprache, die zur Untersuchung von Funktionen und deren Auswertung dient. Er ist die Grundlage der funktionalen Programmierung und hat einen großen Einfluss auf die Entwicklung von Programmiersprachen wie Lisp, ML, Haskell und vielen anderen.
@@ -56,7 +55,6 @@ Viele Funktionale Sprachen werden auf den Grundlagen des Lambda Kalküls aufgeba
 Wie ein komplex verschachtelter Lambda-Ausdruck mit einem Computer ausgewertet werden kann ist also eine interressante und komplizierte Problemstellung und soll die Motivation für diese Arbeit sein.
 
 In der folgenden Arbeit soll gezeigt werden, wie auf der Basis des untypisierten Lambda-Kalküls eine Programmiersprache entwickelt werden kann. Der Funktionsumfang der Sprache bleibt dabei auf das Nötigste reduziert, wobei entscheidende Eigenschaften einer "nützlichen" Sprache gegen Funktionalitäten eingetauscht werden, die eine einfache und verständliche Interaktion mit den Regeln des Lambda-Kalküls ermöglichen.
-
 Ein zentrales Element dieser Arbeit ist die Entwicklung eines "transformierenden" Interpreters, der die Sprache auswertet. Dieser Interpreter soll grundlegende Anforderungen an einen modernen Interpreter erfüllen und zumindest ansatzweise den Ansprüchen an solche Implementierungen gerecht werden.
 Was in diesem Zusammenhang mit einem "transformierenden" Interpreter gemeint ist, wird im Laufe der Arbeit noch genauer ausgeführt.
 
@@ -187,10 +185,9 @@ Daher wurde hier auch der unübliche Begriff eines transformierenden Interpreter
 \section{Design und Implementierung des Interpreters}
 
 \subsection{Beschreibung der Programmiersprache Lambo - DONE}
+\lstset{belowskip=0 \baselineskip}
 
 Die zu entwickelnde Sprache hat keine starken Anforderungen an einen praktischen nutzen für besonders performante Berechungen oder generell an eine nützliche Programmiersprache, deshalb können andere Konzepte und Eigenschaften in den Vordergrund gestellt werden, die normalerweise nicht zu einer gängigen Programmiersprache gehöhren und auch die Implementation vereinfachen.
-
-Über den Umfang dieser Arbeit hinaus wird es eine Website mit einem Code Editor geben in dem man Quellcode eingeben kann und dann die verschachtelten Lambda Terme schritt für Schritt umformen und reduzieren kann (siehe Abbildung \ref*{fig:lambowebsite}). Dieser schrittweise Auswertung hilft nicht nur beim Verständnis, sondern vereinfacht auch die Implementation des Interpreters wie sich später zeigen wird.
 
 \begin{figure}
     \centering
@@ -199,12 +196,14 @@ Die zu entwickelnde Sprache hat keine starken Anforderungen an einen praktischen
     \label{fig:lambowebsite}
 \end{figure}
 
+Über den Umfang dieser Arbeit hinaus wird es eine Website mit einem Code Editor geben in dem man Quellcode eingeben kann und dann die verschachtelten Lambda Terme schritt für Schritt umformen und reduzieren kann (siehe Abbildung \ref*{fig:lambowebsite}). Dieser schrittweise Auswertung hilft nicht nur beim Verständnis, sondern vereinfacht auch die Implementation des Interpreters wie sich später zeigen wird.
+
 Weil die zu entwickelnde Sprache in einem Online Editor verwendet werden soll und nur auf den grundlagen des Lambda Kalküls basiert soll sie auch einen Namen bekommen der diese Eigenschaften widerspiegelt:
 Daher wir die zu entwickelnde Sprache im folgenden Lambo (angelehnt an Lambda Online) genannt.
 
 Wie im Lambda Kalkül soll es in der Sprache Lambo nur Funktionen geben. 
 Um allerdings mehrere Funktionen in einem Programm modelieren zu können wird zusätzlich auch ein Statement für die Wertezuweisung benötigt. Dafür soll in Lambo das Schlüsselwort "def" verwendet werden. Außerdem soll statt der herkömlichen Notation mit $\lambda$ und . die Notation mit runden Klammern und geschweiften Klammern verwendet werden, da diese Notation für einen Qellcode sorgt der populären Programmiersprachen wie z.B. Python ähnelt.
-Eine erste Skizze der Syntax von Lambo hat die folgende Strucktur:
+Eine erste Skizze der Syntax von Lambo kann mit den folgenden Produktionsregeln dargestellt werden:
 \begin{align*}
     \text{\textless lambo-programm\textgreater} & ::= \text{\textless statement\textgreater}* \\
     \text{\textless statement\textgreater} & ::= \text{\textless definition\textgreater} \\
@@ -215,22 +214,21 @@ Eine erste Skizze der Syntax von Lambo hat die folgende Strucktur:
     \text{\textless application\textgreater} & ::= \{\text{\textless lambda-term\textgreater} \; \text{\textless lambda-term\textgreater}\} \\
     \text{\textless letter\textgreater} & ::= a \; | \; b \; | \; c \; | \; ... \; | \; z | \; A \; | \; B \; | \; C \; | \; ... \; | \; Z | \; 0 \; | \; 1 \; | \; 2 \; | \; ... \; | \; 9
 \end{align*}
-Die BNF zeigt die grundlegende Strucktur für ein Lambo Programm. Ein Lambo Programm besteht aus beliebig vielen Statements. Ein Statement wiederum ist eine Definition die mit dem Schlüsselwort "def" beginnt und einer Variable einen Lambda Ausdruck zuweist. Ein Lambda Ausdruck wiederum ist wie gewohnt entweder eine Variable, eine Abstraktion oder eine Applikation wobei die Syntax für die Lambda Ausdrücke hier ein Bisschen anderes gewählt ist als für das Lambda Kalkül üblich. Um diese Syntax verständlicher zu machen folgen nun einige Beispiele für Lambo Programme. \\ \\
+Die BNF zeigt die grundlegende Strucktur für ein Lambo Programm. Ein Lambo Programm besteht aus beliebig vielen Statements. Ein Statement wiederum ist eine Definition die mit dem Schlüsselwort "def" beginnt und einer Variable einen Lambda Ausdruck zuweist. Ein Lambda Ausdruck wiederum ist wie gewohnt entweder eine Variable, eine Abstraktion oder eine Applikation wobei die Syntax für die Lambda Ausdrücke hier ein Bisschen anderes gewählt ist als für das Lambda Kalkül üblich. Um diese Syntax verständlicher zu machen folgen nun einige Beispiele für Lambo Programme.
+
 Eine einfache Identitätsfunktion wie $(\lambda x.x)$ kann in Lambo wie folgt aussehen:
 \begin{lstlisting}
 def ifunc (x) {
     x
 }
-\end{lstlisting}
+\end{lstlisting} 
 In Lambo muss aber jeder Ausrduckt eine Definition sein deshalb wird der Lambda Ausdruch hier dem Symbol "ifunc" zugewiesen. Gleichermaßen lässt sich auch eine Variable in Lambo definieren:
 \begin{lstlisting}
 def a b
 \end{lstlisting}
 Hier wird die Variable b dem Symbol "a" zugewiesen. Für eine Applikation geht das ganze dann so:
 \begin{lstlisting}
-def app {
-    a b
-}
+def app {a b}
 \end{lstlisting}
 Wieder ist eine Definition nötig um den Lambda Ausdurck in Lambo darzustellen. Hier wird die Aplikation von a auf b dem Symbol "app" zugewiesen. Auch verschachtelte Funktionen sind mit dieser Definition der Syntax möglich:
 \begin{lstlisting}
@@ -248,9 +246,9 @@ def a b
 def c d
 def e f
 \end{lstlisting}
-Damit lässt sich bereits alles modelieren was an berechnbaren Fukntionen möglich ist. Allerdings ist die Syntax noch nicht ganz vollständig. Es fehlt noch die Möglichkeit Funktionen mit mehreren Parametern zu definieren. Dafür soll in Lambo die Syntax für Abstraktionen erweitert werden. Die erweiterte Syntax für Abstraktionen sieht dann wie folgt aus:
+Damit lässt sich bereits alles modelieren was an berechnbaren Fukntionen möglich ist. Allerdings ist die Syntax noch nicht ganz vollständig. Es fehlt noch die Möglichkeit Funktionen mit mehreren Parametern zu definieren. Dafür soll in Lambo die Syntax für Abstraktionen wie folgt erweitert werden:
 \begin{align*}
-    \text{\textless abstraction\textgreater} & ::= (\text{\textless variable\textgreater}*)\{\text{\textless lambda-term\textgreater}\}\\
+    \text{\textless abstraction\textgreater} ::= (\text{\textless variable\textgreater}*)\{\text{\textless lambda-term\textgreater}\}
 \end{align*}
 Damit sind nun auch Funktionen mit mehreren Parametern möglich z.B.:
 \begin{lstlisting}
@@ -266,21 +264,19 @@ def func (x) {
     }
 }
 \end{lstlisting}
-Dieses Konzept wird auch Currying genannt und ist eine wichtige Eigenschaft von Lambo. Currying bedeutet, dass eine Funktion mit mehreren Parametern in mehrere Funktionen mit jeweils einem Parameter umgewandelt wird. Die Funktion $(\lambda x.\lambda y.x)$ wird also in Lambo zu $(\lambda x.(\lambda y.x))$ umgewandelt. Das hat den Vorteil, dass Funktionen mit mehreren Parametern in Lambo nicht anders behandelt werden müssen als Funktionen mit nur einem Parameter. Das vereinfacht die Implementation des Interpreters und ist auch ein Grund warum die Syntax von Lambo so gewählt wurde wie sie ist. Um eine ähliche Vereinfachung auch für die Applikationen zu erreichen, soll in Lambo auch die Syntax für Applikationen erweitert werden. Die erweiterte Syntax für Applikationen sieht dann wie folgt aus:
+Dieses Konzept wird auch Currying genannt und ist eine wichtige Eigenschaft von Lambo. Currying bedeutet, dass eine Funktion mit mehreren Parametern in mehrere Funktionen mit jeweils einem Parameter umgewandelt wird. Die Funktion $(\lambda x.\lambda y.x)$ wird also in Lambo zu $(\lambda x.(\lambda y.x))$ umgewandelt. Das hat den Vorteil, dass Funktionen mit mehreren Parametern in Lambo nicht anders behandelt werden müssen als Funktionen mit nur einem Parameter. Das vereinfacht die Implementation des Interpreters und ist auch ein Grund warum die Syntax von Lambo so gewählt wurde wie sie ist. 
+
+Um eine ähliche Vereinfachung auch für die Applikationen zu erreichen, soll in Lambo auch die Syntax für Applikationen erweitert werden:
 \begin{align*}
-    \text{\textless application\textgreater} & ::= \{\text{\textless lambda-term\textgreater} \; \text{\textless lambda-term\textgreater}*\} \\
+    \text{\textless application\textgreater} & ::= \{\text{\textless lambda-term\textgreater} \; \text{\textless lambda-term\textgreater}*\}
 \end{align*}
 Damit wird die linksassoziativ der Applikation auch in Lambo übernommen und ermöglicht es so eineige Klammern einzusparen. Statt
 \begin{lstlisting}
-def app {
-    {{a b} c}
-}
+def app {{a b} c}
 \end{lstlisting}
 kann in Lambo also auch
 \begin{lstlisting}
-def app {
-    a b c
-}
+def app {a b c}
 \end{lstlisting}
 geschrieben werden. 
 
@@ -304,7 +300,6 @@ Damit ist die Syntax von Lambo bis auf Quelltext-Kommentare vollständig. Diese 
 }
 
 Wie auch bei der ersten Implementationen eines Interpreters aus dem Buch von Nystrom \cite[Kap. 4-13]{nystrom}, soll auch hier der Interpreter mit Java implementiert werden. So müssen schwierige Probleme wie die Speicherverwaltung nicht beachtet werden und das Lambda Kalkül steht im Fokus. Außerdem lässt sich für den Lambo Interpreter in Java später leicht mit vorhandenen Java Bibliotheken eine funktionstüchtige HTTP API umsetzen.
-
 Im folgenden werden die einzelnen Komponenten des Interpreters vorgestellt und die Implementation erläutert. Dabei wird allerdings auf die vollständige Implementation verzichtet und es werden nur vereinfachte Quelltext-Ausschnitte der wichtigsten Teile der Implementation vorgestellt. Der komplette Quelltext ist sowohl auf in einer öffentlichen GitHub Repository \cite{logithub}, als auch im Anhang dieser Arbeit zu finden.
 
 \subsubsection{Lexer}
@@ -317,7 +312,7 @@ public class Token {
 }
 \end{lstlisting}
 Ein Token hat dabei einen Typ und ein Lexeme welches den Inhalt des Tokens repräsentiert. Der Typ des Tokens wird dabei durch eine Enumeration definiert:
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+\begin{lstlisting}
 public enum TokenType {
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, EQUAL,
     IDENTIFIER,
@@ -327,7 +322,7 @@ public enum TokenType {
 \end{lstlisting}
 Jeder Token in der Sprache Lambo lässt sich also genau einem Typ zuordnen. Ein Token kann dabei ein Sonderzeichen wie "(" oder ")" sein, ein Schlüsselwort wie "def" oder eine Variable. Die Variable wird dabei durch den Typ "IDENTIFIER" repräsentiert und das Lexeme der Variable ist dann der Name der Variable.
 Mit diesem Grundgerüst lässt sich nun der Lexer implementieren.
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+\begin{lstlisting}
 public class Lexer{
     private final String source;
     private final List<Token> tokens;
@@ -384,8 +379,8 @@ So kann mit nur einem Durchlauf über den Quelltext (und ein Bischen vor und zur
 
 \subsubsection{Parser}
 
-Weiterhin angelehnt an das Buch von Nystrom (TODO: CITE!) soll auch hier ein rekursiver Parser verwendet werden. Der Parser nimmt dabei die Liste von Tokens und baut daraus einen Syntax Baum auf. Dafür braucht es zunächst Klassen für die Knoten des Syntax Baums. Wie diese aufgebaut sind soll kurz am Beispiel der Klassen für die Knoten von Abstraktionen, Applikationen und Variablen gezeigt werden:
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+Weiterhin angelehnt an das Buch von Nystrom soll auch hier ein rekursiver Parser verwendet werden \cite*[Kap. 6]{nystrom}. Der Parser nimmt dabei die Liste von Tokens und baut daraus einen Syntax Baum auf. Dafür braucht es zunächst Klassen für die Knoten des Syntax Baums. Wie diese aufgebaut sind soll kurz am Beispiel der Klassen für die Knoten von Abstraktionen, Applikationen und Variablen gezeigt werden:
+\begin{lstlisting}
     public abstract class LamboExpression {
         public static class Abstraction extends LamboExpression {
             private final Variable boundVariable;
@@ -413,10 +408,12 @@ Weiterhin angelehnt an das Buch von Nystrom (TODO: CITE!) soll auch hier ein rek
         }
     }
 \end{lstlisting}
-Um die Abhängigkeiten zwischen den verschiedenen Expression Typen und den Methoden die diese verabeiten müssen leicht zu entkoppeln bietet sich das "Visitor Pattern" an (TODO: CITE!). Die Klasse LamboExpression ist dabei die abstrakte Basisklasse für alle Knoten des Syntax Baums die zu einem Lambda Ausdruck gehöhren (d.h. nicht für Definitionen). Auf die gleiche Art müssen auch noch Klassen für die Knoten der Statements und des gesamten Syntax Baums erstellt werden. Diese Klassen sind aber nicht so wichtig für das Verständnis des Interpreters und werden deshalb hier nicht gezeigt.
+Um die Abhängigkeiten zwischen den verschiedenen Expression Typen und den Methoden die diese verabeiten müssen leicht zu entkoppeln bietet sich das "Visitor Pattern" an wie es unter anderem in "The essence of the Visitor pattern" von J. Palsberg und C. Jay beschrieben wird \cite*{Palsberg1998TheEO}. Die Klasse LamboExpression ist dabei die abstrakte Basisklasse für alle Knoten des Syntax Baums die zu einem Lambda Ausdruck gehöhren (d.h. nicht für Definitionen). 
+
+Auf die gleiche Art müssen auch noch Klassen für die Knoten der Statements und des gesamten Syntax Baums erstellt werden. Diese Klassen sind aber nicht so wichtig für das Verständnis des Interpreters und werden deshalb hier nicht gezeigt.
 
 Die Umwandelung von der Liste von Tokens in einen Syntax Baum wird dann genau anhand der Regeln der BNF durchgeführt:
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+\begin{lstlisting}
 public class Parser {
     private final List<Token> tokens;
     private int current = 0;
@@ -473,14 +470,14 @@ public class Parser {
     ...Hilfsmethoden wie match, consume, error usw.
 }
 \end{lstlisting}
-Dieser unvollständigen Parser ohne Currying und ohne Definitionen, liest immer den nächsten Token und versucht dann eine der Regeln aus der BNF der Lambo Grammatik zu vervollständigen. Die Methode parse() iteriert dabei über die Liste der Tokens und ruft für jeden Token die Methode matchExpression() auf. Die Methode matchExpression() entscheidet dann anhand des aktuellen Tokens welche Regel aus der BNF angewendet werden muss und ruft dann die entsprechende Methode auf. Die Methode matchVariable() erzeugt dabei einen Knoten für eine Variable, die Methode matchAbstraction() erzeugt einen Knoten für eine Abstraktion und die Methode matchApplication() erzeugt einen Knoten für eine Applikation. Die Methode matchExpression() wird dabei rekursiv aufgerufen um auch verschachtelte Lambda Ausdrücke zu verarbeiten. Die Methode parse() gibt dann eine Liste von Lambda Ausdrücken zurück die dann an den Interpreter weitergegeben werden kann. Diese simplen rekursiven Vergleiche mit der BNF reichen aus um einen Syntax Baum aufzubauen der dann an den Interpreter weitergegeben werden kann. Für die ganze Sprache von Lambo fehlen hier aber natürlich noch die Regeln für die Definitionen und für das Currying. Diese können im Anhang nachgelesen werden (TODO: Referenz zu Anhang).
+Dieser unvollständigen Parser ohne Currying und ohne Definitionen, liest immer den nächsten Token und versucht dann eine der Regeln aus der BNF der Lambo Grammatik zu vervollständigen. Die Methode parse() iteriert dabei über die Liste der Tokens und ruft für jeden Token die Methode matchExpression() auf. Die Methode matchExpression() entscheidet dann anhand des aktuellen Tokens welche Regel aus der BNF angewendet werden muss und ruft dann die entsprechende Methode auf. Die Methode matchVariable() erzeugt dabei einen Knoten für eine Variable, die Methode matchAbstraction() erzeugt einen Knoten für eine Abstraktion und die Methode matchApplication() erzeugt einen Knoten für eine Applikation. Die Methode matchExpression() wird dabei rekursiv aufgerufen um auch verschachtelte Lambda Ausdrücke zu verarbeiten. Die Methode parse() gibt dann eine Liste von Lambda Ausdrücken zurück die dann an den Interpreter weitergegeben werden kann. Diese simplen rekursiven Vergleiche mit der BNF reichen aus um einen Syntax Baum aufzubauen der dann an den Interpreter weitergegeben werden kann. Für die ganze Sprache von Lambo fehlen hier aber natürlich noch die Regeln für die Definitionen und für das Currying. Diese können im Anhang nachgelesen werden.
 
-An diesem Punkt liegt nun ein Syntax Baum vor der alle Informationen enthält die für die Auswertung der Lambda Ausdrücke nötig sind. In einem herkömlichen Interpreter kann nun der Syntax Baum direkt ausgeführt werden indem mann Knoten des Baums rekursiv abarbeiten und entsprechen mit der Host-Sprache (hier Java) ausführt. Da Lambo aber ein, wie oben selbst definiert, transformierender Interpreter ist, soll der Syntax Baum nicht direkt ausgeführt werden sondern in eine andere Form übersetzt werden. Dafür braucht es zunächst eine Klasse für die Zwischenrepresentation (ZR):
+An diesem Punkt liegt nun ein Syntax Baum vor der alle Informationen enthält die für die Auswertung der Lambda Ausdrücke nötig sind. In einem herkömlichen Interpreter kann nun der Syntax Baum direkt ausgeführt werden indem mann Knoten des Baums rekursiv abarbeiten und entsprechen mit der Host-Sprache (hier Java) ausführt. Da Lambo aber ein, wie oben selbst definiert, transformierender Interpreter ist, soll der Syntax Baum nicht direkt ausgeführt werden sondern in eine andere Form übersetzt werden. Dafür braucht es zunächst eine Klasse für die Zwischenrepresentation:
 
 \subsubsection{AST mit De-Bruijn-Indizes als Zwischenrepresentation}
 
 Im Zusammenhang mit den Regeln des Lambda Kalküls wurde bereits die Notation mit De-Bruijn-Indizes vorgestellt die imense Vorteile bei der Substitution von Variablen bietet. Um diese Notation auch im Lambo Interpreter nutzbar zu machen muss der vorhandene Systax Baum in einen neuen Systax Baum mit De-Bruijn-Indizes übersetzt werden. Dafür wird wieder das Visitor Pattern verwendet um nun die Repräsentation für einen Sysntax Baum in der Zwischenrepresentation zu definieren:
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+\begin{lstlisting}
 public abstract class DeBruijnExpression {
 
     public static class Abstraction extends DeBruijnExpression{
@@ -511,9 +508,9 @@ public abstract class DeBruijnExpression {
     }
 }
 \end{lstlisting}
-Ein AST in dieser ZR hat dabei fast die gleiche Strucktur wie der ursprüngliche AST nur dass hier alle gebundenen Variabeln durch entsprechende De-Bruijn-Indizes ersetzt werden. Alle ungebundenen Variablen in einem Lambda-Ausdruck behalten allerdings ihren Variablennamen. In dieser Hinsicht wird hier von der zuvor vorgestellten Notation abgewichen.
+Ein AST in dieser Zwischenrepresentation hat dabei fast die gleiche Strucktur wie der ursprüngliche AST nur dass hier alle gebundenen Variabeln durch entsprechende De-Bruijn-Indizes ersetzt werden. Alle ungebundenen Variablen in einem Lambda-Ausdruck behalten allerdings ihren Variablennamen. In dieser Hinsicht wird hier von der zuvor vorgestellten Notation abgewichen.
 Hier beginnt dann auch die erste Kernaufgabe des Interpreters. Der Interpreter muss den vorhandenen AST in einen AST mit De-Bruijn-Indizes übersetzen. Dafür wird hier zum ersten mal das Visitor Interface implementiert:
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+\begin{lstlisting}
 public class DeBruijnTranslator implements LamboExpression.Visitor<DeBruijnExpression>{
 
     private DeBruijnEnvironment environment = new DeBruijnEnvironment(null);
@@ -561,7 +558,7 @@ Das Visitor Pattern erlaubt es die rekursive Übersetzung des AST in einen AST m
 Genau wie diese Übersetzung werden auch alle möglichen anderen Umformungen und Berechnungen mit Hilfe des Visitor Interface implementiert. Die absolut wichtigste Umformung ist dabei die Substitution von Variablen. Nur hierfür wurde überhaupt der Aufwand betrieben den AST in einen AST mit De-Bruijn-Indizes zu übersetzen.
 Hierfür wird nun ein weiterer Visitor implementiert der diesemal rekursiv den AST mit De-Bruijn-Indizes durchläuft und dabei die Substitution von Variablen durch weitere DeBruijnExpressions durchführt:
 
-\begin{lstlisting}[caption={TODO: Referenz zu Anhang}, captionpos=b]
+\begin{lstlisting}
 public class DeBruijnSubstitution implements DeBruijnExpression.Visitor<DeBruijnExpression>{
 
     private final DeBruijnExpression input;
@@ -601,16 +598,17 @@ public class DeBruijnSubstitution implements DeBruijnExpression.Visitor<DeBruijn
     }
 }
 \end{lstlisting}
-Die Klasse DeBruijnSubstitution nimmt dabei einen AST mit De-Bruijn-Indizes und eine Map von Variablen zu DeBruijnExpressions und ersetzt dann alle Variablen im AST durch die entsprechenden DeBruijnExpressions. Dabei wird die Tiefe der Verschachtelung mitgezählt um die DeBruijnExpressions entsprechend zu inkrementieren. Die Klasse IncrementFreeDeBruijnIndices ist dabei eine weitere Klasse die mit Hilfe des Visitor Interface die eigentliche Inkrementierung durchführt (REF ANHANG). Aufbauend darauf können alle weiteren Funktionen mit Hilfe des Visitor Interface implementiert werden. Um hier nicht den Rahmen zu sprengen werden hier werden allerdings die rekursiven Implemtationen für die Beta-Reduktion und die Alpha-Konversion nicht gezeigt da die gerade implementierte DeBruijnSubstitution bereits die wichtigste dieser Umformungen ist. Die restlichen Klassen können im Anhang gefunen werden (TODO: Referenz zu Anhang).
+Die Klasse DeBruijnSubstitution nimmt dabei einen AST mit De-Bruijn-Indizes und eine Map von Variablen zu DeBruijnExpressions und ersetzt dann alle Variablen im AST durch die entsprechenden DeBruijnExpressions. Dabei wird die Tiefe der Verschachtelung mitgezählt um die DeBruijnExpressions entsprechend zu inkrementieren. Die Klasse IncrementFreeDeBruijnIndices ist dabei eine weitere Klasse die mit Hilfe des Visitor Interface die eigentliche Inkrementierung durchführt (siehe Anhang, Abschnitt 5.10). Aufbauend darauf können alle weiteren Funktionen mit Hilfe des Visitor Interface implementiert werden. Um hier nicht den Rahmen zu sprengen werden allerdings die rekursiven Implemtationen für die Beta-Reduktion und die Alpha-Konversion nicht gezeigt da die gerade implementierte DeBruijnSubstitution bereits die wichtigste dieser Umformungen ist. Die restlichen Klassen können im Anhang gefunen werden.
 
 \subsubsection{Zurück zum Quellcode}
 
-Ohne den Quelltext für eine Implementation hier im feinsten Deteil darzustellen sollte es klar sein das mit dem gleichen Visitor Interface auch wieder eine Umformung in die ursprüngliche Lambo Syntax möglich ist. Dafür wurde für die Sprache die Klasse DeBruijnPrinter (REF ANHANG) implementiert die den AST mit De-Bruijn-Indizes rekursiv wieder in einen gültigen Quelltext der Sprache Lambo übersetzt. Dieser wird dann zurück an den Nutzer gegeben und schließt so den Kreis der Interkation. Der Nutzer kann nun Lambo Code an den Interpreter geben, verschiedene Umformungen durchführen und bekommt dann wieder Lambo Code zurück. Damit ist der ,,Transformierende Interpreter'' fertig implementiert.
+Ohne den Quelltext für eine Implementation hier im feinsten Deteil darzustellen sollte es klar sein das mit dem gleichen Visitor Interface auch wieder eine Umformung in die ursprüngliche Lambo Syntax möglich ist. Dafür wurde für die Sprache die Klasse DeBruijnPrinter (siehe Anhnag, Abschnitt 5.7) implementiert die den AST mit De-Bruijn-Indizes rekursiv wieder in einen gültigen Quelltext der Sprache Lambo übersetzt. Dieser wird dann zurück an den Nutzer gegeben und schließt so den Kreis der Interkation. Der Nutzer kann nun Lambo Code an den Interpreter geben, verschiedene Umformungen durchführen und bekommt dann wieder Lambo Code zurück. Damit ist der ,,Transformierende Interpreter'' fertig implementiert.
 
 \section{Evaluation und Ausblick}
 
 \lstset
 {
+    keywordstyle=\color{black},
     frame=no,
     basicstyle=\footnotesize,
     numbers=left,
@@ -679,7 +677,7 @@ Und führen wir das Programm wieder aus:
 ...
 def berechnung true
 \end{lstlisting}
-Auch die Disjunktion funktioniert wie erwartet. Ab hier lässt sich beliebige lange Fortfahen um noch viele weitere Konzepte mit Lambo zu implementieren. Für mehr Beispiele kann dazu wieder im Anhang nachgelesen werden (TODO: Referenz zu Anhang).
+Auch die Disjunktion funktioniert wie erwartet. Ab hier lässt sich beliebige lange Fortfahen um noch viele weitere Konzepte mit Lambo zu implementieren.
 
 \subsection{Limitierungen der Implementation}
 
