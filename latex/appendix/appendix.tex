@@ -1,4 +1,5 @@
-\documentclass[ngerman]{article}
+\documentclass{article}
+\usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
@@ -29,9 +30,9 @@
     \vskip0.5em}%
 }
 
-\title{Anhang: Quelltext}
+\title{Quelltext Anhang}
 \author{Marvin Mielchen - Matrikelnummer: 7394385}
-\subtitle{Für die Hausarbeit: Implementierung eines ,,transformierenden“ Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
+\subtitle{Beigefügt der Hausarbeit: Implementierung eines ,,transformierenden“ Interpreters für eine rudimentäre Programmiersprache auf Basis des untypisierten Lambda-Kalküls unter Verwendung von De-Bruijn-Indizes}
 \date{\today}
 
 \begin{document}
@@ -42,6 +43,8 @@ Das Paket \texttt{com.marvinmielchen.lambo.lexicalanalysis} enthält die Klassen
 \\Das Paket \texttt{com.marvinmielchen.lambo.syntacticanalysis} den Parser und die Klassen für den Abstrakten Syntax Baum. 
 Das Paket \texttt{com.marvinmielchen.lambo.intermediatrep} enthält die Klassen für die Zwischendarstellung des Programms, also für die Übersetzung mit De-Bruijn-Indizes sowie alle Klassen für die wichtigen Operationen im Lambda-Kalkül wie die Beta-Reduktion. 
 \\Das Paket \texttt{com.marvinmielchen.lambo.semanticanalysis} enthält die Klassen für den Interpreter und das Stammpaket \texttt{com.marvinmielchen.lambo} enthält die Klasse Lambo die als Hauptklasse dient und die anderen Pakete aufruft.
+
+\tableofcontents
 
 \newpage
 
@@ -76,7 +79,44 @@ Das Paket \texttt{com.marvinmielchen.lambo.intermediatrep} enthält die Klassen 
 \subsection{ParserError.java}
 \lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/syntacticanalysis/ParseError.java}
 
+\section{com.marvinmielchen.lambo.semanticanalysis}
+
+\subsection{Interpreter.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/semanticanalysis/Interpreter.java}
+
+\subsection{RuntimeError.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/semanticanalysis/RuntimeError.java}
+
 \section{com.marvinmielchen.lambo.intermediatrep}
 
+\subsection{DeBruijnTranslator.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/DeBruijnTranslator.java}
+
+\subsection{DeBruijnExpression.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/DeBruijnExpression.java}
+
+\subsection{DeBruijnEnvironment.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/DeBruijnEnvironment.java}
+
+\subsection{BetaReduction.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/BetaReduction.java}
+
+\subsection{DeBuijnAlphaEquivalence.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/DeBruijnAlphaEquivalence.java}
+
+\subsection{DeBruijnClone.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/DeBruijnClone.java}
+
+\subsection{DeBruijnPrinter.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/DeBruijnPrinter.java}
+
+\subsection{DeBruijnSubstitution.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/DeBruijnSubstitution.java}
+
+\subsection{FindAndPerformOneBetaReduction.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/FindAndPerformOneBetaReduction.java}
+
+\subsection{IncrementFreeDeBruijnIndices.java}
+\lstinputlisting{../../lambo/src/main/java/com/marvinmielchen/lambo/intermediaterep/IncrementFreeDeBruijnIndices.java}
 
 \end{document}
