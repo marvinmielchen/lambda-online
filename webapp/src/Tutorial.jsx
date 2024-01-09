@@ -7,26 +7,26 @@ const markdown =
 # Lambo
 Willkommen im Online Interpreter der Programmiersprache Lambo. Lambo ist eine minimalistische Sprache, die auf den Prinzipien des Lambda-Kalküls basiert.
 
-Diese Website ist das Ergebnis einer Seminararbeit an der Universität Hamburg.
-
-Beginnen Sie mit dem Schreiben von Lambo-Code im Hauptfenster und nutzen Sie die Auswertungsfunktionen, um das Ergebnis zu sehen. Experimentieren Sie mit verschiedenen Funktionen und Parametern, um ein tieferes Verständnis des Lambda-Kalküls zu erlangen.
-
-## Syntax
-Die Syntax von Lambo ist sehr einfach. Es gibt nur drei Arten von Ausdrücken:
-
-- Variablen
-- Funktionen
-- Anwendungen
-
-### Variablen
-Variablen sind Zeichenketten, die mit einem Kleinbuchstaben beginnen. Sie können Buchstaben, Zahlen und Unterstriche enthalten.
-
-### Code
+### Syntax
+Es gibt nur eine Art von Statement in Lambo uns das ist die Definition die mit dem Schlüsselwort \`def\` eingeleitet wird:
 \`\`\`
-x
-y
-z
+def x 5
 \`\`\`
+
+Definition weisen einem Bezeichner einen Lambda Ausdruck zu, also entweder eine Variable eine Abstraktion oder eine Applikation:
+\`\`\`
+def variable x
+
+def abstraktion (x) {
+    x
+}
+
+def applikation (x) {
+    {x x}
+}
+\`\`\`
+---
+Diese Website präsentiert das Ergebnis einer Seminararbeit von Marvin Mielchen aus dem Seminar „Funktionale Programmierung“ an der Universität Hamburg.
 `
 
 function Tutorial() {
