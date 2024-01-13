@@ -2,8 +2,9 @@
 export const text =
 `
 
-//this is a comment
+//Im folgenden wird eine einfache Bool'sche Logik implementiert
 
+//da es in Lambo keine Literale gibt, müssen wir diese selbst definieren
 def true(t f){
     t
 }
@@ -12,10 +13,21 @@ def false(t f){
     f
 }
 
-def if(cond a b){
-    cond a b
+//und die Bool'schen Operatoren
+def and(a b){
+    a b false
 }
 
-def result {if true g h}
+def or(a b){
+    a true b
+}
+
+def not(a){
+    a false true
+}
+
+//jetzt da wir unsere Literale und Operatoren haben, können wir diese verwenden
+def result {and true false}
+
 
 `
