@@ -48,7 +48,7 @@ Um ein Programm auszuführen kann etweder eine Definitionen-Substitution oder ei
 
 Bei Programmieren muss allerdings beachtet werden dass die Reihenfolge der Definitionen insoweit relevant ist, dass eine Definition zu einem Bezeichner auswertet wenn dieser zuvor definiert wurde.
 
-### Dann mall los!
+### Dann mal los!
 
 -------------------------
 Diese Website präsentiert das Ergebnis einer Seminararbeit von Marvin Mielchen aus dem Seminar „Funktionale Programmierung“ an der Universität Hamburg.

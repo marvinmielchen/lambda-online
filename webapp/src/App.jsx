@@ -8,6 +8,7 @@ import Tutorial from "./Tutorial.jsx";
 const api_endpoint = "https://api.lambo.main.marvinmielchen.com"
 
 function App() {
+
     const [statusOk, setStatusOk] = useState(false);
 
     useEffect(() => {
@@ -19,6 +20,14 @@ function App() {
             }
         });
     }, []);
+
+    if(window.innerWidth <= 768){
+        return (
+            <div>
+                <h2>Die Website ist für die mobile Nutzung noch nicht optimiert</h2>
+            </div>
+        );
+    }
 
     if (statusOk) {
         return <MainPage />;
