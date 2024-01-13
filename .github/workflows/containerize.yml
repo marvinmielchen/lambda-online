@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/lamboserver
+  IMAGE_NAME: ${{ github.repository_owner }}/lambda-online-server
 
 jobs:
   build:
@@ -21,8 +21,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4.0.0
-        with:
-          lfs: 'true'
 
       - uses: docker/setup-buildx-action@v3.0.0
 
