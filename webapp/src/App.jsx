@@ -5,12 +5,13 @@ import {useState, useEffect, useRef} from 'react'
 import {text} from './examplecode.js'
 import Tutorial from "./Tutorial.jsx";
 
+const api_endpoint = "https://api.lambo.main.marvinmielchen.com"
 
 function App() {
     const [statusOk, setStatusOk] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/status").then((response) => {
+        fetch(api_endpoint + "/api/status").then((response) => {
             if (response.status !== 200) {
                 setStatusOk(false);
             }else{
@@ -57,7 +58,7 @@ function MainPage() {
 
     const handleBetaReduction = () => {
         const payload = window.sessionStorage.getItem("content")
-        fetch("http://localhost:8080/api/reduction", {
+        fetch(api_endpoint + "/api/reduction", {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
@@ -79,7 +80,7 @@ function MainPage() {
     const handleSyntaxCheck = (value) => {
         setContent(value)
         const payload = window.sessionStorage.getItem("content")
-        fetch("http://localhost:8080/api/syntax", {
+        fetch(api_endpoint + "/api/syntax", {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
@@ -97,7 +98,7 @@ function MainPage() {
 
     const handleDefinitionSubstitution = () => {
         const payload = window.sessionStorage.getItem("content")
-        fetch("http://localhost:8080/api/substitution", {
+        fetch(api_endpoint + "/api/substitution", {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
